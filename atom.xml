@@ -3,80 +3,33 @@
   <title>岛</title>
   
   <subtitle>我哪也不去，就在这里</subtitle>
-  <link href="http://example.com/atom.xml" rel="self"/>
+  <link href="https://jeyson325.github.io/atom.xml" rel="self"/>
   
-  <link href="http://example.com/"/>
-  <updated>2020-10-27T02:52:06.755Z</updated>
-  <id>http://example.com/</id>
+  <link href="https://jeyson325.github.io/"/>
+  <updated>2020-10-27T09:55:58.705Z</updated>
+  <id>https://jeyson325.github.io/</id>
   
   <author>
-    <name>Jeyson</name>
+    <name>苟富贵</name>
     
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>about</title>
-    <link href="http://example.com/2020/10/27/about/"/>
-    <id>http://example.com/2020/10/27/about/</id>
-    <published>2020-10-27T02:47:37.000Z</published>
-    <updated>2020-10-27T02:52:06.755Z</updated>
+    <title>测试文章</title>
+    <link href="https://jeyson325.github.io/2020/10/27/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/"/>
+    <id>https://jeyson325.github.io/2020/10/27/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/</id>
+    <published>2020-10-27T09:42:03.000Z</published>
+    <updated>2020-10-27T09:55:58.705Z</updated>
     
     
       
       
         
         
-    <summary type="html">&lt;p&gt;姓名：刘继仓&lt;/p&gt;
-&lt;p&gt;现居：合肥&lt;/p&gt;
-&lt;p&gt;GitHub: jeyson325&lt;/p&gt;
-&lt;p&gt;QQ: 854731410&lt;/p&gt;
-&lt;p&gt;微信:</summary>
-        
-      
-    
-    
-    
-    
-  </entry>
-  
-  <entry>
-    <title>关于我</title>
-    <link href="http://example.com/2020/10/27/%E5%85%B3%E4%BA%8E%E6%88%91/"/>
-    <id>http://example.com/2020/10/27/%E5%85%B3%E4%BA%8E%E6%88%91/</id>
-    <published>2020-10-27T02:19:26.994Z</published>
-    <updated>2020-10-27T02:19:26.995Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;Welcome to</summary>
-        
-      
-    
-    
-    
-    
-    <category term="旅行" scheme="http://example.com/tags/%E6%97%85%E8%A1%8C/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Hello World</title>
-    <link href="http://example.com/2020/10/21/hello-world/"/>
-    <id>http://example.com/2020/10/21/hello-world/</id>
-    <published>2020-10-21T14:59:05.554Z</published>
-    <updated>2020-10-21T14:59:05.554Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.io/docs/&quot;&gt;documentation&lt;/a&gt;</summary>
+    <summary type="html">&lt;p&gt;我的第一篇博客，测试文章&lt;/p&gt;
+</summary>
         
       
     
