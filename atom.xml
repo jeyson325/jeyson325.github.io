@@ -1,39 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>岛</title>
+  <title>有刃有鱼</title>
   
   <subtitle>我哪也不去，就在这里</subtitle>
   <link href="https://jeyson325.github.io/atom.xml" rel="self"/>
   
   <link href="https://jeyson325.github.io/"/>
-  <updated>2020-10-27T09:55:58.705Z</updated>
+  <updated>2020-12-12T07:41:35.398Z</updated>
   <id>https://jeyson325.github.io/</id>
   
   <author>
-    <name>苟富贵</name>
+    <name>有刃有鱼阮小六</name>
     
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>测试文章</title>
-    <link href="https://jeyson325.github.io/2020/10/27/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/"/>
-    <id>https://jeyson325.github.io/2020/10/27/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/</id>
-    <published>2020-10-27T09:42:03.000Z</published>
-    <updated>2020-10-27T09:55:58.705Z</updated>
+    <title>前言：我平淡生活的最后目击者</title>
+    <link href="https://jeyson325.github.io/2020/12/12/%E5%89%8D%E8%A8%80%EF%BC%9A%E6%88%91%E5%B9%B3%E6%B7%A1%E7%94%9F%E6%B4%BB%E7%9A%84%E6%9C%80%E5%90%8E%E7%9B%AE%E5%87%BB%E8%80%85/"/>
+    <id>https://jeyson325.github.io/2020/12/12/%E5%89%8D%E8%A8%80%EF%BC%9A%E6%88%91%E5%B9%B3%E6%B7%A1%E7%94%9F%E6%B4%BB%E7%9A%84%E6%9C%80%E5%90%8E%E7%9B%AE%E5%87%BB%E8%80%85/</id>
+    <published>2020-12-12T05:42:03.000Z</published>
+    <updated>2020-12-12T07:41:35.398Z</updated>
     
     
       
       
         
         
-    <summary type="html">&lt;p&gt;我的第一篇博客，测试文章&lt;/p&gt;
-</summary>
+    <summary type="html">&lt;p&gt;今年的大部分时间里，我一个人住在距离上班的地方仅10分钟路程的公寓里，每天经过两个红绿灯，在第二个路口处拐弯，会看到一排枫树，从左往右用脚步数过去，大概300多步就会到达公司楼下，然后掏出钉钉打卡。&lt;/p&gt;
+&lt;p&gt;所以我几乎不会迟到，因为实在太近了，以至于我可以精确的将打卡</summary>
         
       
     
     
+    
+    <category term="生活" scheme="https://jeyson325.github.io/categories/%E7%94%9F%E6%B4%BB/"/>
     
     
   </entry>
