@@ -5,6 +5,7 @@
 
 
 <head>
+  <meta name="baidu-site-verification" content="code-HojyQT4gjt" />
   <meta charset="utf-8" />
    
   <meta name="keywords" content="生活,代码,博客" />
@@ -13,7 +14,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    webpack中url-loader新版本的坑（变化） |  有刃有鱼阮小六的博客
+    从前慢 |  有刃有鱼阮小六的博客
   </title>
   <meta name="generator" content="hexo-theme-ayer">
   
@@ -47,7 +48,7 @@ var _hmt = _hmt || [];
 </script>
 
 
-<link rel="alternate" href="/atom.xml" title="null" type="application/atom+xml">
+<link rel="alternate" href="/atom.xml" title="岛" type="application/atom+xml">
 </head>
 
 </html>
@@ -59,7 +60,7 @@ var _hmt = _hmt || [];
     <main class="content on">
       <section class="outer">
   <article
-  id="post-webpack中url-loader新版本的坑（变化）"
+  id="post-从前慢"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -70,18 +71,18 @@ var _hmt = _hmt || [];
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  webpack中url-loader新版本的坑（变化）
+  从前慢
 </h1>
  
 
     </header>
      
     <div class="article-meta">
-      <a href="/2020/12/14/webpack%E4%B8%ADurl-loader%E6%96%B0%E7%89%88%E6%9C%AC%E7%9A%84%E5%9D%91%EF%BC%88%E5%8F%98%E5%8C%96%EF%BC%89/" class="article-date">
-  <time datetime="2020-12-14T03:00:31.000Z" itemprop="datePublished">2020-12-14</time>
+      <a href="/%E4%BB%8E%E5%89%8D%E6%85%A2.html" class="article-date">
+  <time datetime="2020-12-15T01:18:28.000Z" itemprop="datePublished">2020-12-15</time>
 </a> 
   <div class="article-category">
-    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+    <a class="article-category-link" href="/categories/%E5%86%99%E4%BD%9C/">写作</a>
   </div>
   
 <div class="word_count">
@@ -89,7 +90,7 @@ var _hmt = _hmt || [];
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> 字数统计:</span>
-            <span class="post-count">907</span>
+            <span class="post-count">2.3k</span>
         </span>
     </span>
 
@@ -98,7 +99,7 @@ var _hmt = _hmt || [];
         <span class="post-meta-item-icon">
             <i class="ri-book-open-line"></i>
             <span class="post-meta-item-text"> 阅读时长≈</span>
-            <span class="post-count">3 分钟</span>
+            <span class="post-count">7 分钟</span>
         </span>
     </span>
 </div>
@@ -113,48 +114,83 @@ var _hmt = _hmt || [];
   
     <div class="article-entry" itemprop="articleBody">
        
-  <h3 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h3><p>之前在进行webpack配置练习过程中遇到了一个坑，花了2个小时才搞定，挺有感触，以记之。</p>
-<p>webpack有几个核心概念，其中一个是loader。</p>
-<p>loader其实就是用于对模块的源代码进行转换，如TypeScript转换为 JavaScript，sass转成css等，就要安装相对应的 loader。</p>
-<p>其中有几个常用的loader如下：</p>
+  <blockquote>
+<p>从前的日色变得慢<br>车，马，邮件都慢<br>一生只够爱一个人</p>
+</blockquote>
+<h3 id="1"><a href="#1" class="headerlink" title="1"></a>1</h3><p>明海把书放下，轻轻地闭上眼。</p>
+<p>冬季的阳光照在院子里，照在躺椅上。明海爷爷在旁边劈好了柴，把刀扔在一边，擤了把鼻涕，站起身来。他回头看了看明海，脸上露出微笑，慢慢往厨屋里走。</p>
 <a id="more"></a>
 
-<ul>
-<li>处理图片、字体等文件<code>file-loader</code>或者<code>url-loader</code>。（file-loader可以对图片、字体等文件进行打包，url-loader是基于file-loader进行的一层封装，可以将限制在大小以内的图片文件转成base64格式，减少图片请求）</li>
-<li>处理vue文件<code>vue-loader</code>（详见vue-loader文档）</li>
-<li>处理css文件<code>css-loader</code>、<code>style-loader</code></li>
-<li>处理scss文件<code>sass-loader</code>、<code>node-sass</code></li>
-<li>处理vue文件里的style <code>vue-style-loader</code></li>
-<li>css预处理<code>postcss-loader</code></li>
-<li>…</li>
-</ul>
-<h3 id="url-loader新版本的坑"><a href="#url-loader新版本的坑" class="headerlink" title="url-loader新版本的坑"></a>url-loader新版本的坑</h3><p>我把将图片和字体资源放进项目，根据webpack的官方文档介绍安装了<code>file-loader</code>和<code>url-loader</code>，进行配置并加载，此时出问题了。</p>
-<p>通过<code>file-loader</code>加载的字体正常，<strong>而通过<code>url-loader</code>加载的图片却出不来。</strong></p>
-<p><img src="https://tva1.sinaimg.cn/large/006tNbRwly1gai032c55hj30pu082t9c.jpg" alt="image-20200101214727561"></p>
-<p>开始以为是配置出的错误，经过反复的尝试修改，结果一无所获。</p>
-<p>于是去网上找了一个别人的webpack相关项目拉下来运行，但很奇怪的是， <strong>url-loader</strong>相关的配置，大家基本都差不多按文档来的，那为啥别人的图片就能运行成功，到我这里就加载失败了？</p>
-<h3 id="解决过程"><a href="#解决过程" class="headerlink" title="解决过程"></a>解决过程</h3><p>经过反复的比对分析，一点点排除错误因素，终于找到了问题所在——<code>url-loader</code>版本问题。</p>
-<p>通过npm-check-updates，我检查到package.json里面的版本变化：</p>
-<p><img src="https://tva1.sinaimg.cn/large/006tNbRwly1gai03k9m3oj30pu0f875y.jpg" alt="image-20200101221638094"></p>
-<p>这里面最大的变化就是<code>file-loader</code>和<code>url-loader</code>，是一个大版本的更新。</p>
-<p>但是项目中字体解析正常，那么<strong>问题很可能就出在<code>url-loader</code>上。</strong></p>
-<p>于是我去github上查看<code>url-loader</code>的更新日志，看看都更新了什么，结果看到了这个：</p>
-<p><img src="https://tva1.sinaimg.cn/large/006tNbRwly1gai03qz5hkj31240h0whb.jpg" alt="image-20200101222340289"></p>
-<p>翻译过来就是：</p>
-<ul>
-<li>最低要求的nodejs版本是10.13.0</li>
-<li>将esModules选项重命名为esModule</li>
-<li>默认情况下切换到ES模块（<strong>默认情况下，esModule选项为true</strong>）</li>
-</ul>
-<p>那么一切就水落石出了：最新版本的 <code>url-loader</code> 添加了一个新的配置选择 <strong>esModule</strong>。</p>
-<p>如果不设置 <strong>esModule</strong> 为 <strong>false</strong>，那么默认它会将图片导出一个module对象，而不是一个url路径，所以此时页面图片当然加载不出来了。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// index.js </span></span><br><span class="line"><span class="comment">// 入口文件 引入图片和logo</span></span><br><span class="line"><span class="keyword">const</span> happy = <span class="built_in">require</span>(<span class="string">&#x27;./happy.jpg&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> logo = <span class="built_in">require</span>(<span class="string">&#x27;./logo.png&#x27;</span>)</span><br><span class="line"><span class="comment">// 注: url-loader在3.0.0版本有重大改变</span></span><br><span class="line"><span class="comment">// 需在webpack.config.js里添加 esModule: false</span></span><br><span class="line"><span class="comment">// 否则打印出来的happy是个module对象，不是一个url路径</span></span><br><span class="line"><span class="built_in">console</span>.log(happy)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// webpack.config.js</span></span><br><span class="line">rules: [</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">// 加载图片</span></span><br><span class="line">    test: <span class="regexp">/\.(png|jpg|gif|svg)$/</span>,</span><br><span class="line">    use: [</span><br><span class="line">      &#123;</span><br><span class="line">        loader: <span class="string">&#x27;url-loader&#x27;</span>,</span><br><span class="line">        options: &#123;</span><br><span class="line">          limit: <span class="number">5</span> * <span class="number">1024</span>,</span><br><span class="line">          name: <span class="string">&#x27;images/[name].[ext]&#x27;</span>,</span><br><span class="line">          <span class="comment">// 如果要在图片的src里使用，这里要添加esModule属性，默认是true，需要设置成false</span></span><br><span class="line">          esModule: <span class="literal">false</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p>鸡群在院落里伸脖子找食，明海爷爷经过时，惊的几只鸡瞪大眼睛，扑棱着翅膀慌忙往两边跑。明海睁开眼，看到水槽被一只奔跑的老母鸡掀翻，在地上打着圈，清水洒了一地。</p>
+<p>堂屋的座钟传来悠长而古老的响声，铛……铛……，上午九点了。</p>
+<p>明海眯着眼看天空，阳光并不刺眼，高大的松木在院墙外窜出来，直窜到树梢隐没在眼帘外。</p>
+<p>风吹了起来。明海仰头看了一会儿，百无聊赖，便站起身，拿扫把扫院里的几摊鸡屎。</p>
+<p>明海爷爷走进厨屋，在水缸里舀了一瓢水倒进脸盆。明海奶奶在锅台边炒饼心，顺手拿水瓢准备往锅里添水，一摸没摸到，转头看见明海爷爷，叫到：“要死了，老头子把我水瓢拿走了。”</p>
+<p>嘴上说着话，手上的动作却不落下，一把大铲子灵活的在锅里左右翻动，磁……磁……不一会儿，一股浓郁的香味顺着烟雾就飘了出来。</p>
+<p>明海爷爷把手放进水里，随意得搓了两下。水里漂出一些污垢，像小蝌蚪一样，甩动着尾巴，撒欢的往水底跑。明海爷爷的手很糙，比院外的那颗老松树皮还要糙，手心里沟壑纵横，老茧又厚又黄，每一道指关节的纹理间都深深嵌着不知名的黑色物质，怎么洗都洗不掉。它们嵌到了皮下，嵌到肉里，与血肉长成一块了。</p>
+<p>洗了手，明海爷爷变得活泼起来，他把水泼到门外的沟里，花白的头朝外伸。</p>
+<p>屋后，明海二爷爷家的大门半开着，里面传来几句热闹的笑声。还没等他听的真切，明海奶奶拿着铲子喝骂道:“老头子还不去把面粉搬过来！”明海爷爷回到屋里把脸盆放下，湿漉漉的双手在裤子上抹抹，有些悻悻地说：“这么急，还一下不歇了！”</p>
+<p>当然这话明海奶奶是听不见的，因为明海奶奶的耳朵不太好，非得别人对着她的耳边大声的重复好几遍才能勉强听见。明海在院子里看着，感觉有些好笑。都这么多年了，两个人有时候还像个小孩子似的。</p>
+<p>明海爷爷在屋里找了一圈没找到面粉，问明海奶奶：“面粉在哪？”</p>
+<p>明海奶奶一边炒菜一边把头侧过来说：“什么呀？”</p>
+<p>“面粉在哪？”</p>
+<p>“你说什么？”</p>
+<p>“我说面粉在哪？”</p>
+<p>“啊？”</p>
+<p>明海爷爷倒也不急，他张大了嘴，将多余的字都省了，嘴唇不紧不慢的做出口型，他喊：“面粉！面粉！”</p>
+<p>这次明海奶奶终于听见了。“面粉哦。”她左手朝上一指：“面粉不在楼上晒着嘛！”</p>
+<h3 id="2"><a href="#2" class="headerlink" title="2"></a>2</h3><p>明海奶奶的耳朵听不见已经好多年了，无论谁要跟她说话，都需要耐着些性子。有时即使在她耳边使劲喊也不大管用了，于是大家渐渐改为呼喊和做口型并重，同时配以一定的手势动作。</p>
+<p>比如明海二爷爷来串门，问她吃过了没，就把嘴巴龇咧着，然后张大，露出“吃饭”的口型，同时右手假装拿着筷子，左手端饭碗，哗哗哗，做出扒饭的动作，嘴里使劲喊：“吃饭！吃饭！”这样做果然效果明显，明海奶奶一下子就懂了，说：“吃饭啊，问我吃饭了是吧，吃过了吃过了，早吃过了！”</p>
+<p>但是接电话的时候可就没有口型和动作配合了，偏偏明海奶奶还喜欢和明海爷爷抢电话。就像昨天，明海在城里打电话回来，明海爷爷接起来说：“喂，谁呀？”</p>
+<p>明海说:“我是海子。”在明海村里，喊晚辈名字都喜欢在最后一个字后面加“子”，就像桌子、椅子一样。</p>
+<p>明海爷爷说：“哦，海子啊……”还没等他继续说，明海奶奶在一旁看到了，急忙跑过来说：“老头子，电话哦，谁呀，问一下是谁。”然后用围裙把手上的水擦擦，直接就夺过来。“来，我来！”</p>
+<p>明海爷爷也不跟她抢，他对明海说：“给你奶奶了。”</p>
+<p>明海奶奶拿过电话，将话筒郑重的贴在脸上，身子靠着床头，大声喊道：“喂，谁呀？你是谁呀？”</p>
+<p>明海说：“我是海子！”</p>
+<p>明海奶奶说：“谁呀，是不是海子？”</p>
+<p>“是的，我是海子！”</p>
+<p>“不是啊？你是哪个？是铃子吗”</p>
+<p>“不是，我是海子！”</p>
+<p>明海爷爷在一边一直使劲地说：“是海子！是海子呀！”</p>
+<p>明海奶奶转过头看着明海爷爷：“谁呀？你说谁呀？是不是铃子，是铃子吧？”然后就对着听筒喊：“铃子啊，什么事啊？”</p>
+<p>明海大声喊：“我是海子！海子！”明海爷爷也大声喊：“是海子！海子！”</p>
+<p>“哦，是东子啊！”</p>
+<p>就这样，爷孙俩一个在电话这边，一个在电话那边，同时喊海子喊了有两分钟，直到明海奶奶快把家里亲戚都猜完了，她自己都不耐烦了，然后把电话扔给明海爷爷。</p>
+<p>“呐，老头子，给你接吧。”</p>
+<h3 id="3"><a href="#3" class="headerlink" title="3"></a>3</h3><p>明海爷爷到楼上很快搬来装着面粉的大木盆。</p>
+<p>明海将柴抱到墙边的柴堆上摆整齐，然后去厨屋帮忙。</p>
+<p>明海奶奶把水和面粉和在一起，边揉边嘟囔：“这老头子怎么不管事，面粉在哪都不知道！”明海将饼心从锅里盛起来装到盘子里，看了看爷爷，笑了笑，不说话。</p>
+<p>明海爷爷在旁边摇摇头，叹一口气：“你奶奶耳朵聋，又有心脏病，高血压，她一生都性子强，不让着她怎么行呢……”</p>
+<p>明海奶奶很快就把面团和好，笑眯眯的对明海说：“奶奶做糙面饼给你吃，中午吃糙面饼可好？”明海使劲的点头，这句话她上午已经说了五遍了，奶奶年纪越大越喜欢把一件小事不断的重复。</p>
+<p>“家里做的饼可不像外面卖得，好吃哩！”明海奶奶又说。她从面团中拽出一小块来，伸出手指扒了一个口，用勺子舀了两勺饼心，然后把缺口合上，在手心里拍成一个圆状，啪啪两下，一个糙面饼就做好了。</p>
+<p>饼下了锅，明海爷爷坐在锅台下往锅洞里添柴火。几根树枝塞进去，锅洞里烧的兴旺，噼里啪啦，火光映了出来。明海看见爷爷脸上红彤彤的一片，影子摇曳着。烟囱鼓鼓的往外冒。</p>
+<p>十二点多，三个人把饭菜摆好，吃中饭了。</p>
+<h3 id="4"><a href="#4" class="headerlink" title="4"></a>4</h3><p>饭后，明海爷爷和明海奶奶都闲下来了。冬天的庄稼地里没有活儿，明海奶奶端了个火盆，把手缩进围裙下面，靠在躺椅子上晒太阳。</p>
+<p>明海爷爷双手蜷缩拢在袖子里，驼着背在院子里转悠，走到院门口时，时不时伸个头朝门外瞟。</p>
+<p>明海奶奶看了一会，说：“老头子，别转了，你去玩吧！”</p>
+<p>明海爷爷转过头，看着明海奶奶。</p>
+<p>“下午也没事，去玩一会儿吧！”</p>
+<p>明海爷爷朝门外又看了一眼，转过身，摇着头，说：“麻将有什么好玩的，不去哦。”</p>
+<p>明海奶奶看到他摇头，笑着说：“不玩啊？”</p>
+<p>“不玩。”</p>
+<p>“不去啊？”</p>
+<p>“不去。”</p>
+<p>“那你干什么？”</p>
+<p>“看电视！”</p>
+<p>明海爷爷走到屋里，把电视打开。</p>
+<p>没一会儿明海奶奶喊明海搬着躺椅也进来了。明海奶奶躺到上面，轻轻摇晃，“吱呀”——“吱呀”——，电视里老旦托着袖子咿呀呀唱着黄梅戏。</p>
+<p>明海爷爷在床尾坐着，盯着屏幕看的认真。</p>
+<p>明海奶奶说话了：“坐的这么近，眼睛不要了！”</p>
+<p>明海爷爷就从床尾站起来，往后退几步，到床边靠着。</p>
+<p>“再往后一点！”</p>
+<p>明海爷爷就往后退一点。</p>
+<p>“再往后一点！”</p>
+<p>明海爷爷就又退了一点。</p>
+<p>外面阳光照进来。明海奶奶把明海爷爷的大棉袄裹的紧了一点，只露出了瘦小的脸庞，看着电视，不一会儿传来轻微的鼾声。明海爷爷半边屁股靠在床沿上，看戏看的入了神。</p>
+<p>明海搬了个椅子坐在院子里，鸡群咯咯的叫。堂屋的座钟“铛……铛……铛……”地响了三声。起风了。</p>
+<br/>
 
-<p>注：而<strong>关于<code>url-loader</code>最近的这次更新，webpack中文文档上面并没有同步更新</strong>，仍然只有以前的三个options配置选项，我去翻英文文档，才发现它更新了。</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
-<li><strong>不仅仅是webpack，许多项目的中文文档都不是及时更新的，有一定的滞后性，要习惯看英文文档，看英文文档，看英文文档！！！</strong></li>
-<li>爬坑的过程，也是快速深入学习的过程，爬完之后对webpack相关配置理解了很多。</li>
-</ul>
+<p><font color="#999999">——写于2015年1月29日</font></p>
  
       <!-- reward -->
       
@@ -225,12 +261,12 @@ var _hmt = _hmt || [];
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://jeyson325.github.io/2020/12/14/webpack%E4%B8%ADurl-loader%E6%96%B0%E7%89%88%E6%9C%AC%E7%9A%84%E5%9D%91%EF%BC%88%E5%8F%98%E5%8C%96%EF%BC%89/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://jeyson325.github.io/%E4%BB%8E%E5%89%8D%E6%85%A2.html" alt="微信分享二维码">
     </div>
 </div>
 
 <div id="share-mask"></div>  
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webpack/" rel="tag">webpack</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%A3%E6%96%87/" rel="tag">散文</a></li></ul>
 
     </footer>
   </div>
@@ -238,10 +274,19 @@ var _hmt = _hmt || [];
    
   <nav class="article-nav">
     
+      <a href="/%E5%8D%BF%E6%9C%AC%E4%BD%B3%E4%BA%BA%EF%BC%8C%E5%A5%88%E4%BD%95%E4%BB%8E%E8%B4%BC.html" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            卿本佳人，奈何从贼
+          
+        </div>
+      </a>
     
-      <a href="/2020/12/12/%E5%89%8D%E8%A8%80%EF%BC%9A%E6%88%91%E5%B9%B3%E6%B7%A1%E7%94%9F%E6%B4%BB%E7%9A%84%E6%9C%80%E5%90%8E%E7%9B%AE%E5%87%BB%E8%80%85/" class="article-nav-link">
+    
+      <a href="/webpack%E4%B8%ADurl-loader%E6%96%B0%E7%89%88%E6%9C%AC%E7%9A%84%E5%9D%91%EF%BC%88%E5%8F%98%E5%8C%96%EF%BC%89.html" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">前言：我平淡生活的最后目击者</div>
+        <div class="article-nav-title">webpack中url-loader新版本的坑（变化）</div>
       </a>
     
   </nav>
@@ -361,7 +406,7 @@ var _hmt = _hmt || [];
 <nav class="navbar">
   
   <div class="logo">
-    <a href="/"><img src="/images/ayer-side.svg" alt=""></a>
+    <a href="/"><img src="/images/ayer-side.svg" alt="岛"></a>
   </div>
   
   <ul class="nav nav-main">
