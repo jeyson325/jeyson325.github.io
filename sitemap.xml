@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://jeyson325.github.io/update.html</loc>
+    <loc>https://jeyson325.github.io/update/index.html</loc>
     
     <lastmod>2020-12-22</lastmod>
     
@@ -16,7 +16,7 @@
   </url>
   
   <url>
-    <loc>https://jeyson325.github.io/about.html</loc>
+    <loc>https://jeyson325.github.io/about/index.html</loc>
     
     <lastmod>2020-12-21</lastmod>
     
@@ -95,14 +95,14 @@
 
   
   <url>
-    <loc>https://jeyson325.github.io/tags/webpack/</loc>
+    <loc>https://jeyson325.github.io/tags/%E4%B8%9A%E5%8A%A1%E5%AE%9E%E8%B7%B5/</loc>
     <lastmod>2020-12-22</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
-    <loc>https://jeyson325.github.io/tags/%E4%B8%9A%E5%8A%A1%E5%AE%9E%E8%B7%B5/</loc>
+    <loc>https://jeyson325.github.io/tags/webpack/</loc>
     <lastmod>2020-12-22</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
