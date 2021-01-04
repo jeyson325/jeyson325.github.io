@@ -6,7 +6,7 @@
   <link href="https://jeyson325.github.io/atom.xml" rel="self"/>
   
   <link href="https://jeyson325.github.io/"/>
-  <updated>2020-12-21T09:30:37.196Z</updated>
+  <updated>2021-01-04T10:00:33.561Z</updated>
   <id>https://jeyson325.github.io/</id>
   
   <author>
@@ -15,6 +15,44 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>服务器探索之旅：选购和登陆</title>
+    <link href="https://jeyson325.github.io/2020/%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%8E%A2%E7%B4%A2%E4%B9%8B%E6%97%85%EF%BC%9A%E9%80%89%E8%B4%AD%E5%92%8C%E7%99%BB%E9%99%86.html"/>
+    <id>https://jeyson325.github.io/2020/%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%8E%A2%E7%B4%A2%E4%B9%8B%E6%97%85%EF%BC%9A%E9%80%89%E8%B4%AD%E5%92%8C%E7%99%BB%E9%99%86.html</id>
+    <published>2020-12-28T15:41:33.000Z</published>
+    <updated>2021-01-04T10:00:33.561Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;去年在阿里云上购买了第一台云服务器作为个人学习使用。在这台服务器上，我实践了linux系统操作、mysql、mongodb、docker、jenkins、node等各种好用的技能，受益匪浅。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="技术" scheme="https://jeyson325.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+    
+    <category term="服务器" scheme="https://jeyson325.github.io/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>数据结构&amp;算法：JS封装“栈”结构</title>
+    <link href="https://jeyson325.github.io/2020/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&amp;%E7%AE%97%E6%B3%95%EF%BC%9AJS%E5%B0%81%E8%A3%85%E2%80%9C%E6%A0%88%E2%80%9D%E7%BB%93%E6%9E%84.html"/>
+    <id>https://jeyson325.github.io/2020/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&amp;%E7%AE%97%E6%B3%95%EF%BC%9AJS%E5%B0%81%E8%A3%85%E2%80%9C%E6%A0%88%E2%80%9D%E7%BB%93%E6%9E%84.html</id>
+    <published>2020-12-25T01:08:43.000Z</published>
+    <updated>2021-01-04T10:31:03.828Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;栈是一种特殊的线性表，仅能在线性表的一端操作，栈顶允许操作，栈底不允许操作。栈的特点是：先进后出LIFO(last in first out)，从栈顶放入元素的操作叫入栈，取出元素叫出栈。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="技术" scheme="https://jeyson325.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+    
+    <category term="数据结构&amp;算法" scheme="https://jeyson325.github.io/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E7%AE%97%E6%B3%95/"/>
+    
+  </entry>
   
   <entry>
     <title>html5中播放rtsp流实现监控、直播等方案</title>
@@ -104,7 +142,7 @@
     <link href="https://jeyson325.github.io/2020/%E5%89%8D%E8%A8%80%EF%BC%9A%E6%88%91%E5%B9%B3%E6%B7%A1%E7%94%9F%E6%B4%BB%E7%9A%84%E6%9C%80%E5%90%8E%E7%9B%AE%E5%87%BB%E8%80%85.html"/>
     <id>https://jeyson325.github.io/2020/%E5%89%8D%E8%A8%80%EF%BC%9A%E6%88%91%E5%B9%B3%E6%B7%A1%E7%94%9F%E6%B4%BB%E7%9A%84%E6%9C%80%E5%90%8E%E7%9B%AE%E5%87%BB%E8%80%85.html</id>
     <published>2020-12-12T05:42:03.000Z</published>
-    <updated>2020-12-21T02:15:45.831Z</updated>
+    <updated>2020-12-30T03:14:15.162Z</updated>
     
     
     <summary type="html">&lt;p&gt;&lt;img src=&quot;https://tva1.sinaimg.cn/large/0081Kckwly1gll5kmqrc5j31my0l0q68.jpg&quot; alt=&quot;封面&quot;&gt;&lt;/p&gt;

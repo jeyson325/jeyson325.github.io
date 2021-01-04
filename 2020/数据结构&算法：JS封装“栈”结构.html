@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+
+
+<head>
+  <meta name="baidu-site-verification" content="code-oPJ01CI5CK" />
+  <meta charset="utf-8" />
+   
+  <meta name="keywords" content="生活,代码,博客" />
+   
+  <meta name="description" content="有刃有鱼阮小六的博客" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    数据结构&amp;算法：JS封装“栈”结构 |  有刃有鱼阮小六的博客
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+  
+  
+
+  
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?c9dd61c3db6fe7faa3313d42c0183949";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+<link rel="alternate" href="/atom.xml" title="岛" type="application/atom+xml">
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-数据结构&amp;算法：JS封装“栈”结构"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  数据结构&amp;算法：JS封装“栈”结构
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2020/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&%E7%AE%97%E6%B3%95%EF%BC%9AJS%E5%B0%81%E8%A3%85%E2%80%9C%E6%A0%88%E2%80%9D%E7%BB%93%E6%9E%84.html" class="article-date">
+  <time datetime="2020-12-25T01:08:43.000Z" itemprop="datePublished">2020-12-25</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">1.6k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">6 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>最近在学习数据结构和算法，虽然前端在实际业务开发中直接用到的一般不多，但学习这些能帮助我们理解一些底层知识，优化代码逻辑、提升代码质量，更重要的是对思维的锤炼，帮助我们朝着大前端的方向迈出更扎实的步伐。</p>
+<p>作为一个初涉<strong>数据结构和算法</strong>的萌新，我将多看多练，尽可能的去系统的学习，并通过js来一一实现。写代码，不含糖，搞起搞起。</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwly1glppkimlzuj312g0gytdz.jpg" alt="image-20201216150239461"></p>
+<h3 id="一、【数据结构】栈的介绍"><a href="#一、【数据结构】栈的介绍" class="headerlink" title="一、【数据结构】栈的介绍"></a>一、【数据结构】栈的介绍</h3><blockquote>
+<p>栈是一种特殊的线性表，仅能在线性表的一端操作，栈顶允许操作，栈底不允许操作。栈的特点是：先进后出LIFO(last in first out)，从栈顶放入元素的操作叫入栈，取出元素叫出栈。</p>
+</blockquote>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwly1glze434gj6j30xs0fi0x3.jpg" alt="image-20201225000135502"></p>
+<h3 id="二、JS封装实现一个栈"><a href="#二、JS封装实现一个栈" class="headerlink" title="二、JS封装实现一个栈"></a>二、JS封装实现一个栈</h3><p>js本身提供了数组相关操作的方法，十分方便灵活，那么我们便基于数组来封装一个类，实现简单的栈结构及相关操作。</p>
+<p>思路：</p>
+<ul>
+<li>创建一个类，在构造实例时创建一个数组类型的变量，来存放相关操作数据</li>
+<li>类中提供一些栈相关操作方法和属性</li>
+<li>实例化并测试操作</li>
+</ul>
+<p>封装如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 封装一个栈类</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Stack</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="title">constructor</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.data = [] <span class="comment">// 存放栈数据的变量</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 通过length属性 获取栈的长度</span></span><br><span class="line">  get length () &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.data.length</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 通过isEmpty属性 判断是否空栈</span></span><br><span class="line">  get isEmpty () &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.data.length === <span class="number">0</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 压栈</span></span><br><span class="line">  push (item) &#123;</span><br><span class="line">    <span class="built_in">this</span>.data.push(item)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 出栈</span></span><br><span class="line">  pop () &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.data.pop()</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 清空栈</span></span><br><span class="line">  clear () &#123;</span><br><span class="line">    <span class="built_in">this</span>.data.length = <span class="number">0</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 查看栈顶元素</span></span><br><span class="line">  peek () &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.data[<span class="built_in">this</span>.data.length - <span class="number">1</span>]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>简单的栈结构就封装好了，接下来进行测试：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 实例化并进行相关操作</span></span><br><span class="line"><span class="keyword">const</span> stack = <span class="keyword">new</span> Stack()</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(stack.length)  <span class="comment">// 栈长度，打印结果 0</span></span><br><span class="line"><span class="built_in">console</span>.log(stack.isEmpty) <span class="comment">// 是否空栈 打印结果 true</span></span><br><span class="line"></span><br><span class="line">stack.push(<span class="number">1</span>) <span class="comment">// 将数字1压入栈中</span></span><br><span class="line">stack.push(<span class="number">2</span>) <span class="comment">// 将数字2压入栈中</span></span><br><span class="line">stack.push(<span class="number">3</span>) <span class="comment">// 将数字3压入栈中</span></span><br><span class="line"><span class="built_in">console</span>.log(stack.peek()) <span class="comment">// 获取栈顶元素 打印结果 3</span></span><br><span class="line"></span><br><span class="line">stack.pop() <span class="comment">// 出栈</span></span><br><span class="line"><span class="built_in">console</span>.log(stack.length)  <span class="comment">// 栈长度，打印结果 2</span></span><br><span class="line"><span class="built_in">console</span>.log(stack.isEmpty) <span class="comment">// 是否空栈 打印结果 false</span></span><br><span class="line"></span><br><span class="line">stack.clear()</span><br><span class="line"><span class="built_in">console</span>.log(stack.length)  <span class="comment">// 栈长度，打印结果 0</span></span><br><span class="line"><span class="built_in">console</span>.log(stack.isEmpty) <span class="comment">// 是否空栈 打印结果 true</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="三、栈相关经典题目解法"><a href="#三、栈相关经典题目解法" class="headerlink" title="三、栈相关经典题目解法"></a>三、栈相关经典题目解法</h3><h4 id="1、元素出栈、入栈顺序的合理性。"><a href="#1、元素出栈、入栈顺序的合理性。" class="headerlink" title="1、元素出栈、入栈顺序的合理性。"></a>1、元素出栈、入栈顺序的合理性。</h4><p>题目：入栈顺序是1、2、3、4、5，那么出栈顺序是4、5、3、2、1是否合理？</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 解：是否合理先从出栈顺序入手，我们可以通过实例化一个栈结构来模拟</span></span><br><span class="line"><span class="keyword">const</span> stack = <span class="keyword">new</span> Stack()</span><br><span class="line"><span class="comment">// 第一个出栈是4，那么4必然在栈顶，那么根据入栈顺序，依次如下：</span></span><br><span class="line">stack.push(<span class="number">1</span>)</span><br><span class="line">stack.push(<span class="number">2</span>)</span><br><span class="line">stack.push(<span class="number">3</span>)</span><br><span class="line">stack.push(<span class="number">4</span>)</span><br><span class="line"></span><br><span class="line">stack.pop() <span class="comment">// 出栈 4</span></span><br><span class="line"></span><br><span class="line">stack.push(<span class="number">5</span>)</span><br><span class="line">stack.pop() <span class="comment">// 出栈 5</span></span><br><span class="line"></span><br><span class="line">stack.pop() <span class="comment">// 出栈 3</span></span><br><span class="line">stack.pop() <span class="comment">// 出栈 2</span></span><br><span class="line">stack.pop() <span class="comment">// 出栈 1</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 因此以上出栈顺序是合理的</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="2、通过栈结构来实现进制转换"><a href="#2、通过栈结构来实现进制转换" class="headerlink" title="2、通过栈结构来实现进制转换"></a>2、通过栈结构来实现进制转换</h4><p>题目，实现十进制整数转换为二进制、八进制、十六进制。</p>
+<p>分析：<strong>十进制整数转换为二进制整数采用”除2取余，逆序排列”法。具体做法是：用2整除十进制整数，可以得到一个商和余数；再用2去除商，又会得到一个商和余数，如此进行，直到商为小于1时为止，然后把先得到的余数作为二进制数的低位有效位，后得到的余数作为二进制数的高位有效位，依次排列起来。</strong></p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwly1glzefwxlrgj30ui0e8dj2.jpg" alt="image-20201225001302901"></p>
+<p>转八进制和转十六进制思路同样如此。</p>
+<p>下面通过栈结构来实现：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 十进制整数转换其他进制方法</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param </span>num [Number] 十进制整数</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param </span>base [Number] 要转换的进制；可选有：2-二进制（默认）；8-八进制；16-十六进制</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">const</span> decimalcConversion = <span class="function">(<span class="params">num, base = <span class="number">2</span></span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// 判断要转换的是哪个进制</span></span><br><span class="line">  <span class="keyword">const</span> baseList = [<span class="number">2</span>, <span class="number">8</span>, <span class="number">16</span>]</span><br><span class="line">  <span class="keyword">if</span> (baseList.includes(base)) &#123;</span><br><span class="line">    <span class="comment">// 创建一个栈实例</span></span><br><span class="line">    <span class="keyword">const</span> stack = <span class="keyword">new</span> Stack()</span><br><span class="line">    <span class="comment">// 向栈内压入余数</span></span><br><span class="line">    <span class="keyword">while</span> (num &gt; <span class="number">0</span>) &#123;</span><br><span class="line">      stack.push(num % base)</span><br><span class="line">      num = <span class="built_in">Math</span>.floor(num / base)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 出栈，存放到字符串中</span></span><br><span class="line">    <span class="keyword">let</span> string = <span class="string">&#x27;&#x27;</span></span><br><span class="line">    <span class="keyword">while</span> (!stack.isEmpty) &#123;</span><br><span class="line">      <span class="keyword">let</span> item = stack.pop()</span><br><span class="line">      <span class="comment">// 针对16进制的处理</span></span><br><span class="line">      <span class="keyword">if</span> (item &gt;= <span class="number">10</span>) &#123;</span><br><span class="line">        item = [<span class="string">&#x27;a&#x27;</span>, <span class="string">&#x27;b&#x27;</span>, <span class="string">&#x27;c&#x27;</span>, <span class="string">&#x27;d&#x27;</span>, <span class="string">&#x27;e&#x27;</span>, <span class="string">&#x27;f&#x27;</span>][item - <span class="number">10</span>]</span><br><span class="line">      &#125;</span><br><span class="line">      string += item</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 返回转换后的进制字符串值</span></span><br><span class="line">    <span class="keyword">return</span> string</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">&#x27;请输入正确的进制数&#x27;</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">decimalcConversion(<span class="number">100</span>) <span class="comment">// 二进制 1100100</span></span><br><span class="line">decimalcConversion(<span class="number">100</span>, <span class="number">8</span>) <span class="comment">// 八进制 144</span></span><br><span class="line">decimalcConversion(<span class="number">100</span>, <span class="number">16</span>) <span class="comment">// 十六进制 64</span></span><br><span class="line">decimalcConversion(<span class="number">300</span>) <span class="comment">// 二进制 100101100</span></span><br><span class="line">decimalcConversion(<span class="number">300</span>, <span class="number">8</span>) <span class="comment">// 八进制 454</span></span><br><span class="line">decimalcConversion(<span class="number">300</span>, <span class="number">16</span>) <span class="comment">// 十六进制 12c</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="3、返回栈中元素的最小值"><a href="#3、返回栈中元素的最小值" class="headerlink" title="3、返回栈中元素的最小值"></a>3、返回栈中元素的最小值</h4><p>分析：元素入栈后，要直接从栈中寻找最小值是很困难的，因为栈结构主要就是入栈、出栈两个核心操作，因此要获取最小值，可以通过新建一个数组存放。</p>
+<p><img src="https://tva1.sinaimg.cn/large/0081Kckwly1glzetiyujmj30ui0d6djv.jpg" alt="image-20201225002608310"></p>
+<p>可以在上面封装栈的基础上继承，增加一个存放最小值的数组以及获取最小值的方法。</p>
+<p>代码如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 继承上面封装的栈</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MinStack</span> <span class="keyword">extends</span> <span class="title">Stack</span> </span>&#123;</span><br><span class="line">  <span class="title">constructor</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="built_in">super</span>()</span><br><span class="line">    <span class="built_in">this</span>.minData = [] <span class="comment">// 存放栈中最小值</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 获取栈中最小元素</span></span><br><span class="line">  get minimum () &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.minData[<span class="built_in">this</span>.minData.length - <span class="number">1</span>]</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 重写压栈push方法</span></span><br><span class="line">  push (item) &#123;</span><br><span class="line">    <span class="keyword">let</span> min = <span class="number">0</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">this</span>.data.length === <span class="number">0</span>) &#123;</span><br><span class="line">      <span class="comment">// 第一个元素进来时</span></span><br><span class="line">      min = item</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">// 否则，对栈顶元素和压入元素进行比较，小的进minData</span></span><br><span class="line">      <span class="keyword">const</span> minimum = <span class="built_in">this</span>.minimum</span><br><span class="line">      min = item &lt;= minimum ? item : minimum</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">this</span>.data.push(item)</span><br><span class="line">    <span class="built_in">this</span>.minData.push(min)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 重写出栈pop方法</span></span><br><span class="line">  pop () &#123;</span><br><span class="line">    <span class="built_in">this</span>.minData.pop()</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">this</span>.data.pop()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> stack = <span class="keyword">new</span> MinStack()</span><br><span class="line"></span><br><span class="line">stack.push(<span class="number">2</span>)</span><br><span class="line">stack.push(<span class="number">30</span>)</span><br><span class="line">stack.push(<span class="number">1</span>)</span><br><span class="line">stack.push(<span class="number">88</span>)</span><br><span class="line"><span class="built_in">console</span>.log(stack.minimum) <span class="comment">// 1</span></span><br><span class="line">stack.pop()</span><br><span class="line">stack.pop()</span><br><span class="line"><span class="built_in">console</span>.log(stack.minimum) <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+
+<p>当然，上面的实现主要是基于“栈”结构的特点，提供的一种解决问题的方式，目的是为了锤炼思维的多样性和灵活性。</p>
+<p>实际上由于我们是通过js的数组来模拟封装栈结构的，所以完全可以直接通过操作原始数组来获取最小值：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 封装一个栈类</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Stack</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="title">constructor</span>(<span class="params"></span>)</span> &#123;</span><br><span class="line">    <span class="built_in">this</span>.data = [] <span class="comment">// 存放栈数据的变量</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 获取栈中最小元素</span></span><br><span class="line">  get minimum () &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">Math</span>.min(...this.data)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// 其他属性和方法</span></span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>除了最小值以外，获取栈结构中最大值的写法也同样如此。</p> 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://jeyson325.github.io/2020/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&%E7%AE%97%E6%B3%95%EF%BC%9AJS%E5%B0%81%E8%A3%85%E2%80%9C%E6%A0%88%E2%80%9D%E7%BB%93%E6%9E%84.html" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84-%E7%AE%97%E6%B3%95/" rel="tag">数据结构&算法</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2020/%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%8E%A2%E7%B4%A2%E4%B9%8B%E6%97%85%EF%BC%9A%E9%80%89%E8%B4%AD%E5%92%8C%E7%99%BB%E9%99%86.html" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            服务器探索之旅：选购和登陆
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/html5%E4%B8%AD%E6%92%AD%E6%94%BErtsp%E6%B5%81%E5%AE%9E%E7%8E%B0%E7%9B%91%E6%8E%A7%E3%80%81%E7%9B%B4%E6%92%AD%E7%AD%89%E6%96%B9%E6%A1%88.html" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">html5中播放rtsp流实现监控、直播等方案</div>
+      </a>
+    
+  </nav>
+
+   
+<!-- valine评论 -->
+<div id="vcomments-box">
+  <div id="vcomments"></div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script>
+<script>
+  new Valine({
+    el: "#vcomments",
+    app_id: "MDsEijjo4FndNO2zMicxD9Pm-9Nh9j0Va",
+    app_key: "ITIWeEeo4oqlok7axOOHKon2",
+    path: window.location.pathname,
+    avatar: "monsterid",
+    placeholder: "给我的文章加点评论吧~",
+    recordIP: true,
+  });
+  const infoEle = document.querySelector("#vcomments .info");
+  if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+    infoEle.childNodes.forEach(function (item) {
+      item.parentNode.removeChild(item);
+    });
+  }
+</script>
+<style>
+  #vcomments-box {
+    padding: 5px 30px;
+  }
+
+  @media screen and (max-width: 800px) {
+    #vcomments-box {
+      padding: 5px 0px;
+    }
+  }
+
+  #vcomments-box #vcomments {
+    background-color: #fff;
+  }
+
+  .v .vlist .vcard .vh {
+    padding-right: 20px;
+  }
+
+  .v .vlist .vcard {
+    padding-left: 10px;
+  }
+</style>
+
+ 
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2021
+        <i class="ri-heart-fill heart_icon"></i> 有刃有鱼阮小六
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        由 <a href="https://hexo.io" target="_blank">Hexo</a> 强力驱动
+        <span class="division">|</span>
+        主题 - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+        <li>
+          <a href="https://beian.miit.gov.cn/#/Integrated/index" target="_black" rel="nofollow">皖ICP备2021000001号</a>
+        </li>
+        
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/logo2.png" alt="岛"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/aplayer">音乐歌单</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/update">更新日志</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝奶茶</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.png">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.png">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+<!-- ClickLove -->
+
+
+<script src="/js/clickLove.js"></script>
+
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+
+<link rel="stylesheet" href="/css/clipboard.css">
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+    <div id="music">
+    
+    
+    
+    <iframe frameborder="no" border="1" marginwidth="0" marginheight="0" width="200" height="52"
+        src="//music.163.com/outchain/player?type=2&id=410042763&auto=0&height=32"></iframe>
+</div>
+
+<style>
+    #music {
+        position: fixed;
+        right: 15px;
+        bottom: 0;
+        z-index: 998;
+    }
+</style>
+    
+  </div>
+</body>
+
+</html>
