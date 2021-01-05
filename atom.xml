@@ -6,7 +6,7 @@
   <link href="https://jeyson325.github.io/atom.xml" rel="self"/>
   
   <link href="https://jeyson325.github.io/"/>
-  <updated>2021-01-04T10:00:33.561Z</updated>
+  <updated>2021-01-05T08:59:23.968Z</updated>
   <id>https://jeyson325.github.io/</id>
   
   <author>
@@ -21,10 +21,12 @@
     <link href="https://jeyson325.github.io/2020/%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%8E%A2%E7%B4%A2%E4%B9%8B%E6%97%85%EF%BC%9A%E9%80%89%E8%B4%AD%E5%92%8C%E7%99%BB%E9%99%86.html"/>
     <id>https://jeyson325.github.io/2020/%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%8E%A2%E7%B4%A2%E4%B9%8B%E6%97%85%EF%BC%9A%E9%80%89%E8%B4%AD%E5%92%8C%E7%99%BB%E9%99%86.html</id>
     <published>2020-12-28T15:41:33.000Z</published>
-    <updated>2021-01-04T10:00:33.561Z</updated>
+    <updated>2021-01-05T08:59:23.968Z</updated>
     
     
-    <summary type="html">&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.css&quot;&gt;&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.js&quot; class=&quot;aplayer-secondary-script-marker&quot;&gt;&lt;/script&gt;&lt;script class=&quot;meting-secondary-script-marker&quot; src=&quot;https://cdn.jsdelivr.net/npm/meting@1.1.0/dist/Meting.min.js&quot;&gt;&lt;/script&gt;&lt;p&gt;去年在阿里云上购买了第一台云服务器作为个人学习使用。在这台服务器上，我实践了linux系统操作、mysql、mongodb、docker、jenkins、node等各种好用的技能，受益匪浅。&lt;/p&gt;</summary>
+    <summary type="html">&lt;p&gt;去年在阿里云上购买了第一台云服务器作为个人学习使用。在这台服务器上，我实践了linux系统操作、mysql、mongodb、docker、jenkins、node等各种好用的技能，受益匪浅。&lt;/p&gt;
+&lt;p&gt;可惜当时不知道 &lt;strong&gt;新人专享&lt;/strong&gt; 的优惠福利，只买了1年的有效期，直到续费时看到那个费用才追悔莫及。&lt;/p&gt;
+&lt;p&gt;噫吁嚱，悔乎迟矣！😭&lt;/p&gt;</summary>
     
     
     
@@ -43,7 +45,7 @@
     <updated>2021-01-04T10:31:03.828Z</updated>
     
     
-    <summary type="html">&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.css&quot;&gt;&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.js&quot; class=&quot;aplayer-secondary-script-marker&quot;&gt;&lt;/script&gt;&lt;script class=&quot;meting-secondary-script-marker&quot; src=&quot;https://cdn.jsdelivr.net/npm/meting@1.1.0/dist/Meting.min.js&quot;&gt;&lt;/script&gt;&lt;p&gt;栈是一种特殊的线性表，仅能在线性表的一端操作，栈顶允许操作，栈底不允许操作。栈的特点是：先进后出LIFO(last in first out)，从栈顶放入元素的操作叫入栈，取出元素叫出栈。&lt;/p&gt;</summary>
+    <summary type="html">&lt;p&gt;栈是一种特殊的线性表，仅能在线性表的一端操作，栈顶允许操作，栈底不允许操作。栈的特点是：先进后出LIFO(last in first out)，从栈顶放入元素的操作叫入栈，取出元素叫出栈。&lt;/p&gt;</summary>
     
     
     
@@ -62,7 +64,7 @@
     <updated>2020-12-21T09:30:37.196Z</updated>
     
     
-    <summary type="html">&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.css&quot;&gt;&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.js&quot; class=&quot;aplayer-secondary-script-marker&quot;&gt;&lt;/script&gt;&lt;script class=&quot;meting-secondary-script-marker&quot; src=&quot;https://cdn.jsdelivr.net/npm/meting@1.1.0/dist/Meting.min.js&quot;&gt;&lt;/script&gt;&lt;p&gt;&lt;img src=&quot;https://tva1.sinaimg.cn/large/0081Kckwly1glv87mbthtj31fb0u07wh.jpg&quot; alt=&quot;image-20201221093518005&quot;&gt;&lt;/p&gt;
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;https://tva1.sinaimg.cn/large/0081Kckwly1glv87mbthtj31fb0u07wh.jpg&quot; alt=&quot;image-20201221093518005&quot;&gt;&lt;/p&gt;
 &lt;p&gt;需求：&lt;strong&gt;在浏览器网页上播放建筑工地摄像头监控的画面，如工地出入口通道画面、塔吊可视化，并且可兼容不同型号的摄像头设备&lt;/strong&gt;。&lt;/p&gt;</summary>
     
     
@@ -125,7 +127,7 @@
     <updated>2020-12-15T09:33:27.537Z</updated>
     
     
-    <summary type="html">&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.css&quot;&gt;&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.js&quot; class=&quot;aplayer-secondary-script-marker&quot;&gt;&lt;/script&gt;&lt;script class=&quot;meting-secondary-script-marker&quot; src=&quot;https://cdn.jsdelivr.net/npm/meting@1.1.0/dist/Meting.min.js&quot;&gt;&lt;/script&gt;&lt;p&gt;&lt;img src=&quot;https://tva1.sinaimg.cn/large/006tNbRwly1gai03qz5hkj31240h0whb.jpg&quot; alt=&quot;封面&quot;&gt;&lt;/p&gt;
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;https://tva1.sinaimg.cn/large/006tNbRwly1gai03qz5hkj31240h0whb.jpg&quot; alt=&quot;封面&quot;&gt;&lt;/p&gt;
 &lt;p&gt;之前在进行webpack配置练习过程中遇到了一个坑，花了2个小时才搞定，挺有感触，以记之。&lt;/p&gt;</summary>
     
     
@@ -142,11 +144,11 @@
     <link href="https://jeyson325.github.io/2020/%E5%89%8D%E8%A8%80%EF%BC%9A%E6%88%91%E5%B9%B3%E6%B7%A1%E7%94%9F%E6%B4%BB%E7%9A%84%E6%9C%80%E5%90%8E%E7%9B%AE%E5%87%BB%E8%80%85.html"/>
     <id>https://jeyson325.github.io/2020/%E5%89%8D%E8%A8%80%EF%BC%9A%E6%88%91%E5%B9%B3%E6%B7%A1%E7%94%9F%E6%B4%BB%E7%9A%84%E6%9C%80%E5%90%8E%E7%9B%AE%E5%87%BB%E8%80%85.html</id>
     <published>2020-12-12T05:42:03.000Z</published>
-    <updated>2020-12-30T03:14:15.162Z</updated>
+    <updated>2021-01-05T11:24:36.841Z</updated>
     
     
-    <summary type="html">&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.css&quot;&gt;&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.js&quot; class=&quot;aplayer-secondary-script-marker&quot;&gt;&lt;/script&gt;&lt;script class=&quot;meting-secondary-script-marker&quot; src=&quot;https://cdn.jsdelivr.net/npm/meting@1.1.0/dist/Meting.min.js&quot;&gt;&lt;/script&gt;&lt;p&gt;&lt;img src=&quot;https://tva1.sinaimg.cn/large/0081Kckwly1gll5kmqrc5j31my0l0q68.jpg&quot; alt=&quot;封面&quot;&gt;&lt;/p&gt;
-&lt;p&gt;今年的大部分时间里，我一个人住在距离上班的地方仅10分钟路程的公寓里，每天…&lt;/p&gt;</summary>
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;https://tva1.sinaimg.cn/large/0081Kckwly1gmcx3mbrsfj31og0qcnpe.jpg&quot; alt=&quot;封面&quot;&gt;&lt;/p&gt;
+&lt;p&gt;今年的大部分时间里，我一个人住在距离上班的地方仅10分钟路程的公寓里，每天会经过两个红绿灯，在第二个路口处拐弯…&lt;/p&gt;</summary>
     
     
     

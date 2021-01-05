@@ -114,10 +114,17 @@ var _hmt = _hmt || [];
   
     <div class="article-entry" itemprop="articleBody">
        
-  <h2 id="一、服务器选购"><a href="#一、服务器选购" class="headerlink" title="一、服务器选购"></a>一、服务器选购</h2><p>去年在阿里云上购买了第一台云服务器作为个人学习使用。在这台服务器上，我实践了linux系统操作、mysql、mongodb、docker、jenkins、node等各种好用的技能，受益匪浅。</p>
+  <p>去年在阿里云上购买了第一台云服务器作为个人学习使用。在这台服务器上，我实践了linux系统操作、mysql、mongodb、docker、jenkins、node等各种好用的技能，受益匪浅。</p>
 <p>可惜当时不知道 <strong>新人专享</strong> 的优惠福利，只买了1年的有效期，直到续费时看到那个费用才追悔莫及。</p>
-<p>不过想到除了阿里云之外，我的腾讯云还没注册过，于是果断弃了阿里云的服务器，转移阵地来搞腾讯云。（渣男本渣）</p>
-<p>这一次我选了腾讯云服务器3年的有效期，注册账号后，实名认证。新人第一次购买打骨折，配置是1核2G，系统环境选的是centOS 7.6，因此之后的<strong>所有配置也都是基于centOS 7.6系统环境下</strong>的。</p>
+<p>噫吁嚱，悔乎迟矣！😭</p>
+<a id="more"></a>
+
+<h2 id="一、服务器选购"><a href="#一、服务器选购" class="headerlink" title="一、服务器选购"></a>一、服务器选购</h2><p>阿里云的服务器到期之后，我开始转战腾讯云，因为我的腾讯云还没注册过，可以享受新人优惠。</p>
+<p>这一次果断选了服务器3年的有效期，注册账号后，实名认证。新人第一次购买打骨折，配置是1核2G，系统环境选的是centOS 7.6。因此：</p>
+<blockquote>
+<p><strong>以下所有的配置都是基于centOS 7.6系统环境下</strong>的。</p>
+</blockquote>
+<p>服务器购买成功后，我们先进行第一次登陆。</p>
 <p><img src="https://tva1.sinaimg.cn/large/0081Kckwly1gm2i3blwp7j31wm0rw7es.jpg" alt="image-20201227163551118"></p>
 <p>腾讯云的控制台里选择购买的实例，进去后<strong>重置密码</strong>，然后重启服务器。</p>
 <p>因为云服务器一般均会预装好 <code>ssh</code> 服务，所以可以直接用终端连接：</p>
@@ -229,7 +236,8 @@ var _hmt = _hmt || [];
 <p>修改成功后保存，这样服务器端就有了公钥（公钥要绑定到你的服务器实例上），客户端上就有了私钥，相当于双端互留了电话号码，接着直接连接即可登录了：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ssh <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
 
-<p>注：如果配置了密钥登陆，设置里会默认关闭密码登录。如果你要同时可以密钥登录或者密码登录，重置下实例密码即可。</p> 
+<p>注：如果配置了密钥登陆，设置里会默认关闭密码登录。如果你要同时可以密钥登录或者密码登录，重置下实例密码即可。</p>
+ 
       <!-- reward -->
       
       <div id="reword-out">
@@ -435,7 +443,7 @@ var _hmt = _hmt || [];
 <nav class="navbar">
   
   <div class="logo">
-    <a href="/"><img src="/images/logo2.png" alt="岛"></a>
+    <a href="/"><img src="/images/logo.png" alt="岛"></a>
   </div>
   
   <ul class="nav nav-main">
