@@ -56,13 +56,13 @@
 <p>然后回车，自动跳转到下载页：</p>
 <p><img src="https://tva1.sinaimg.cn/large/008eGmZEly1gmhtapirxwj31od0u0wxo.jpg" alt="image-20210109222640092"></p>
 <p>首次可能要关注个公众号拿个验证码，拿到后就行了，word和pdf格式自选下载。</p>
-<h3 id="2、vip视频资源破解"><a href="#2、vip视频资源破解" class="headerlink" title="2、vip视频资源破解"></a>2、vip视频资源破解</h3><p>在该视频链接地址 https://  后面**加上wn.run/**，然后回车。如下：</p>
+<h3 id="2、vip视频资源破解"><a href="#2、vip视频资源破解" class="headerlink" title="2、vip视频资源破解"></a>2、vip视频资源破解</h3><p>在该视频链接地址 https://  后面 <strong>加上wn.run</strong>，然后回车。如下：</p>
 <p><img src="https://tva1.sinaimg.cn/large/008eGmZEly1gmhu6jzfm0j31wk0oi17i.jpg" alt="image-20210109225717479"></p>
 <p>跳转到这个页面：</p>
 <p><img src="https://tva1.sinaimg.cn/large/008eGmZEly1gmhu2uv84nj31kz0u0gzf.jpg" alt="image-20210109225344123"></p>
 <p>然后这个vip视频就解析出来了：</p>
 <p><img src="https://tva1.sinaimg.cn/large/008eGmZEly1gmhu850zsxj31gz0u0e1z.jpg" alt="image-20210109225848799"></p>
-<p>该方法同样可适用在<strong>手机浏览器</strong>上：</p>
+<p>该方法同样可适用在<strong>手机浏览器</strong>上（但手机端解析效果没有pc端好，因为脚本代码大多数是为PC端写的）：</p>
 <p><img src="https://tva1.sinaimg.cn/large/008eGmZEly1gmhv5yhf07j316x0u0b29.jpg" alt="image-20210109233117697"></p>
 <p><img src="https://tva1.sinaimg.cn/large/008eGmZEly1gmhv6v1jv3j31qf0u0b29.jpg" alt="image-20210109233211260"></p>
 <p>注：<strong>wn.run这个命令可适用于几乎任何网站，针对要解析的网站，它可能会提供视频破解、下载、翻译、网页转pdf等各种功能，相当于把许多功能的脚本进行了汇总</strong>。</p>
@@ -71,7 +71,7 @@
 <p><img src="https://tva1.sinaimg.cn/large/008eGmZEly1gmhvi1w01sj318y0u0gv2.jpg" alt="image-20210109234256547"></p>
 <p>综上，以后<strong>遇到任何想要破解的vip资源，不管是视频还是文档，都可以先通过加 wn.run/ 的方法去试验一下</strong>，虽然不能说100%有效，但是说不定就有效呢。</p>
 <p>以上是最简单直接的资源破解方法，无复杂操作，也无需登录，只要在网址那里输几个字母即可。</p>
-<p><strong>注：该方法仅供技术交流和个人使用，严禁各种商业和不法用途。同时不保证其永久稳定。如有变动，后续再关注并更新。</strong></p>
+<p><strong>注：该方法仅供技术交流和个人使用，严禁各种商业和不法用途。同时不保证其永久稳定。如有变动，后续再关注并更新。另外，我更推荐使用下面的插件破解方式去获取资源。</strong></p>
 <h2 id="二、浏览器插件类"><a href="#二、浏览器插件类" class="headerlink" title="二、浏览器插件类"></a>二、浏览器插件类</h2><h3 id="1、Listen1"><a href="#1、Listen1" class="headerlink" title="1、Listen1"></a>1、Listen1</h3><p>我在2019年的时候，有一段时间特别烦听歌要切换各大音乐平台，因为版权的缘故，经常听一首歌要去网易云、酷狗、qq音乐上找一圈，歌单也变得异常零碎。</p>
 <p>我那时候就想如果能开发一款跨平台音乐播放的应用多好。</p>
 <p>很显然，有这样想法的远不止我一个人，而是很多人。于是我在github上找到了这样一个开源的项目：<strong>Listen1</strong>音乐播放器。</p>
@@ -91,14 +91,39 @@
 <h3 id="2、Tempermonkey（油猴）"><a href="#2、Tempermonkey（油猴）" class="headerlink" title="2、Tempermonkey（油猴）"></a>2、Tempermonkey（油猴）</h3><p>插件对于浏览器来说，就像给老虎插上了翅膀，瞬间让浏览器升了一个档次。</p>
 <p>而在插件领域，你可以没有任何别的插件，但一定要有Tempermonkey（俗称油猴）。</p>
 <p>无他，因为它是综合的用户脚本管理器，就相当于机器猫的那个口袋，里面包罗万象，什么神仙功能都有可能搞出来。</p>
-<p>比如<strong>破解视频的、获取百度文库的、比价的、获取优惠券</strong>的：</p>
+<p>它经过全球各地无数开发者数年的积累，现在其官网已经有一大把的优秀的现成脚本，完全可以满足普通用户的日常应用，比如：<strong>屏蔽网页广告，网盘全速下载，免费观看腾讯、优酷、爱奇艺等各大视频网站VIP电影，免费下载酷狗、腾讯等音乐网站歌曲，免费下载文库文档，领取京东、天猫购物券，购物比价</strong>等等。</p>
 <p><img src="https://tva1.sinaimg.cn/large/008eGmZEly1gmhywtsmfdj30u20u0qc8.jpg" alt="image-20210110014055843"></p>
-<p>还有什么<strong>豆瓣、知网资源下载、学习助手</strong>什么的：</p>
 <p><img src="https://tva1.sinaimg.cn/large/008eGmZEly1gmhz039rwxj30ts0z4k1s.jpg" alt="image-20210110014404532"></p>
 <p>总之，这个插件综合管理了一大堆的神仙功能脚本，只要你到这个广阔的空间中去搜索和选择自己想要的功能，然后一键安装启动即可。</p>
+<p>通过这个插件脚本去<strong>破解视频是最稳定、速度最快、效率最高的</strong>，并且会保持时常更新。</p>
+<p><strong>安装及使用方法</strong>：</p>
 <blockquote>
-<p> 注：想要安装这个插件需要<strong>科学上网</strong>，正常是无法获取的，所以就要介绍下面这个插件了。⬇️</p>
+<p> 以360安全浏览器为例（其他国内大部分浏览器都类似，主要是找拓展程序，如果找不到可以去度娘，或者联系我）</p>
+<p> <strong>1、打开浏览器</strong></p>
+<p> <img src="https://tva1.sinaimg.cn/large/008eGmZEly1gmkygru637j31n60sak8i.jpg" alt="image-20210112154206220"></p>
+<p> <strong>2、进入市场搜索 tampermonkey，然后安装</strong> </p>
+<p> <img src="https://tva1.sinaimg.cn/large/008eGmZEly1gmkyi6cuyxj31di0kqtjd.jpg" alt="image-20210112154329841"></p>
+<p> <strong>3、安装成功后，从库中获取你想要的功能脚本</strong></p>
+<p> <img src="https://tva1.sinaimg.cn/large/008eGmZEly1gmkykmifcmj319i0rqdri.jpg" alt="image-20210112154550941"></p>
+<p> <img src="https://tva1.sinaimg.cn/large/008eGmZEly1gmkyl2renyj31720q6qc5.jpg" alt="image-20210112154616769"></p>
+<p> <img src="https://tva1.sinaimg.cn/large/008eGmZEly1gmkylmwjswj31cs0m2nfu.jpg" alt="image-20210112154648716"></p>
+<p> <strong>4、寻找你需要的功能脚本并安装</strong></p>
+<p> <img src="https://tva1.sinaimg.cn/large/008eGmZEly1gmkynftfh0j31820u01kx.jpg" alt="image-20210112154832407"></p>
+<p> <img src="https://tva1.sinaimg.cn/large/008eGmZEly1gmkyod8osij31bg0quqn5.jpg" alt="image-20210112154926765"></p>
+<p> <strong>5、使用</strong></p>
+<p> <img src="https://tva1.sinaimg.cn/large/008eGmZEly1gmkz3v2ujsj31v90u016p.jpg" alt="image-20210112160419841"></p>
+<p> <img src="https://tva1.sinaimg.cn/large/008eGmZEly1gmkz687a9vj31e40u0gz6.jpg" alt="image-20210112160636204"></p>
+<p> <img src="https://tva1.sinaimg.cn/large/008eGmZEly1gmkz7ol6d9j31f10u0wip.jpg" alt="image-20210112160759999"></p>
 </blockquote>
+<p>因此，<strong>只要你用电脑端，我就建议你安装一下这个插件，一劳永逸，安装完之后你就可以享受各种爽歪歪的功能了。其中好处，懂得人都懂</strong>。</p>
+<p>至于在手机端上去安装这个插件，然后躺在床上看各种vip视频，想法很好，不过目前需要指定的少数几个手机浏览器才支持拓展插件，比如yandex、Kiwi，都是国外的，你懂的，如果你愿意搞，那就执行下面这几步：</p>
+<blockquote>
+<p>1、有梯子，手机能上梯子。</p>
+<p>2、下载kiwi浏览器，去插件市场下载油猴，安装相应的脚本。</p>
+<p>3、因为大多数【油猴脚本】是针对PC端的，因此要在设置里选择“桌面版网站”，然后就能正常使用了。</p>
+</blockquote>
+<p>我基本常年背着一个笔记本电脑，手机端浏览器用的很少，没搞这个。</p>
+<p>至于电脑端，我用的是谷歌浏览器，它要安装这个插件需要<strong>科学上网</strong>，如果你用的也是谷歌，那就要介绍下面这个插件了。⬇️</p>
 <h3 id="3、集装箱"><a href="#3、集装箱" class="headerlink" title="3、集装箱"></a>3、集装箱</h3><p><img src="https://tva1.sinaimg.cn/large/008eGmZEly1gmhz3xavw7j319s0u0qeh.jpg" alt="image-20210110014745528"></p>
 <p>集装箱这个插件想要做的其实和上面的油猴类似，也是一个插件管理一大堆的服务，目前它提供快捷跳转、搜索、生成二维码等功能的右键菜单，当然这不是重点。重点是它提供的<strong>代理功能</strong>。</p>
 <p>也就是通过安装它可以实现部分<strong>科学上网</strong>，然后可以访问谷歌相关应用，比如谷歌搜索，谷歌翻译，打开谷歌网上商店等等。</p>
@@ -110,10 +135,11 @@
 <p><img src="https://tva1.sinaimg.cn/large/008eGmZEly1gmhzj2ty91j30y40hsacl.jpg" alt="image-20210110020219933"></p>
 <p>于是便可以愉快的（部分）科学上网了。</p>
 <p>从浏览器拓展程序中打开谷歌网上商店，然后去下载安装油猴吧。</p>
-<h2 id="三、收藏的网站类"><a href="#三、收藏的网站类" class="headerlink" title="三、收藏的网站类"></a>三、收藏的网站类</h2><p>1、最大资源网：<a href="http://www.zuidazy4.com/">http://www.zuidazy4.com</a></p>
-<pre><code>  天空资源网：http://www.tiankongzy.com/</code></pre>
+<h2 id="三、收藏的网站类"><a href="#三、收藏的网站类" class="headerlink" title="三、收藏的网站类"></a>三、收藏的网站类</h2><p>1、最大资源网：<a href="http://www.zuidazy4.com/">http://www.zuidazy4.com</a> </p>
+<p>   天空资源网：<a href="http://www.tiankongzy.com/">http://www.tiankongzy.com</a></p>
 <blockquote>
-<p>注：如果上面介绍的<code>wn.run/</code> 命令方法获取vip资源失效了，也可到这里来尝试搜索，这里面的新的视频资源很多，且很多平台的vip视频都能搜到，可以观看和下载。</p>
+<p>注：微信端无法打开，要在浏览器中打开。</p>
+<p>如果上面介绍的<code>wn.run/</code> 命令方法获取vip资源失效了，可到这里来尝试搜索，这里面的新的视频资源很多，且很多平台的vip视频都能搜到，可以观看和下载。</p>
 </blockquote>
 <p>2、今日热榜：<a href="https://tophub.today/">https://tophub.today/</a></p>
 <blockquote>
