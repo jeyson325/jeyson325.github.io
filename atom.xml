@@ -6,7 +6,7 @@
   <link href="https://jeyson325.github.io/atom.xml" rel="self"/>
   
   <link href="https://jeyson325.github.io/"/>
-  <updated>2021-01-12T11:51:50.389Z</updated>
+  <updated>2021-01-20T08:50:08.857Z</updated>
   <id>https://jeyson325.github.io/</id>
   
   <author>
@@ -17,11 +17,52 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>Vue中transition过渡组件全掌握</title>
+    <link href="https://jeyson325.github.io/2021/Vue%E4%B8%ADtransition%E8%BF%87%E6%B8%A1%E7%BB%84%E4%BB%B6%E5%85%A8%E6%8E%8C%E6%8F%A1.html"/>
+    <id>https://jeyson325.github.io/2021/Vue%E4%B8%ADtransition%E8%BF%87%E6%B8%A1%E7%BB%84%E4%BB%B6%E5%85%A8%E6%8E%8C%E6%8F%A1.html</id>
+    <published>2021-01-20T08:44:49.000Z</published>
+    <updated>2021-01-20T08:50:08.857Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;&lt;img src=&quot;https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6804a1350b9b4b7cae6fce6803ac6d55~tplv-k3u1fbpfcp-zoom-1.image&quot; alt=&quot;view4&quot;&gt;&lt;/p&gt;
+&lt;p&gt;在冷冰冰的网页上，加上些许过渡或动画，其变化虽小，却能极大的提升页面质感，给人一种顺畅、丝滑的视觉体验。它的实现过程主要是通过css中的&lt;code&gt;transition&lt;/code&gt;和&lt;code&gt;animation&lt;/code&gt;来实现的。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="技术" scheme="https://jeyson325.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+    
+    <category term="Vue" scheme="https://jeyson325.github.io/tags/Vue/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>Vue知识点补缺补漏</title>
+    <link href="https://jeyson325.github.io/2021/Vue%E7%9F%A5%E8%AF%86%E7%82%B9%E8%A1%A5%E7%BC%BA%E8%A1%A5%E6%BC%8F.html"/>
+    <id>https://jeyson325.github.io/2021/Vue%E7%9F%A5%E8%AF%86%E7%82%B9%E8%A1%A5%E7%BC%BA%E8%A1%A5%E6%BC%8F.html</id>
+    <published>2021-01-20T08:44:07.000Z</published>
+    <updated>2021-01-20T08:50:08.862Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;最近重读了一遍vue2.0文档，感触颇深。在经过大量业务实践之后，回过头再读它们，会带着全新的视角去认识和理解。&lt;/p&gt;
+&lt;p&gt;另外在读文档的过程中还发现了一些盲区，有的是以前读文档时没注意一略而过，有的是实际业务开发中用的很少而渐渐忘记了，重读之后，感觉豁然开朗，有一种如汤化雪、水到渠成的舒畅感。&lt;/p&gt;
+&lt;p&gt;于是趁着这个机会，把一些或常用、或生僻的知识点提取出来，以记之。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="技术" scheme="https://jeyson325.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+    
+    <category term="Vue" scheme="https://jeyson325.github.io/tags/Vue/"/>
+    
+  </entry>
+  
+  <entry>
     <title>神仙资源合集</title>
     <link href="https://jeyson325.github.io/2021/%E7%A5%9E%E4%BB%99%E8%B5%84%E6%BA%90%E5%90%88%E9%9B%86.html"/>
     <id>https://jeyson325.github.io/2021/%E7%A5%9E%E4%BB%99%E8%B5%84%E6%BA%90%E5%90%88%E9%9B%86.html</id>
     <published>2021-01-10T12:08:43.000Z</published>
-    <updated>2021-01-12T11:51:50.389Z</updated>
+    <updated>2021-01-20T09:17:08.127Z</updated>
     
     
     <summary type="html">&lt;p&gt;&lt;strong&gt;vip资源破解类&lt;/strong&gt;：如百度文库vip资源下载、各大平台vip视频资源播放和下载。&lt;/p&gt;
@@ -40,7 +81,7 @@
     <link href="https://jeyson325.github.io/2021/%E6%88%91%E7%9A%84%E6%98%B5%E7%A7%B0%E5%92%8Clogo%E8%AF%9E%E7%94%9F%E8%AE%B0.html"/>
     <id>https://jeyson325.github.io/2021/%E6%88%91%E7%9A%84%E6%98%B5%E7%A7%B0%E5%92%8Clogo%E8%AF%9E%E7%94%9F%E8%AE%B0.html</id>
     <published>2021-01-10T12:01:55.000Z</published>
-    <updated>2021-01-10T12:46:17.502Z</updated>
+    <updated>2021-01-20T09:17:08.120Z</updated>
     
     
     <summary type="html">&lt;p&gt;&lt;img src=&quot;https://tva1.sinaimg.cn/large/008eGmZEly1gmisqgsg47j30j208ajsz.jpg&quot; alt=&quot;image-20210110185247734&quot;&gt;&lt;/p&gt;</summary>
@@ -182,7 +223,7 @@
     <link href="https://jeyson325.github.io/2020/%E5%89%8D%E8%A8%80%EF%BC%9A%E6%88%91%E5%B9%B3%E6%B7%A1%E7%94%9F%E6%B4%BB%E7%9A%84%E6%9C%80%E5%90%8E%E7%9B%AE%E5%87%BB%E8%80%85.html"/>
     <id>https://jeyson325.github.io/2020/%E5%89%8D%E8%A8%80%EF%BC%9A%E6%88%91%E5%B9%B3%E6%B7%A1%E7%94%9F%E6%B4%BB%E7%9A%84%E6%9C%80%E5%90%8E%E7%9B%AE%E5%87%BB%E8%80%85.html</id>
     <published>2020-12-12T05:42:03.000Z</published>
-    <updated>2021-01-10T03:26:56.922Z</updated>
+    <updated>2021-01-20T09:17:08.123Z</updated>
     
     
     <summary type="html">&lt;p&gt;&lt;img src=&quot;https://tva1.sinaimg.cn/large/0081Kckwly1gmcx3mbrsfj31og0qcnpe.jpg&quot; alt=&quot;封面&quot;&gt;&lt;/p&gt;
