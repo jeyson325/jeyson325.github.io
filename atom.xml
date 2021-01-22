@@ -44,7 +44,7 @@
     <updated>2021-01-20T08:50:08.862Z</updated>
     
     
-    <summary type="html">&lt;p&gt;最近重读了一遍vue2.0文档，感触颇深。在经过大量业务实践之后，回过头再读它们，会带着全新的视角去认识和理解。&lt;/p&gt;
+    <summary type="html">&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.css&quot;&gt;&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.js&quot; class=&quot;aplayer-secondary-script-marker&quot;&gt;&lt;/script&gt;&lt;script class=&quot;meting-secondary-script-marker&quot; src=&quot;https://cdn.jsdelivr.net/npm/meting@1.1.0/dist/Meting.min.js&quot;&gt;&lt;/script&gt;&lt;p&gt;最近重读了一遍vue2.0文档，感触颇深。在经过大量业务实践之后，回过头再读它们，会带着全新的视角去认识和理解。&lt;/p&gt;
 &lt;p&gt;另外在读文档的过程中还发现了一些盲区，有的是以前读文档时没注意一略而过，有的是实际业务开发中用的很少而渐渐忘记了，重读之后，感觉豁然开朗，有一种如汤化雪、水到渠成的舒畅感。&lt;/p&gt;
 &lt;p&gt;于是趁着这个机会，把一些或常用、或生僻的知识点提取出来，以记之。&lt;/p&gt;</summary>
     
@@ -65,7 +65,7 @@
     <updated>2021-01-22T08:38:50.318Z</updated>
     
     
-    <summary type="html">&lt;p&gt;&lt;strong&gt;vip资源破解类&lt;/strong&gt;：如百度文库vip资源下载、各大平台vip视频资源播放和下载（包括pc端、手机端、电视端）。&lt;/p&gt;
+    <summary type="html">&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.css&quot;&gt;&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.js&quot; class=&quot;aplayer-secondary-script-marker&quot;&gt;&lt;/script&gt;&lt;script class=&quot;meting-secondary-script-marker&quot; src=&quot;https://cdn.jsdelivr.net/npm/meting@1.1.0/dist/Meting.min.js&quot;&gt;&lt;/script&gt;&lt;p&gt;&lt;strong&gt;vip资源破解类&lt;/strong&gt;：如百度文库vip资源下载、各大平台vip视频资源播放和下载（包括pc端、手机端、电视端）。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;浏览器插件类&lt;/strong&gt;：如跨平台音乐播放、神仙功能百宝箱。&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;收藏的网站类&lt;/strong&gt;：一些个人觉得不错的网站。&lt;/p&gt;</summary>
     
@@ -84,7 +84,7 @@
     <updated>2021-01-20T09:17:08.120Z</updated>
     
     
-    <summary type="html">&lt;p&gt;&lt;img src=&quot;https://tva1.sinaimg.cn/large/008eGmZEly1gmisqgsg47j30j208ajsz.jpg&quot; alt=&quot;image-20210110185247734&quot;&gt;&lt;/p&gt;</summary>
+    <summary type="html">&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.css&quot;&gt;&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.js&quot; class=&quot;aplayer-secondary-script-marker&quot;&gt;&lt;/script&gt;&lt;script class=&quot;meting-secondary-script-marker&quot; src=&quot;https://cdn.jsdelivr.net/npm/meting@1.1.0/dist/Meting.min.js&quot;&gt;&lt;/script&gt;&lt;p&gt;&lt;img src=&quot;https://tva1.sinaimg.cn/large/008eGmZEly1gmisqgsg47j30j208ajsz.jpg&quot; alt=&quot;image-20210110185247734&quot;&gt;&lt;/p&gt;</summary>
     
     
     
@@ -124,7 +124,7 @@
     <updated>2021-01-04T10:31:03.828Z</updated>
     
     
-    <summary type="html">&lt;p&gt;栈是一种特殊的线性表，仅能在线性表的一端操作，栈顶允许操作，栈底不允许操作。栈的特点是：先进后出LIFO(last in first out)，从栈顶放入元素的操作叫入栈，取出元素叫出栈。&lt;/p&gt;</summary>
+    <summary type="html">&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.css&quot;&gt;&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.js&quot; class=&quot;aplayer-secondary-script-marker&quot;&gt;&lt;/script&gt;&lt;script class=&quot;meting-secondary-script-marker&quot; src=&quot;https://cdn.jsdelivr.net/npm/meting@1.1.0/dist/Meting.min.js&quot;&gt;&lt;/script&gt;&lt;p&gt;栈是一种特殊的线性表，仅能在线性表的一端操作，栈顶允许操作，栈底不允许操作。栈的特点是：先进后出LIFO(last in first out)，从栈顶放入元素的操作叫入栈，取出元素叫出栈。&lt;/p&gt;</summary>
     
     
     
@@ -143,7 +143,7 @@
     <updated>2020-12-21T09:30:37.196Z</updated>
     
     
-    <summary type="html">&lt;p&gt;&lt;img src=&quot;https://tva1.sinaimg.cn/large/0081Kckwly1glv87mbthtj31fb0u07wh.jpg&quot; alt=&quot;image-20201221093518005&quot;&gt;&lt;/p&gt;
+    <summary type="html">&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.css&quot;&gt;&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.js&quot; class=&quot;aplayer-secondary-script-marker&quot;&gt;&lt;/script&gt;&lt;script class=&quot;meting-secondary-script-marker&quot; src=&quot;https://cdn.jsdelivr.net/npm/meting@1.1.0/dist/Meting.min.js&quot;&gt;&lt;/script&gt;&lt;p&gt;&lt;img src=&quot;https://tva1.sinaimg.cn/large/0081Kckwly1glv87mbthtj31fb0u07wh.jpg&quot; alt=&quot;image-20201221093518005&quot;&gt;&lt;/p&gt;
 &lt;p&gt;需求：&lt;strong&gt;在浏览器网页上播放建筑工地摄像头监控的画面，如工地出入口通道画面、塔吊可视化，并且可兼容不同型号的摄像头设备&lt;/strong&gt;。&lt;/p&gt;</summary>
     
     
@@ -206,7 +206,7 @@
     <updated>2020-12-15T09:33:27.537Z</updated>
     
     
-    <summary type="html">&lt;p&gt;&lt;img src=&quot;https://tva1.sinaimg.cn/large/006tNbRwly1gai03qz5hkj31240h0whb.jpg&quot; alt=&quot;封面&quot;&gt;&lt;/p&gt;
+    <summary type="html">&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.css&quot;&gt;&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.js&quot; class=&quot;aplayer-secondary-script-marker&quot;&gt;&lt;/script&gt;&lt;script class=&quot;meting-secondary-script-marker&quot; src=&quot;https://cdn.jsdelivr.net/npm/meting@1.1.0/dist/Meting.min.js&quot;&gt;&lt;/script&gt;&lt;p&gt;&lt;img src=&quot;https://tva1.sinaimg.cn/large/006tNbRwly1gai03qz5hkj31240h0whb.jpg&quot; alt=&quot;封面&quot;&gt;&lt;/p&gt;
 &lt;p&gt;之前在进行webpack配置练习过程中遇到了一个坑，花了2个小时才搞定，挺有感触，以记之。&lt;/p&gt;</summary>
     
     
@@ -226,7 +226,7 @@
     <updated>2021-01-20T09:17:08.123Z</updated>
     
     
-    <summary type="html">&lt;p&gt;&lt;img src=&quot;https://tva1.sinaimg.cn/large/0081Kckwly1gmcx3mbrsfj31og0qcnpe.jpg&quot; alt=&quot;封面&quot;&gt;&lt;/p&gt;
+    <summary type="html">&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.css&quot;&gt;&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.js&quot; class=&quot;aplayer-secondary-script-marker&quot;&gt;&lt;/script&gt;&lt;script class=&quot;meting-secondary-script-marker&quot; src=&quot;https://cdn.jsdelivr.net/npm/meting@1.1.0/dist/Meting.min.js&quot;&gt;&lt;/script&gt;&lt;p&gt;&lt;img src=&quot;https://tva1.sinaimg.cn/large/0081Kckwly1gmcx3mbrsfj31og0qcnpe.jpg&quot; alt=&quot;封面&quot;&gt;&lt;/p&gt;
 &lt;p&gt;今年的大部分时间里，我一个人住在距离上班的地方仅10分钟路程的公寓里，每天会经过两个红绿灯，在第二个路口处拐弯…&lt;/p&gt;</summary>
     
     
