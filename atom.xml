@@ -6,7 +6,7 @@
   <link href="https://jeyson325.github.io/atom.xml" rel="self"/>
   
   <link href="https://jeyson325.github.io/"/>
-  <updated>2021-01-28T17:38:07.429Z</updated>
+  <updated>2021-01-29T08:37:56.157Z</updated>
   <id>https://jeyson325.github.io/</id>
   
   <author>
@@ -17,11 +17,31 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>docker常用命令汇总</title>
+    <link href="https://jeyson325.github.io/2021/docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%B1%87%E6%80%BB.html"/>
+    <id>https://jeyson325.github.io/2021/docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%B1%87%E6%80%BB.html</id>
+    <published>2021-01-29T08:34:15.000Z</published>
+    <updated>2021-01-29T08:37:56.157Z</updated>
+    
+    
+    <summary type="html">&lt;p&gt;在服务器上我钟爱docker服务，真香。&lt;/p&gt;
+&lt;p&gt;以下是我&lt;strong&gt;基于CentOS系统&lt;/strong&gt;对它进行安装、管理、常用命令的相关笔记汇总。&lt;/p&gt;</summary>
+    
+    
+    
+    <category term="技术" scheme="https://jeyson325.github.io/categories/%E6%8A%80%E6%9C%AF/"/>
+    
+    
+    <category term="服务器" scheme="https://jeyson325.github.io/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/"/>
+    
+  </entry>
+  
+  <entry>
     <title>《海子诗集》读书笔记</title>
     <link href="https://jeyson325.github.io/2021/%E3%80%8A%E6%B5%B7%E5%AD%90%E8%AF%97%E9%9B%86%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html"/>
     <id>https://jeyson325.github.io/2021/%E3%80%8A%E6%B5%B7%E5%AD%90%E8%AF%97%E9%9B%86%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html</id>
     <published>2021-01-28T15:48:46.000Z</published>
-    <updated>2021-01-28T17:38:07.429Z</updated>
+    <updated>2021-01-29T03:54:32.865Z</updated>
     
     
     <summary type="html">&lt;p&gt;&lt;img src=&quot;https://tva1.sinaimg.cn/large/008eGmZEly1gn0bndt0j2j31ci0u07wh.jpg&quot; alt=&quot;image-20210125224320542&quot;&gt;&lt;/p&gt;

@@ -43,12 +43,150 @@
       </categories>
   </entry>
   <entry>
+    <title>docker常用命令汇总</title>
+    <url>/2021/docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%B1%87%E6%80%BB.html</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="https://cdn.jsdelivr.net/npm/meting@1.1.0/dist/Meting.min.js"></script><p>在服务器上我钟爱docker服务，真香。</p>
+<p>以下是我<strong>基于CentOS系统</strong>对它进行安装、管理、常用命令的相关笔记汇总。</p>
+<a id="more"></a>
+
+<h2 id="一、安装docker"><a href="#一、安装docker" class="headerlink" title="一、安装docker"></a>一、安装docker</h2><p>各个系统的安装方法官网上有详细的说明，这里是<a href="https://docs.docker.com/engine/install/centos/">CentOS系统的安装方法</a></p>
+<p>安装过程简单的介绍如下：</p>
+<h3 id="1、先删除旧的版本（确定没有可跳过）"><a href="#1、先删除旧的版本（确定没有可跳过）" class="headerlink" title="1、先删除旧的版本（确定没有可跳过）"></a>1、先删除旧的版本（确定没有可跳过）</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo yum remove docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-engine</span><br></pre></td></tr></table></figure>
+
+<h3 id="2、安装相关依赖，设置存储库"><a href="#2、安装相关依赖，设置存储库" class="headerlink" title="2、安装相关依赖，设置存储库"></a>2、安装相关依赖，设置存储库</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo yum install -y yum-utils</span><br><span class="line"></span><br><span class="line">sudo yum-config-manager \</span><br><span class="line">    --add-repo \</span><br><span class="line">    https://download.docker.com/linux/centos/docker-ce.repo</span><br></pre></td></tr></table></figure>
+
+<h3 id="3、安装最新的稳定版本"><a href="#3、安装最新的稳定版本" class="headerlink" title="3、安装最新的稳定版本"></a>3、安装最新的稳定版本</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">sudo yum install docker-ce docker-ce-cli containerd.io</span><br></pre></td></tr></table></figure>
+
+<p>如果要选择指定的安装版本，先查看可安装的稳定版本列表：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum list docker-ce --showduplicates | sort -r</span><br><span class="line"></span><br><span class="line">docker-ce.x86_64  3:18.09.1-3.el7                     docker-ce-stable</span><br><span class="line">docker-ce.x86_64  3:18.09.0-3.el7                     docker-ce-stable</span><br><span class="line">docker-ce.x86_64  18.06.1.ce-3.el7                    docker-ce-stable</span><br><span class="line">docker-ce.x86_64  18.06.0.ce-3.el7                    docker-ce-stable</span><br></pre></td></tr></table></figure>
+
+<p>然后选择其中一个版本安装</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo yum install docker-ce-&lt;VERSION_STRING&gt; docker-ce-cli-&lt;VERSION_STRING&gt; containerd.io</span><br><span class="line"><span class="comment"># 比如要安装18.06.1这个版本，就执行这个命令</span></span><br><span class="line">sudo yum install docker-ce-18.06.1 docker-ce-cli-18.06.1 containerd.io</span><br></pre></td></tr></table></figure>
+
+<h3 id="4、启动docker服务并测试"><a href="#4、启动docker服务并测试" class="headerlink" title="4、启动docker服务并测试"></a>4、启动docker服务并测试</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo systemctl start docker</span><br><span class="line"></span><br><span class="line"><span class="comment"># 用hello-world测试下</span></span><br><span class="line">sudo docker run hello-world</span><br><span class="line">Unable to find image <span class="string">&#x27;hello-world:latest&#x27;</span> locally</span><br><span class="line">latest: Pulling from library/hello-world</span><br><span class="line">1b930d010525: Pull complete</span><br><span class="line">Digest: sha256:2557e3c07ed1e38f26e389462d03ed943586f744621577a99efb77324b0fe535</span><br><span class="line">Status: Downloaded newer image <span class="keyword">for</span> hello-world:latest</span><br><span class="line"></span><br><span class="line">Hello from Docker!</span><br><span class="line">This message shows that your installation appears to be working correctly.</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>如果看到上面的提示，说明Docker已经成功安装并运行了了。</p>
+<p><img src="https://tva1.sinaimg.cn/large/008eGmZEly1gn4n6mjs6jj31ls0ognh5.jpg" alt="image-20210129162438346"></p>
+<h2 id="二、docker常用命令"><a href="#二、docker常用命令" class="headerlink" title="二、docker常用命令"></a>二、docker常用命令</h2><h3 id="1、镜像相关命令"><a href="#1、镜像相关命令" class="headerlink" title="1、镜像相关命令"></a>1、镜像相关命令</h3><ul>
+<li><p>列出本地镜像</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker images [Options]</span><br><span class="line"></span><br><span class="line"><span class="comment"># Options</span></span><br><span class="line"><span class="comment"># -a: 列出所有镜像</span></span><br><span class="line"><span class="comment"># -q :只显示镜像ID</span></span><br><span class="line"><span class="comment"># -f: 过滤显示满足条件的镜像</span></span><br><span class="line"></span><br><span class="line">docker images -f dangling=<span class="literal">true</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 把那些虚悬镜像列出来，这类镜像已经是没用的了，可以用下面命令删除</span></span><br><span class="line">docker rmi $(docker images -q -f dangling-true)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>删除本地镜像</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker rmi hello-world</span><br><span class="line"></span><br><span class="line"><span class="comment"># docker rmi [Options] &lt;镜像名&gt;</span></span><br><span class="line"><span class="comment"># -f: 强制删除</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>docker仓库</p>
+<p>目前 Docker 官方维护了一个公共仓库 <a href="https://hub.docker.com/">Docker Hub</a>，大部分需求都可以通过在 Docker Hub 中直接下载镜像来实现。</p>
+<p>先在 <a href="https://hub.docker.com/">https://hub.docker.com</a> 免费注册一个 Docker 账号。</p>
+<ul>
+<li><p>登录和退出</p>
+<p>登录需要输入用户名和密码，登录成功后，我们就可以从 docker hub 上拉取自己账号下的全部镜像。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">docker login -u 用户名 -p 密码</span><br><span class="line">docker logout</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>推送镜像到仓库</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker tag ubuntu:18.04 username/ubuntu:18.04</span><br><span class="line">docker images</span><br><span class="line">docker push username/ubuntu:18.04</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>从仓库中寻找镜像</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker search httpd</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>从仓库中拉取镜像下来</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker pull httpd</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建一个新的镜像</p>
+<ul>
+<li><p>从容器中创建一个新的镜像</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker commit -a <span class="string">&quot;runoob.com&quot;</span> -m <span class="string">&quot;my apache&quot;</span> a404c6c174a2  mymysql:v1</span><br><span class="line"><span class="comment"># 将容器a404c6c174a2 保存为新的镜像,并添加提交人信息和说明信息。</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用Dockerfile文件创建新的镜像</p>
+<p>Dockerfile 是一个用来构建镜像的文本文件，文本内容包含了一条条构建镜像所需的指令和说明。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># build stage</span></span><br><span class="line"><span class="comment"># 基于node10版本的环境</span></span><br><span class="line">FROM node:10 as build-stage</span><br><span class="line"></span><br><span class="line"><span class="comment"># maintainer是指谁在维护这个项目</span></span><br><span class="line">LABEL maintainer=ljclucky@163.com</span><br><span class="line"></span><br><span class="line"> <span class="comment"># 创建一个工作目录</span></span><br><span class="line"> WORKDIR /app</span><br><span class="line"> </span><br><span class="line"> <span class="comment"># 把当前项目中的所有文件复制到镜像中来</span></span><br><span class="line"> <span class="comment"># 注：通过.dockerignore文件忽略不需要复制的文件</span></span><br><span class="line"> COPY . .</span><br><span class="line"> </span><br><span class="line"> <span class="comment"># 安装依赖 </span></span><br><span class="line"> <span class="comment">## 可以把npm换成yarn 并增加淘宝的镜像源</span></span><br><span class="line"> <span class="comment"># RUM yarn install --registry=https://registry.npm.taobao.org</span></span><br><span class="line"> RUN npm install</span><br><span class="line"> </span><br><span class="line"> <span class="comment"># 运行打包 生成dist文件夹</span></span><br><span class="line"> RUN npm run build</span><br><span class="line"> </span><br><span class="line"> <span class="comment"># production stage</span></span><br><span class="line"> <span class="comment"># 生产部署环节，基于nginx稳定版环境</span></span><br><span class="line"> FROM nginx:stable-alpine as production-stage</span><br><span class="line"> <span class="comment"># 复制上面打包后项目目录里dist文件夹到 nginx主页html下</span></span><br><span class="line"> COPY --from=build-stage /app/dist /usr/share/nginx/html</span><br><span class="line"> <span class="comment"># 暴露80端口</span></span><br><span class="line"> EXPOSE 80</span><br><span class="line"> <span class="comment"># 把nginx运行起来</span></span><br><span class="line"> CMD [<span class="string">&quot;nginx&quot;</span>, <span class="string">&quot;-g&quot;</span>, <span class="string">&quot;daemon off;&quot;</span>]</span><br></pre></td></tr></table></figure>
+
+<p>然后通过命令运行这个Dockerfile文件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker build -t web:1.0 .</span><br><span class="line"><span class="comment"># -t 打tag  . 指的是当前目录下的Dockerfile文件  </span></span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="2、容器相关命令"><a href="#2、容器相关命令" class="headerlink" title="2、容器相关命令"></a>2、容器相关命令</h3><ul>
+<li><p>查看进程和日志服务</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker ps  // 查看当前运行的进程</span><br><span class="line">docker ps -a  // 查看所有进程 包括停止的</span><br><span class="line"></span><br><span class="line"><span class="comment"># -a: 列出所有进程</span></span><br><span class="line"><span class="comment"># -s: 显示总的文件大小。</span></span><br><span class="line"></span><br><span class="line">docker logs -f mysql  // -f 持续打印 输出容器日志信息</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>运行</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run [OPTIONS] IMAGE [COMMAND] [ARG...]</span><br></pre></td></tr></table></figure>
+
+<p><code>docker run 一个镜像</code>，如果找不到该镜像，就回去docker hub仓库拉取下来</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run -itd --name ubuntu-test ubuntu</span><br><span class="line"><span class="comment"># -i: 以交互模式运行容器，通常与 -t 同时使用</span></span><br><span class="line"><span class="comment"># -t: 为容器重新分配一个伪输入终端，通常与 -i 同时使用</span></span><br><span class="line"><span class="comment"># -d: 挂在后台运行，并返回容器ID</span></span><br><span class="line"><span class="comment"># --name: 为容器指定一个自定义名称</span></span><br><span class="line"></span><br><span class="line">docker run --name some-mysql -e MYSQL_ROOT_PASSWORD=123456 -p 10022:3306 -d mysql:latest</span><br><span class="line"><span class="comment"># -e: 设置环境变量</span></span><br><span class="line"><span class="comment"># -p: 端口映射，外部端口映射到容器内端口</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>停止</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker stop &lt;容器 ID或名字&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动已停止运行的容器</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker start &lt;容器 ID或名字&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重启容器</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker restart &lt;容器 ID或名字&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>删除容器</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker rm &lt;容器 ID或名字&gt;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 注：如果docker在运行中，不能删除，要先停止之后才能删除</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>进入容器内操作</p>
+<p>在使用 <strong>-d</strong> 参数时，容器启动后会进入后台。此时想要进入容器，可以通过以下指令进入：</p>
+<ul>
+<li><p>docker attach</p>
+</li>
+<li><p><strong>docker exec</strong>：推荐使用 docker exec 命令，因为它退出容器终端，不会导致容器的停止。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker <span class="built_in">exec</span> [OPTIONS] CONTAINER COMMAND [ARG...]</span><br><span class="line"></span><br><span class="line">docker <span class="built_in">exec</span> -it 243c32535da7 /bin/bash</span><br><span class="line">docker <span class="built_in">exec</span> -it 1e33b26152e1 /bin/sh</span><br><span class="line"><span class="comment"># or docker exec -it 1e33b26152e1 bash</span></span><br><span class="line"><span class="comment"># or docker exec -it 1e33b26152e1 sh</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>容器与主机之间的数据拷贝</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 将主机/www/runoob目录拷贝到容器96f7f14e99ab的/www目录下</span></span><br><span class="line">docker cp /www/runoob 96f7f14e99ab:/www/</span><br><span class="line"></span><br><span class="line"><span class="comment"># 将容器96f7f14e99ab的/www目录拷贝到主机的/tmp目录中</span></span><br><span class="line">docker cp 96f7f14e99ab:/www /tmp/</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<h2 id="三、docker-compose工具"><a href="#三、docker-compose工具" class="headerlink" title="三、docker-compose工具"></a>三、docker-compose工具</h2><p>Compose是一个<code>批量</code>工具，用于运行与管理多个<code>docker</code>容器。使用 YML 文件来配置应用程序需要的所有服务。然后，使用一个命令，就可以从 YML 文件配置中创建并启动所有服务。</p>
+<p>Compose 使用的三个步骤：</p>
+<ul>
+<li>使用 Dockerfile文件 定义应用程序的环境。</li>
+<li>使用 docker-compose.yml文件 定义构成应用程序的服务，这样它们可以在隔离环境中一起运行。</li>
+<li>最后，执行 docker-compose up 命令来启动并运行整个应用程序。</li>
+</ul>
+<h3 id="1、安装"><a href="#1、安装" class="headerlink" title="1、安装"></a>1、安装</h3><p>（详见官网 <a href="https://docs.docker.com/compose/install/%EF%BC%89">https://docs.docker.com/compose/install/）</a></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 下载docker-compose</span></span><br><span class="line">sudo curl -L <span class="string">&quot;https://github.com/docker/compose/releases/download/1.28.2/docker-compose-<span class="subst">$(uname -s)</span>-<span class="subst">$(uname -m)</span>&quot;</span> -o /usr/<span class="built_in">local</span>/bin/docker-compose</span><br><span class="line"></span><br><span class="line"><span class="comment"># 给予执行权限</span></span><br><span class="line">sudo chmod +x /usr/<span class="built_in">local</span>/bin/docker-compose</span><br><span class="line"></span><br><span class="line"><span class="comment"># 测试命令</span></span><br><span class="line">docker-compose --version</span><br></pre></td></tr></table></figure>
+
+<h3 id="2、使用"><a href="#2、使用" class="headerlink" title="2、使用"></a>2、使用</h3><p>docker-compose.yml 的配置案例如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">version: <span class="string">&#x27;3&#x27;</span></span><br><span class="line">services:</span><br><span class="line">  jenkins:</span><br><span class="line">    container_name: <span class="string">&#x27;jenkins&#x27;</span></span><br><span class="line">    image: jenkins/jenkins:lts</span><br><span class="line">    restart: always</span><br><span class="line">    user: jenkins:994</span><br><span class="line">    ports:</span><br><span class="line">    - <span class="string">&quot;10050:8080&quot;</span></span><br><span class="line">    - <span class="string">&quot;50000:50000&quot;</span></span><br><span class="line">    - <span class="string">&quot;10051:10051&quot;</span></span><br><span class="line">    volumes:</span><br><span class="line">    - /srv/jenkins/data:/var/jenkins_home</span><br><span class="line">    - /usr/bin/docker:/usr/bin/docker</span><br><span class="line">    - /var/run/docker.sock:/var/run/docker.sock</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>启动程序</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker-compose up</span><br><span class="line">docker-compose up -d    // -d 在后台执行该服务</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>停止程序</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker-compose stop</span><br><span class="line">docker-compose rm</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>技术</category>
+      </categories>
+      <tags>
+        <tag>服务器</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>《海子诗集》读书笔记</title>
     <url>/2021/%E3%80%8A%E6%B5%B7%E5%AD%90%E8%AF%97%E9%9B%86%E3%80%8B%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0.html</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="https://cdn.jsdelivr.net/npm/meting@1.1.0/dist/Meting.min.js"></script><p><img src="https://tva1.sinaimg.cn/large/008eGmZEly1gn0bndt0j2j31ci0u07wh.jpg" alt="image-20210125224320542"></p>
 <p>11月底的时候在图书馆借了两本书，分别是《海子诗集》和《海子传》。</p>
 <p>每天抽时间看一点，断断续续看了2个月才全部看完。</p>
-<p>我是先看的《海子传》，要理解作品，自然得先从他成长的环境和时代背景开始了解。</p>
+<p>我是先看《海子传》的，要理解作品，自然得先从他成长的环境和时代背景开始了解。</p>
 <p>海子生于安庆市怀宁县查家湾，父母是上个世纪典型的中国式农民，大半辈子都把汗水洒在庄稼里。海子的母亲在年轻时经历了家破人亡的痛苦，父亲是个沉默寡言的人，靠种地、做裁缝养活一家老幼。海子便在这样一个贫穷的小村庄中渐渐长大了。</p>
 <blockquote>
 <p>《村庄》</p>
@@ -135,7 +273,7 @@
 <p>父母长辈把我养大，供我读书，长大后我却与他们成为活在两个世界的人，每年过年回家，听爷爷说他过去的日子，我常常无动于衷，我无法融入他的世界，他也无法理解我的悲欢，唯有一种简单的朴素的关怀在中间维持。</p>
 <p>我渴望能靠自己的才华和努力去获取更好的生活，但是一步步走来，却步履蹒跚、生活笨拙。</p>
 <p>我单纯甚至幼稚的理解着这个世界，逃避与人的沟通，渐渐活在自己的岛上。</p>
-<p>然而谁不憧憬着做一个自由而幸福的人呢？</p>
+<p>谁不憧憬着做一个自由而幸福的人呢？</p>
 <blockquote>
 <p>从明天起，做一个幸福的人</p>
 <p>喂马，劈柴，周游世界</p>
@@ -156,21 +294,20 @@
 <p>愿你在尘世获得幸福</p>
 <p>我只愿面朝大海，春暖花开</p>
 </blockquote>
-<p>马、柴、沾着水珠的粮食和蔬菜，这是海子心中的幸福的生活，也是每一个陷入现实沼泽的游子向往的生活。</p>
-<p>我爱这清澈如水的文字，爱一切照映幸福的事物，但是我亦为写下这些文字的海子感到浓郁的悲伤——“从明天起”，所以今天呢？</p>
+<p>马匹、木柴、沾着水珠的粮食和蔬菜，这是海子心中的幸福的生活，也是每一个陷入现实沼泽的游子向往的生活。</p>
+<p>我爱这清澈如水的文字，爱一切照映幸福的事物，但是我亦为写下这些文字的海子感到深深的悲伤——“从明天起”，所以今天呢？</p>
 <p>海子在一生最灿烂的年纪却活在自我痛苦和流浪之中，他把幸福生活寄托在了想象之中，这到底不是我所追求的。</p>
 <p>我佩服他自杀的勇气，亦轻视他作为一个男子汉的担当。海子死后，苦的是他的母亲，那位农村的老母亲，几乎疯了，见人就下跪……</p>
 <p>鲁迅曾说，不要为了一己小小的悲欢，而忘了整个世界。</p>
-<p>放下一些没必要的虚荣、名利、执念，去站在一个更高的位置俯瞰世界，所有困难都将会烟消云散。生死之外，皆是小事，这是我现在的观点，也是我对抗一切艰难困苦的法宝。</p>
-<p>《海子诗集》读完了，我喜欢的诗篇大概有10来首，也就是一两百行的字，其他晦涩难懂、悲观抑郁、鲜血淋漓的部分我是不爱读的，并且我一直认为有些诗仅仅是作者的私事，旁人没必要去深入曲解它。看自己喜欢的，从中汲取到一些力量，这就足够了。</p>
-<p>海子自杀后不久，中国迎来了改革开放，人们以轻快的步伐迎接消费时代的来临。</p>
-<p>生活条件渐渐改善，而文学则开始退出社会主流，不再是人人追求的白月光，也不再有大批的年轻人夜以继日的读诗写作，它渐渐退至社会边缘，成为一小部分人的精神寄托。</p>
-<p>这是好事，我觉得文学本就不该成为社会的主流，他应该是成为基础教育的一部分，也成为人们自由选择的一个方向。让喜欢的人去喜欢，让无兴趣的去做他感兴趣的，幸福生活该是自己去掌握。</p>
-<p>海子在人生最后的一首诗《春天，十个海子》中写道：</p>
+<p>放下一些没必要的虚荣、名利、执念，去站在一个更高的位置俯瞰世界，所有困难都将会烟消云散。生死之外，皆是小事，这是我现在的观点，也是我对抗一切现实苦难的法宝。</p>
+<p>《海子诗集》读完了，我喜欢的诗篇大概有10来首，也就是一两百行的字，其他晦涩难懂、悲观抑郁、鲜血淋漓的部分我是不爱读的，并且我一直认为有些诗仅仅是作者的私事，旁人没必要去深入曲解它。看自己喜欢的，从中汲取到一些力量，便已足够。</p>
+<p>海子自杀后不久，中国迎来了改革开放，人们以轻快的步伐迎接消费时代的来临。生活条件渐渐改善，而文学则开始退出社会主流，不再是人人追求的白月光，也不再有大批的年轻人夜以继日的读诗写作，它渐渐退至社会边缘，成为一小部分人的精神寄托。</p>
+<p>这是好事，我觉得文学本就不该成为社会的主流，他应该是成为基础教育的一部分，也成为人们自由选择的一个方向。让喜欢的人去喜欢，让无兴趣的去做他感兴趣的，幸福生活应该是自己去掌握。</p>
+<p>海子在人生的最后一首诗《春天，十个海子》中写道：</p>
 <p><strong>春天，十个海子全部复活</strong></p>
 <br/>
 
-<p><font color="#999999">—— 2021年1月28日晚11点  春天来临之前</font></p>]]></content>
+<p><font color="#999999">—— 2021年1月28日晚  春天来临之前</font></p>]]></content>
       <categories>
         <category>写作</category>
       </categories>
