@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+
+
+<head>
+  <meta name="baidu-site-verification" content="code-oPJ01CI5CK" />
+  <meta charset="utf-8" />
+   
+  <meta name="keywords" content="生活,代码,博客" />
+   
+  <meta name="description" content="有刃有鱼阮小六的博客" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    webpack打包koa项目配置解析 |  有刃有鱼阮小六的博客
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/logo.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+  
+  
+
+  
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?7bcaf5b5f4d25a43d3da737ce02caec9";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+<link rel="alternate" href="/atom.xml" title="岛" type="application/atom+xml">
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-webpack打包koa项目配置解析"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  webpack打包koa项目配置解析
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2021/webpack%E6%89%93%E5%8C%85koa%E9%A1%B9%E7%9B%AE%E9%85%8D%E7%BD%AE%E8%A7%A3%E6%9E%90.html" class="article-date">
+  <time datetime="2021-02-04T02:57:44.000Z" itemprop="datePublished">2021-02-04</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">4.3k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">18 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p>以前刚接触webpack的时候，我对它繁琐复杂的配置一个头两个大，后来项目渐渐做的多了，懂得多了，就渐渐熟悉了，而且也深深的理解了它的好处。</p>
+<p>不管是做前端项目，还是用node做后端项目，只要和js相关的，都可以用webpack辅助构建，它可以提供es6语法的支持、开发热更新、部署代码压缩、对各种资源文件的处理……等等许多功能。</p>
+<p>下面介绍在node框架koa开发的项目中，如何进行webpack配置。</p>
+<h2 id="一、新建koa项目"><a href="#一、新建koa项目" class="headerlink" title="一、新建koa项目"></a>一、新建koa项目</h2><p>新建<code>koa-demo</code>文件夹，通过npm初始化项目。然后创建以下目录结构、文件和内容：</p>
+<p><strong>项目目录</strong></p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">  koa-demo</span><br><span class="line">  |- package.json</span><br><span class="line"><span class="addition">+ |- /src</span></span><br><span class="line"><span class="addition">+   |- index.js</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>src/index.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 先npm安装koa </span></span><br><span class="line"><span class="comment">// 这里引用和初始化</span></span><br><span class="line"><span class="keyword">const</span> Koa = <span class="built_in">require</span>(<span class="string">&#x27;koa&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> app = <span class="keyword">new</span> Koa()</span><br><span class="line"></span><br><span class="line">app.use(<span class="keyword">async</span> ctx =&gt; &#123;</span><br><span class="line">  ctx.body = <span class="string">&#x27;hello koa&#x27;</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 监听端口</span></span><br><span class="line">app.listen(<span class="number">3000</span>)</span><br></pre></td></tr></table></figure>
+
+<p>这样一个简单的koa项目就创建好了。</p>
+<br />
+
+<h2 id="二、配置webpack"><a href="#二、配置webpack" class="headerlink" title="二、配置webpack"></a>二、配置webpack</h2><p>接下来就是重点了，配置webpack，我们先安装相关所有需要的依赖，再解释为什么要这样配置：</p>
+<p>注：<strong>这里所有配置以webpack4版本为基础</strong>，升级webpack5可去官方查看</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">npm i -D webpack@4 webpack-cli@3</span><br><span class="line"><span class="comment"># 安装webpack4版本</span></span><br><span class="line"><span class="comment"># 安装webpack-cli3版本 此工具用于在命令行中运行 webpack</span></span><br><span class="line"></span><br><span class="line">npm i -D clean-webpack-plugin</span><br><span class="line"><span class="comment"># 常用插件，打包前自动清理之前打包的文件</span></span><br><span class="line"></span><br><span class="line">npm i -D webpack-node-externals</span><br><span class="line"><span class="comment"># 打包时排除node_modules，里面的所有依赖都不打包</span></span><br><span class="line"></span><br><span class="line">npm i -D @babel/core @babel/node @babel/preset-env babel-loader</span><br><span class="line"><span class="comment"># 使用es6语法所需的babel相关依赖</span></span><br><span class="line"><span class="comment"># @babel/node在babel7中被移了出来，如果在node环境中使用，要单独安装，有在运行Babel预设和插件之前进行编译的好处，调试用</span></span><br><span class="line"></span><br><span class="line">npm i -D terser-webpack-plugin@4</span><br><span class="line"><span class="comment"># 生产环境需要打包压缩代码</span></span><br><span class="line"></span><br><span class="line">npm i -D webpack-merge</span><br><span class="line"><span class="comment"># 分开发配置和生产配置，它们有共同配置，抽离出来，通过webpack-merge合并</span></span><br><span class="line"></span><br><span class="line">npm i -D nodemon</span><br><span class="line"><span class="comment"># 监控node.js 源代码的变化和自动重启服务</span></span><br><span class="line"></span><br><span class="line">npm i -D cross-env</span><br><span class="line"><span class="comment"># 运行跨平台设置和使用环境变量的脚本</span></span><br><span class="line"></span><br><span class="line">npm i -D npm-run-all</span><br><span class="line"><span class="comment"># 实现同时执行多个命令</span></span><br><span class="line"></span><br><span class="line">npm i -D rimraf</span><br><span class="line"><span class="comment"># 以包的形式包装rm -rf命令，用来删除文件和文件夹的。用来清理dist目录</span></span><br></pre></td></tr></table></figure>
+
+<p>我们的koa项目分为<strong>开发时环境</strong>和<strong>生产时环境</strong>，不同环境时webpack的配置是有部分不同的，所以要新建两个配置文件<code>webpack.config.dev.js</code> 和 <code>webpack.config.prod.js</code>，同时它们又有共同之处，所以需要一个通用配置文件<code>webpack.config.base.js</code>。</p>
+<p>所以在项目根目录下新建config文件夹，把这三个webpack配置文件放进去。</p>
+<p><strong>项目目录</strong></p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">  koa-demo</span><br><span class="line"><span class="addition">+ |- config</span></span><br><span class="line"><span class="addition">+ 	|- webpack.config.base.js</span></span><br><span class="line"><span class="addition">+ 	|- webpack.config.dev.js</span></span><br><span class="line"><span class="addition">+ 	|- webpack.config.prod.js</span></span><br><span class="line">  |- package.json</span><br><span class="line">  |- /src</span><br><span class="line">    |- index.js</span><br></pre></td></tr></table></figure>
+
+<p>接下来在通用配置文件<code>webpack.config.base.js</code>中配置：</p>
+<p><strong>config/webpack.config.base.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> webpack = <span class="built_in">require</span>(<span class="string">&#x27;webpack&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> nodeExternals = <span class="built_in">require</span>(<span class="string">&#x27;webpack-node-externals&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> &#123; CleanWebpackPlugin &#125; = <span class="built_in">require</span>(<span class="string">&#x27;clean-webpack-plugin&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> webpackConfig = &#123;</span><br><span class="line">  target: <span class="string">&#x27;node&#x27;</span>, <span class="comment">// koa项目仅在node环境下运行，因此设置称&#x27;node&#x27;</span></span><br><span class="line">  entry: &#123;</span><br><span class="line">    <span class="comment">// 设置入口文件</span></span><br><span class="line">    server: path.join(__dirname, <span class="string">&#x27;../src/index.js&#x27;</span>)</span><br><span class="line">  &#125;,</span><br><span class="line">  output: &#123;</span><br><span class="line">    <span class="comment">// 设置打包后的文件和位置</span></span><br><span class="line">    filename: <span class="string">&#x27;[name].bundle.js&#x27;</span>,</span><br><span class="line">    path: path.join(__dirname, <span class="string">&#x27;../dist&#x27;</span>)</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">// devtool: &#x27;inline-source-map&#x27;,</span></span><br><span class="line">  <span class="built_in">module</span>: &#123;</span><br><span class="line">    rules: [</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="regexp">/\.js|jsx$/</span>,</span><br><span class="line">        use: &#123;</span><br><span class="line">          loader: <span class="string">&#x27;babel-loader&#x27;</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="comment">// 尽量将 loader 应用于最少数量的必要模块，因此设置include</span></span><br><span class="line">        <span class="comment">// 只针对该目录下的js文件进行babel处理</span></span><br><span class="line">        include: path.join(__dirname, <span class="string">&#x27;../src&#x27;</span>)</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;,</span><br><span class="line">  resolve: &#123;</span><br><span class="line">    <span class="comment">// modules: 告诉webpack哪些目录需要搜索去匹配解析</span></span><br><span class="line">    modules: [path.join(__dirname, <span class="string">&#x27;../src/index.js&#x27;</span>), <span class="string">&#x27;node_modules&#x27;</span>],</span><br><span class="line">    <span class="comment">// extensions: 告诉webpack这些后缀文件需要去搜索匹配</span></span><br><span class="line">    extensions: [<span class="string">&#x27;.js&#x27;</span>, <span class="string">&#x27;.json&#x27;</span>],</span><br><span class="line">    alias: &#123;</span><br><span class="line">      <span class="comment">// 设置别名指向对应目录</span></span><br><span class="line">      <span class="string">&#x27;@&#x27;</span>: path.join(__dirname, <span class="string">&#x27;../src&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  externals: [nodeExternals()], <span class="comment">// 排除对node_modules里的依赖进行打包</span></span><br><span class="line">  plugins: [</span><br><span class="line">    <span class="keyword">new</span> CleanWebpackPlugin(), <span class="comment">// 打包前清除输出目录</span></span><br><span class="line">    <span class="keyword">new</span> webpack.DefinePlugin(&#123;</span><br><span class="line">      <span class="comment">// 定义环境变量，区分开发和生产环境</span></span><br><span class="line">      <span class="comment">// 具体详情可查看DefinePlugin文档</span></span><br><span class="line">      <span class="string">&#x27;process.env.NODE_ENV&#x27;</span>:</span><br><span class="line">        process.env.NODE_ENV === <span class="string">&#x27;production&#x27;</span></span><br><span class="line">          ? <span class="built_in">JSON</span>.stringify(<span class="string">&#x27;production&#x27;</span>)</span><br><span class="line">          : <span class="built_in">JSON</span>.stringify(<span class="string">&#x27;development&#x27;</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">  ],</span><br><span class="line">  <span class="comment">// node下这些选项可以使最初为Node.js环境编写的代码，在其他环境（如浏览器）中运行</span></span><br><span class="line">  node: &#123;</span><br><span class="line">    <span class="built_in">console</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="built_in">global</span>: <span class="literal">true</span>,</span><br><span class="line">    process: <span class="literal">true</span>,</span><br><span class="line">    Buffer: <span class="literal">true</span>,</span><br><span class="line">    __filename: <span class="literal">true</span>,</span><br><span class="line">    __dirname: <span class="literal">true</span>,</span><br><span class="line">    setImmediate: <span class="literal">true</span>,</span><br><span class="line">    path: <span class="literal">true</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = webpackConfig</span><br></pre></td></tr></table></figure>
+
+<p><strong>config/webpack.config.dev.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; merge &#125; = <span class="built_in">require</span>(<span class="string">&#x27;webpack-merge&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> baseConfig = <span class="built_in">require</span>(<span class="string">&#x27;./webpack.config.base&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 通过webpack-merge合并基础配置，添加开发时配置</span></span><br><span class="line"><span class="keyword">const</span> webpackConfig = merge(baseConfig, &#123;</span><br><span class="line">  mode: <span class="string">&#x27;development&#x27;</span>, <span class="comment">// 开发模式</span></span><br><span class="line">  devtool: <span class="string">&#x27;eval-source-map&#x27;</span>, <span class="comment">// 开发时出错能知道在源代码中哪一行</span></span><br><span class="line">  stats: &#123;</span><br><span class="line">    children: <span class="literal">false</span>, <span class="comment">// webpack打包时子模块信息设置不显示</span></span><br><span class="line">    modules: <span class="literal">false</span> <span class="comment">// 不显示模块信息</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = webpackConfig</span><br></pre></td></tr></table></figure>
+
+<p><strong>config/webpack.config.prod.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; merge &#125; = <span class="built_in">require</span>(<span class="string">&#x27;webpack-merge&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> baseConfig = <span class="built_in">require</span>(<span class="string">&#x27;./webpack.config.base&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> TerserPlugin = <span class="built_in">require</span>(<span class="string">&#x27;terser-webpack-plugin&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 通过webpack-merge合并基础配置，添加生产时配置</span></span><br><span class="line"><span class="keyword">const</span> webpackConfig = merge(baseConfig, &#123;</span><br><span class="line">  mode: <span class="string">&#x27;production&#x27;</span>, <span class="comment">// 生产模式</span></span><br><span class="line">  stats: &#123;</span><br><span class="line">    children: <span class="literal">false</span>, <span class="comment">// webpack打包时子模块信息设置不显示</span></span><br><span class="line">    warnings: <span class="literal">false</span> <span class="comment">// 警告不显示</span></span><br><span class="line">  &#125;,</span><br><span class="line">  optimization: &#123;</span><br><span class="line">    minimizer: [</span><br><span class="line">      <span class="comment">// terser-webpack-plugin插件可以压缩代码</span></span><br><span class="line">      <span class="comment">// 在webpack4版本中需要安装terser-webpack-plugin4版本</span></span><br><span class="line">      <span class="comment">// 里面是官方推荐的具体的参数，详情可查看文档</span></span><br><span class="line">      <span class="keyword">new</span> TerserPlugin(&#123;</span><br><span class="line">        terserOptions: &#123;</span><br><span class="line">          warning: <span class="literal">true</span>,</span><br><span class="line">          compress: &#123;</span><br><span class="line">            warnings: <span class="literal">false</span>,</span><br><span class="line">            drop_console: <span class="literal">false</span>, <span class="comment">// 取消注释console 方便有时候进行调试</span></span><br><span class="line">            dead_code: <span class="literal">true</span>,</span><br><span class="line">            drop_debugger: <span class="literal">true</span></span><br><span class="line">          &#125;,</span><br><span class="line">          output: &#123;</span><br><span class="line">            comments: <span class="literal">false</span>, <span class="comment">// 不要注释</span></span><br><span class="line">            beautify: <span class="literal">false</span> <span class="comment">// 不要格式，一行显示所有代码</span></span><br><span class="line">          &#125;,</span><br><span class="line">          mangle: <span class="literal">true</span></span><br><span class="line">        &#125;,</span><br><span class="line">        parallel: <span class="literal">true</span>, <span class="comment">// 使用多进程并行运行可提高构建速度，默认的并发运行数量 os.cpus().length - 1</span></span><br><span class="line">        sourceMap: <span class="literal">false</span></span><br><span class="line">      &#125;)</span><br><span class="line">    ],</span><br><span class="line">    <span class="comment">// splitChunks 用来避免模块之间重复的依赖关系</span></span><br><span class="line">    splitChunks: &#123;</span><br><span class="line">      cacheGroups: &#123;</span><br><span class="line">        commons: &#123;</span><br><span class="line">          name: <span class="string">&#x27;commons&#x27;</span>,</span><br><span class="line">          chunks: <span class="string">&#x27;initial&#x27;</span>,</span><br><span class="line">          minChunks: <span class="number">3</span>,</span><br><span class="line">          enforce: <span class="literal">true</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = webpackConfig</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="1、配置babel去支持es6语法"><a href="#1、配置babel去支持es6语法" class="headerlink" title="1、配置babel去支持es6语法"></a>1、配置babel去支持es6语法</h3><p>接着在根目录下新建<code>.babelrc</code>文件，增加babel配置：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;presets&quot;</span>: [</span><br><span class="line">    [</span><br><span class="line">      <span class="string">&quot;@babel/preset-env&quot;</span>,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">&quot;targets&quot;</span>: &#123;</span><br><span class="line">          <span class="attr">&quot;node&quot;</span>: <span class="string">&quot;current&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>改写src/index.js中的代码：</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="deletion">- const Koa = require(&#x27;koa&#x27;)</span></span><br><span class="line"><span class="addition">+ import Koa from &#x27;koa&#x27;</span></span><br><span class="line">const app = new Koa()</span><br><span class="line"></span><br><span class="line">app.use(async ctx =&gt; &#123;</span><br><span class="line">  ctx.body = &#x27;hello koa&#x27;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">// 监听端口</span><br><span class="line">app.listen(3000)</span><br></pre></td></tr></table></figure>
+
+<p>如果我们用<code>node src/index.js</code>去运行，则会报错：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import Koa from &#x27;koa&#x27;</span><br><span class="line">^^^^^^</span><br><span class="line"></span><br><span class="line">SyntaxError: Cannot use import statement outside a module</span><br></pre></td></tr></table></figure>
+
+<p>在在安装babel之后，node_modules中提供了一个<code>babel-node</code>命令，我们可以通过该命令来运行我们的入口文件。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx babel-node src/index.js</span><br></pre></td></tr></table></figure>
+
+<p>配合之前安装的<code>nodemon</code>可以实现热更新</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx nodemon --<span class="built_in">exec</span> babel-node src/index.js</span><br></pre></td></tr></table></figure>
+
+<p>我们在<code>package.json</code>中添加这个脚本：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;script&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;start&quot;</span>: <span class="string">&quot;nodemon --exec babel-node src/index.js&quot;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样通过在终端里运行<code>npm run start</code>即可启动项目了。</p>
+<p>当然这个只是简单的实现去支持es6语法和开发时热更新功能，并没有通过用webpack去构建，在项目简单的情况下尚可。后面将介绍通过webpack去启动。</p>
+<h3 id="2、调试webpack配置文件"><a href="#2、调试webpack配置文件" class="headerlink" title="2、调试webpack配置文件"></a>2、调试webpack配置文件</h3><p>运行命令去监听webpack配置文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npx node --inspect-brk ./node_modules/.bin/webpack --config config/webpack.config.prod.js --progress</span><br><span class="line"><span class="comment"># --config 指定要监听的配置文件</span></span><br><span class="line"><span class="comment"># --progress 打印webpack编译的过程</span></span><br></pre></td></tr></table></figure>
+
+<p>可以在chrome浏览器里调试，也可以在编辑器里调试，具体方法见<a target="_blank" rel="noopener" href="https://nodejs.org/en/docs/guides/debugging-getting-started/">node调试文档</a>。</p>
+<p><img src="https://tva1.sinaimg.cn/large/008eGmZEly1gnag6rqjrjj31sk0joalj.jpg" alt="image-20210203165556606"></p>
+<p>我们在<code>package.json</code>中添加这个脚本用来调试用：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;script&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;start&quot;</span>: <span class="string">&quot;nodemon --exec babel-node src/index.js&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;webpack:debug&quot;</span>: <span class="string">&quot;node --inspect-brk ./node_modules/.bin/webpack --config config/webpack.config.prod.js --progress&quot;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3、通过webpack构建开发时环境"><a href="#3、通过webpack构建开发时环境" class="headerlink" title="3、通过webpack构建开发时环境"></a>3、通过webpack构建开发时环境</h3><p>我们已经把开发时环境配置好了，接下来就是启动它，<strong>通过<code>webpack --watch</code>命令来监听项目中文件的变化，如果其中一个文件被更新，代码将被重新编译</strong>，而不必再去手动运行整个构建。</p>
+<p>同时我们通过<code>cross-env</code>来设置环境变量，来指定当当前开发环境还是生产环境。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx cross-env NODE_ENV=development webpack --watch --config config/webpack.config.dev.js --progress</span><br></pre></td></tr></table></figure>
+
+<p>执行该命令的意思就是，设置一个环境变量NODE_ENV，值为development，因为我们之前在配置文件中通过DefinePlugin做了配置，所以当这个值不是production时就是开发环境，定义了对应的变量，在项目文件中就可以拿到这个变量，来针对开发和生产时做不同的逻辑处理。</p>
+<p>设置了开发时的环境变量后，通过<code>webpack --watch</code>启动监听模式，指定开发时的配置文件<code>config/webpack.config.dev.js</code>文件，当项目中文件发生变化，代码将被重新编译打包输出到<code>dist/server.bundle.js</code>。</p>
+<p>但仅仅这样时不够的，文件虽然重新被编译并打包了，但是我们并没有监听这个打包后的文件，因此我们通过<code>nodemon</code>来监听输出后的文件：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx nodemon --inspect ./dist/server.bundle.js</span><br></pre></td></tr></table></figure>
+
+<p>我们这时候将不再简单的监听原始入口文件<code>src/index.js</code>了，而是监听经过了webpack处理（包括babel转换、代码压缩等）打包后生成的文件。</p>
+<p>通过运行上面这两个命令就可以帮助我们实现构建开发时环境。我们把该命令配置到<code>package.json</code>脚本中：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;script&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;start&quot;</span>: <span class="string">&quot;nodemon --exec babel-node src/index.js&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;webpack:debug&quot;</span>: <span class="string">&quot;node --inspect-brk ./node_modules/.bin/webpack --config config/webpack.config.prod.js --progress&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;watch&quot;</span>: <span class="string">&quot;cross-env NODE_ENV=development webpack --watch --config config/webpack.config.dev.js --progress&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;debug&quot;</span>: <span class="string">&quot;nodemon --inspect dist/server.bundle.js&quot;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是这是两个命令，一个终端控制台只能监听一个命令，如果每次启动项目都开两个终端比较麻烦，所以我们安装一个工具<code>npm-run-all</code>，来实现一个脚本同时执行多个命令。继续在<code>package.json</code>中添加脚本：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;script&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;start&quot;</span>: <span class="string">&quot;nodemon --exec babel-node src/index.js&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;webpack:debug&quot;</span>: <span class="string">&quot;node --inspect-brk ./node_modules/.bin/webpack --config config/webpack.config.prod.js --progress&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;watch&quot;</span>: <span class="string">&quot;cross-env NODE_ENV=development webpack --watch --config config/webpack.config.dev.js --progress&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;debug&quot;</span>: <span class="string">&quot;nodemon --inspect dist/server.bundle.js&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;start:dist&quot;</span>: <span class="string">&quot;npm-run-all -p watch debug&quot;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>npm-run-all -p watch debug</code>命令的含义是并行执行watch和debug两个脚本命令<code>-p</code>是并行执行的意思。</p>
+<p>配置好后，我们直接在终端运行即可<strong>启动开发时环境</strong>了：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm run start:dist</span><br></pre></td></tr></table></figure>
+
+<p>然后就可以安心写koa项目代码啦。</p>
+<h3 id="4、项目打包，运用到生产环境"><a href="#4、项目打包，运用到生产环境" class="headerlink" title="4、项目打包，运用到生产环境"></a>4、项目打包，运用到生产环境</h3><p>项目写好之后，我们需要打包部署到线上生产环境，这时候再通过<code>npm run start:dist</code>命令就不合适了，因此我们来配置下构建生产环境的打包命令。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npx cross-env NODE_ENV=production webpack --config config/webpack.config.prod.js</span><br></pre></td></tr></table></figure>
+
+<p>和上面构建开发环境的命令很类似，不过此时我们设置环境变量NODE_ENV值为production，并指定配置文件<code>config/webpack.config.prod.js</code>文件去打包构建。</p>
+<p>我们把该命令配置到<code>package.json</code>中：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;script&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;start&quot;</span>: <span class="string">&quot;nodemon --exec babel-node src/index.js&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;webpack:debug&quot;</span>: <span class="string">&quot;node --inspect-brk ./node_modules/.bin/webpack --config config/webpack.config.prod.js --progress&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;watch&quot;</span>: <span class="string">&quot;cross-env NODE_ENV=development webpack --watch --config config/webpack.config.dev.js --progress&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;debug&quot;</span>: <span class="string">&quot;nodemon --inspect dist/server.bundle.js&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;start:dist&quot;</span>: <span class="string">&quot;npm-run-all -p watch debug&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;build&quot;</span>: <span class="string">&quot;cross-env NODE_ENV=production webpack --config config/webpack.config.prod.js&quot;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行该命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm run build</span><br></pre></td></tr></table></figure>
+
+<p>即完成了生产环境下的项目打包构建。</p>
+<p>将整个项目目录除了<code>node_modules</code>文件夹，推送到线上服务器，然后运行<code>npm install</code>安装依赖，接着用node命令执行文件<code>node dist/server.bundle.js</code>把项目启动起来，通过服务器地址和暴露的端口既可以访问koa项目接口啦。</p>
+<blockquote>
+<p>注：清除dist目录配置</p>
+<p>使用<code>npm run build</code>文件项目时每次都会生成一个dist目录，有时需要把dist目录全部删掉，除了在命令行使用rm -rf /dist/命令删除外，还可以使用rimraf命令：</p>
+<p>安装：<code>npm install -D rimraf</code></p>
+<p>使用：<code>npx rimraf dist</code></p>
+<p>我们将其配置到<code>package.json</code>中：</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;script&quot;: &#123;</span><br><span class="line">    ...</span><br><span class="line">    &quot;build&quot;: &quot;cross-env NODE_ENV=production webpack --config config/webpack.config.prod.js&quot;,</span><br><span class="line"><span class="addition">+   &quot;clean&quot;: &quot;rimraf dist&quot;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后通过运行该命令即可清除dist目录：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm run clean</span><br></pre></td></tr></table></figure>
+</blockquote>
+<br />
+
+<h2 id="三、配置eslint-prettier风格"><a href="#三、配置eslint-prettier风格" class="headerlink" title="三、配置eslint + prettier风格"></a>三、配置eslint + prettier风格</h2><p>我习惯写项目必配eslint，操作如下：</p>
+<h3 id="1、安装eslint"><a href="#1、安装eslint" class="headerlink" title="1、安装eslint"></a>1、安装eslint</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装eslint</span></span><br><span class="line">npm i eslint -D</span><br><span class="line"></span><br><span class="line"><span class="comment"># eslint初始化</span></span><br><span class="line">npx eslint --init</span><br><span class="line"></span><br><span class="line"><span class="comment"># 进入自定义选择项</span></span><br><span class="line"><span class="comment"># 1. 你想要怎么使用eslint？ To check syntax and find problems</span></span><br><span class="line"><span class="comment"># 2. 哪一种模块是你的项目使用的？ JavaScript modules</span></span><br><span class="line"><span class="comment"># 3. 选择哪一个框架？ None of these</span></span><br><span class="line"><span class="comment"># 4. 你想要使用TypeScript吗？ N</span></span><br><span class="line"><span class="comment"># 5. 你要运行在哪个环境？ Browser, Node</span></span><br><span class="line"><span class="comment"># 6. 你想要配置文件格式是哪个？ JavaScript</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 全部选择完成后，会在本地生成.eslintrc.js文件</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2、安装prettier"><a href="#2、安装prettier" class="headerlink" title="2、安装prettier"></a>2、安装prettier</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 安装相关配置依赖</span></span><br><span class="line">npm install --save-dev eslint-config-prettier</span><br><span class="line">npm install --save-dev eslint-plugin-prettier</span><br><span class="line">npm install --save-dev --save-exact prettier</span><br></pre></td></tr></table></figure>
+
+<p>然后在<code>.eslintrc.js</code>文件中添加配置：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  ...</span><br><span class="line">  plugins: [<span class="string">&#x27;prettier&#x27;</span>],</span><br><span class="line">  <span class="keyword">extends</span>: [<span class="string">&#x27;eslint:recommended&#x27;</span>, <span class="string">&#x27;prettier&#x27;</span>, <span class="string">&#x27;prettier/prettier&#x27;</span>],</span><br><span class="line">  rules: &#123;</span><br><span class="line">    <span class="string">&#x27;prettier/prettier&#x27;</span>: <span class="string">&#x27;error&#x27;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>具体的prettier规则可以新建一个<code>.prettierrc</code>文件设置。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;semi&quot;</span>: <span class="literal">false</span>, <span class="comment">// 结尾是否加分号</span></span><br><span class="line">  <span class="attr">&quot;singleQuote&quot;</span>: <span class="literal">true</span>, <span class="comment">// 是否使用单引号</span></span><br><span class="line">  <span class="attr">&quot;printWidth&quot;</span>: <span class="number">80</span>, <span class="comment">// 一行代码最长显示80的length</span></span><br><span class="line">  <span class="attr">&quot;endOfLine&quot;</span>: <span class="string">&quot;auto&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;trailingComma&quot;</span>: <span class="string">&quot;none&quot;</span> <span class="comment">// 对象或者数组结尾一项是否逗号</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注：如果在<code>.eslintrc.js</code>文件里直接设置规则也行，但是这样在后面提交检查执行lint-staged的命令<code>prettier --write</code>时，就无法拿到这个规则，而使用prettier默认的规则。</p>
+<p>因此我们需要新建<code>.prettierrc</code>文件去让它们识别。</p>
+</blockquote>
+<p>另外为了增加验证效率，排除那些不需要验证规则的文件，比如<code>mode_modules</code>，可以新建<code>.eslintignore</code>和<code>.prettierignore</code>文件。</p>
+<blockquote>
+<p>注：webstorm编辑器默认JavaScript文件最后分号结尾，如果上述prettier规则结尾不要分号，则会有个编辑器默认的warning：unterminated statement颜色，虽然没啥错，但是看着不爽，可以在编辑器里设置去掉warning。</p>
+<p><img src="https://tva1.sinaimg.cn/large/008eGmZEly1gn9a1y4d6yj31f00oc0yy.jpg" alt="image-20210202163811226"></p>
+</blockquote>
+<br />
+
+<h2 id="四、提交git前代码检查"><a href="#四、提交git前代码检查" class="headerlink" title="四、提交git前代码检查"></a>四、提交git前代码检查</h2><p>为了增强代码线上质量，可以在git提交到仓库前使用<code>husky</code>和<code>lint-staged</code>进行检查。</p>
+<p>它们的功能就是在git提交时触发钩子，其中最重要的一个钩子是<code>pre-commit</code>，在提交代码前可以让我们配置具体做什么，比如运行一下代码检查，如果不符合eslint规则的就中止这次git提交，让你去检查代码问题。</p>
+<p>配置它们很简单，先安装这两个工具。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install husky lint-staged --save-dev</span><br></pre></td></tr></table></figure>
+
+<p>然后在<code>package.json</code>中增加配置：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">	<span class="attr">&quot;husky&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;hooks&quot;</span>: &#123;</span><br><span class="line">      <span class="attr">&quot;pre-commit&quot;</span>: <span class="string">&quot;lint-staged&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">&quot;lint-staged&quot;</span>: &#123;</span><br><span class="line">    <span class="comment">// 匹配所有js文件，按顺序执行任务</span></span><br><span class="line">    <span class="attr">&quot;*.js&quot;</span>: [</span><br><span class="line">      <span class="string">&quot;prettier --write&quot;</span>,</span><br><span class="line">      <span class="string">&quot;eslint&quot;</span>,</span><br><span class="line">      <span class="string">&quot;git add&quot;</span></span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>git的hooks可以在.git文件下的hooks目录里去查看它们，我们可以理解为执行git操作过程中的一系列生命周期，就像vue生命周期一样，在提交时触发一个<code>pre-commit</code>钩子，里面可以执行提交前要做的事情。比如可以执行检查代码：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;husky&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;hooks&quot;</span>: &#123;</span><br><span class="line">      <span class="attr">&quot;pre-commit&quot;</span>: <span class="string">&quot;prettier --write&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样它就在提交前执行了prettier修复命令。但是这样有一个问题，就是它会检查项目所有的代码，而不是仅仅你这次提交的，所以我们需要<code>lint-staged</code>来解决这个问题，而且<code>lint-staged</code>中可以分任务去执行多个命令。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">	<span class="attr">&quot;husky&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;hooks&quot;</span>: &#123;</span><br><span class="line">      <span class="attr">&quot;pre-commit&quot;</span>: <span class="string">&quot;lint-staged&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">&quot;lint-staged&quot;</span>: &#123;</span><br><span class="line">    <span class="comment">// 匹配提交的所有js文件，按顺序执行任务</span></span><br><span class="line">    <span class="attr">&quot;*.js&quot;</span>: [</span><br><span class="line">      <span class="string">&quot;prettier --write&quot;</span>,</span><br><span class="line">      <span class="string">&quot;eslint&quot;</span>,</span><br><span class="line">      <span class="string">&quot;git add&quot;</span></span><br><span class="line">    ]，</span><br><span class="line">    <span class="comment">// 匹配提交的所有vue文件，按顺序执行任务</span></span><br><span class="line">    <span class="string">&quot;*.vue&quot;</span>: [...]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述检查js文件的任务就是，先通过<code>prettier --write *.js</code>命令修复文件中不符合规则的代码，执行完后再执行<code>eslint *.js</code>命令检查不符合eslint规则的代码，没问题后执行<code>git add *.js</code>将修复的文件（如果有修复更改）重新添加到暂存区，然后再执行提交操作。</p>
+<p>这其中有任何一个任务没通过，则本地提交中止，显示报错信息，提醒你规范代码。</p>
+<p><img src="https://tva1.sinaimg.cn/large/008eGmZEly1gnbavn3j68j30va0u00zg.jpg" alt="image-20210204103753077"></p>
+<p>通过以上所有基础配置，开发koa项目之前的构建环境已经搭建完成，接下来只需要安心写项目代码即可。</p>
+<p>后续可针对这些配置，再加上koa系列相关基础中间件，做成脚手架，以减少重复搭建项目基础环境的成本。</p> 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://jeyson325.github.io/2021/webpack%E6%89%93%E5%8C%85koa%E9%A1%B9%E7%9B%AE%E9%85%8D%E7%BD%AE%E8%A7%A3%E6%9E%90.html" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/webpack/" rel="tag">webpack</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+    
+      <a href="/2021/%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%8E%A2%E7%B4%A2%E4%B9%8B%E6%97%85%EF%BC%9A%E5%9F%BA%E7%A1%80%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA.html" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">服务器探索之旅：基础环境搭建</div>
+      </a>
+    
+  </nav>
+
+   
+<!-- valine评论 -->
+<div id="vcomments-box">
+  <div id="vcomments"></div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script>
+<script>
+  new Valine({
+    el: "#vcomments",
+    app_id: "MDsEijjo4FndNO2zMicxD9Pm-9Nh9j0Va",
+    app_key: "ITIWeEeo4oqlok7axOOHKon2",
+    path: window.location.pathname,
+    avatar: "monsterid",
+    placeholder: "给我的文章加点评论吧 ~（注：以上可不填，直接评论即可）",
+    recordIP: true,
+  });
+  const infoEle = document.querySelector("#vcomments .info");
+  if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+    infoEle.childNodes.forEach(function (item) {
+      item.parentNode.removeChild(item);
+    });
+  }
+</script>
+<style>
+  #vcomments-box {
+    padding: 5px 30px;
+  }
+
+  @media screen and (max-width: 800px) {
+    #vcomments-box {
+      padding: 5px 0px;
+    }
+  }
+
+  #vcomments-box #vcomments {
+    background-color: #fff;
+  }
+
+  .v .vlist .vcard .vh {
+    padding-right: 20px;
+  }
+
+  .v .vlist .vcard {
+    padding-left: 10px;
+  }
+</style>
+
+ 
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2020-2021
+        <i class="ri-heart-fill heart_icon"></i> 有刃有鱼阮小六
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        由 <a href="https://hexo.io" target="_blank">Hexo</a> 强力驱动
+        <span class="division">|</span>
+        主题 - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/logo.png" alt="岛"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%8A%80%E6%9C%AF">技术</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E7%94%9F%E6%B4%BB">生活</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%86%99%E4%BD%9C">写作</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/aplayer">音乐歌单</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/update">更新日志</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <!-- class="ri-cup-line" 是杯子图标 可从https://remixicon.com/里找 -->
+  <p class="reward-p"><i class="ri-restaurant-line"></i>请我吃橘子</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.png">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.png">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+<!-- ClickLove -->
+
+
+<script src="/js/clickLove.js"></script>
+
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+
+<link rel="stylesheet" href="/css/clipboard.css">
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+
+
+<head>
+  <meta name="baidu-site-verification" content="code-oPJ01CI5CK" />
+  <meta charset="utf-8" />
+   
+  <meta name="keywords" content="生活,代码,博客" />
+   
+  <meta name="description" content="有刃有鱼阮小六的博客" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    服务器探索之旅：基础环境搭建 |  有刃有鱼阮小六的博客
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/logo.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+  
+  
+
+  
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?7bcaf5b5f4d25a43d3da737ce02caec9";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+<link rel="alternate" href="/atom.xml" title="岛" type="application/atom+xml">
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-服务器探索之旅：基础环境搭建"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  服务器探索之旅：基础环境搭建
+</h1>
+ 
+
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2021/%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%8E%A2%E7%B4%A2%E4%B9%8B%E6%97%85%EF%BC%9A%E5%9F%BA%E7%A1%80%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA.html" class="article-date">
+  <time datetime="2021-02-04T02:53:14.000Z" itemprop="datePublished">2021-02-04</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">2.8k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">11 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p><a href="/2020/%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%8E%A2%E7%B4%A2%E4%B9%8B%E6%97%85%EF%BC%9A%E9%80%89%E8%B4%AD%E5%92%8C%E7%99%BB%E9%99%86.html">服务器选购和登陆</a>之后，就要进行基础环境搭建了。</p>
+<p>每个人的需求不同，我个人需要安装的环境有<strong>node环境</strong>和<strong>docker环境</strong>。其他的数据库服务、HTTP Server服务等都是基于docker实现的，因此下面主要介绍这些环境的搭建。</p>
+<a id="more"></a>
+
+<h2 id="一、node环境安装"><a href="#一、node环境安装" class="headerlink" title="一、node环境安装"></a>一、node环境安装</h2><p>如果要安装node，强烈推荐使用<code>nvm</code>方式去安装。<code>nvm</code>可以控制和切换node版本，特别方便。</p>
+<p>根据<code>nvm</code>在github上的<a target="_blank" rel="noopener" href="https://github.com/nvm-sh/nvm#install--update-script">文档</a>介绍进行安装：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载脚本</span></span><br><span class="line">curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash</span><br><span class="line"><span class="comment"># 或</span></span><br><span class="line">wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash</span><br></pre></td></tr></table></figure>
+
+<p>运行脚本将nvm存储库克隆到~/.nvm，并添加到环境变量中：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> NVM_DIR=<span class="string">&quot;<span class="subst">$([ -z <span class="string">&quot;<span class="variable">$&#123;XDG_CONFIG_HOME-&#125;</span>&quot;</span> ] &amp;&amp; printf %s <span class="string">&quot;<span class="variable">$&#123;HOME&#125;</span>/.nvm&quot;</span> || printf %s <span class="string">&quot;<span class="variable">$&#123;XDG_CONFIG_HOME&#125;</span>/nvm&quot;</span>)</span>&quot;</span></span><br><span class="line">[ -s <span class="string">&quot;<span class="variable">$NVM_DIR</span>/nvm.sh&quot;</span> ] &amp;&amp; \. <span class="string">&quot;<span class="variable">$NVM_DIR</span>/nvm.sh&quot;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>下载脚本拒绝连接解决方法</strong></p>
+<p>在下载脚本时出现报错：<code>Failed connect to raw.githubusercontent.com:443; 拒绝连接</code></p>
+<p>这是因为墙的原因，要解决这个问题，可以使用科学上网，或者添加hosts来解决</p>
+<p>在<a target="_blank" rel="noopener" href="https://www.ipaddress.com/">https://www.ipaddress.com/</a> 查询raw.githubusercontent.com的真实IP</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入hosts文件</span></span><br><span class="line">vim /etc/hosts</span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加</span></span><br><span class="line">199.232.96.133 raw.githubusercontent.com</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>安装完成后查看版本确认已正常安装：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvm --version</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>nvm常用命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看</span></span><br><span class="line">nvm ls-remote <span class="comment"># 列出node有哪些版本</span></span><br><span class="line">nvm list <span class="comment"># 查看已安装的node版本</span></span><br><span class="line">nvm current <span class="comment"># 显示当前版本</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装和卸载</span></span><br><span class="line">nvm install <span class="comment"># 安装最新版本</span></span><br><span class="line">nvm install 12.20.0 <span class="comment"># 安装指定版本</span></span><br><span class="line">nvm uninstall 12.20.0 <span class="comment"># 卸载指定版本</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用</span></span><br><span class="line">nvm use 8.0.0 <span class="comment"># 当前切换到指定版本</span></span><br><span class="line">nvm <span class="built_in">alias</span> default 8.1.0 <span class="comment"># 设置默认版本</span></span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>安装node：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nvm install 12.20.1</span><br></pre></td></tr></table></figure>
+
+<p>完成后检查node版本及是否正常安装</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node --version</span><br></pre></td></tr></table></figure>
+
+<br />
+
+<h2 id="二、docker环境安装"><a href="#二、docker环境安装" class="headerlink" title="二、docker环境安装"></a>二、docker环境安装</h2><p>docker安装及常用操作在上篇博文<a href="/2021/docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%B1%87%E6%80%BB.html">docker常用命令汇总</a>中已经介绍，便不再赘述。</p>
+<p>配置好docker环境之后，下面介绍使用docker安装各种服务：</p>
+<h3 id="1、mongodb数据库"><a href="#1、mongodb数据库" class="headerlink" title="1、mongodb数据库"></a>1、mongodb数据库</h3><p>在服务器上新建<code>docker-compose.yml</code>文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在home目录下新建mongodb文件文件夹，在里面新建docker-compose.yml文件</span></span><br><span class="line"><span class="built_in">cd</span> /home</span><br><span class="line">mkdir mongodb</span><br><span class="line"><span class="built_in">cd</span> mongodb</span><br><span class="line">vim docker-compose.yml</span><br></pre></td></tr></table></figure>
+
+<p>然后对yml文件进行配置：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 将下面的配置复制到里面</span></span><br><span class="line">version: &#x27;3.8&#x27; # compose版本</span><br><span class="line">services:</span><br><span class="line">  mongo:</span><br><span class="line">    image: mongo # 选择镜像 如指定版本mongo:4.2</span><br><span class="line">    restart: always</span><br><span class="line">    container_name: mongodb # 设置镜像名称</span><br><span class="line">    environment:</span><br><span class="line">      MONGO_INITDB_ROOT_USERNAME: root</span><br><span class="line">      MONGO_INITDB_ROOT_PASSWORD: 123456</span><br><span class="line">    ports:</span><br><span class="line">      - 27017:27017 # 映射端口</span><br><span class="line">    volumes:</span><br><span class="line">      - /home/mongodb:/data/db # 挂载</span><br></pre></td></tr></table></figure>
+
+<p>保存文件后退出，然后挂在后台运行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
+
+<p>注意：上面映射端口后，需要在防火墙和安全组中放通该端口。</p>
+<p>这时候，mongodb数据库服务就启动了，接下来是初始化数据库</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入容器内 运行mongo连接到数据库</span></span><br><span class="line">docker <span class="built_in">exec</span> -it &lt;运行的mongodb容器的id或名称&gt; mongo</span><br><span class="line"><span class="comment"># 进入后到达mongodb的shell终端 然后再通过账号密码连接</span></span><br><span class="line"><span class="comment"># 使用（创建）数据库</span></span><br><span class="line">use admin</span><br><span class="line"><span class="comment"># 用账号密码登录该数据库（认证、权限）</span></span><br><span class="line"><span class="comment"># root用户是超级管理员，可以做任何事情，一般交给运维管理使用</span></span><br><span class="line">db.auth(<span class="string">&#x27;root&#x27;</span>, <span class="string">&#x27;567123&#x27;</span>)  <span class="comment"># 输出1则表示成功了</span></span><br><span class="line"><span class="comment"># 显示数据库列表</span></span><br><span class="line">show dbs</span><br><span class="line"></span><br><span class="line">use jeyson_db</span><br><span class="line"><span class="comment"># 创建一个用户（名称、密码、角色权限：对对应的数据库享有dbOwner权限）</span></span><br><span class="line"><span class="comment"># 注：需要有足够的权限才能创建用户，比如root用户，所以如果要创建，先认证root用户</span></span><br><span class="line"><span class="comment"># 然后再use jeyson_db切换到你想要新增用户的数据库下</span></span><br><span class="line">db.createUser(&#123;user: <span class="string">&#x27;mytest&#x27;</span>,<span class="built_in">pwd</span>:<span class="string">&#x27;098890&#x27;</span>,roles:[&#123;role:<span class="string">&#x27;dbOwner&#x27;</span>,db:<span class="string">&#x27;jeyson_db&#x27;</span>&#125;]&#125;)</span><br><span class="line"><span class="comment"># 创建完成后退出当前数据库 再重新进来认证登录（不要同一个数据库多个用户认证,否则报错too many users are authenticated）</span></span><br><span class="line"><span class="comment"># 重新进来后 切换到jeyson_db数据库 使用新创建的用户认证登陆</span></span><br><span class="line">use jeyson_db</span><br><span class="line">db.auth(<span class="string">&#x27;mytest&#x27;</span>, <span class="string">&#x27;098890&#x27;</span>)</span><br><span class="line"><span class="comment"># 插入users collection（类似表）中一条数据</span></span><br><span class="line">db.users.insertOne(&#123;name:<span class="string">&#x27;myname&#x27;</span>,age:30,email:<span class="string">&#x27;31231test@qq.com&#x27;</span>&#125;)</span><br><span class="line"><span class="comment"># 查询所有数据</span></span><br><span class="line">db.users.find(&#123;&#125;)</span><br><span class="line"><span class="comment"># 更新一条数据</span></span><br><span class="line">db.users.updateOne(&#123;name:<span class="string">&#x27;myname&#x27;</span>, &#123;<span class="variable">$set</span>:&#123;email:<span class="string">&#x27;83821dw@qq.com&#x27;</span>&#125;&#125;&#125;)</span><br><span class="line"><span class="comment"># 删除一条数据</span></span><br><span class="line">db.users.deleteOne(&#123;name:<span class="string">&#x27;myname&#x27;</span>&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 其他常用命令</span></span><br><span class="line">show users：显示用户</span><br><span class="line">show collections：显示当前数据库中的集合（类似关系数据库中的表）</span><br><span class="line">use &lt;db name&gt;：切换当前数据库</span><br><span class="line"><span class="comment"># MongoDB没有创建数据库的命令，但有类似的命令。</span></span><br><span class="line"><span class="comment"># 如：如果你想创建一个“myTest”的数据库，先运行use myTest命令，之后就做一些操作（如：db.createCollection(&#x27;user&#x27;)）,这样就可以创建一个名叫“myTest”的数据库</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 用户相关</span></span><br><span class="line">1、添加一个用户</span><br><span class="line"> db.addUser(<span class="string">&quot;name&quot;</span>);</span><br><span class="line"> db.addUser(<span class="string">&quot;userName&quot;</span>, <span class="string">&quot;pwd123&quot;</span>, <span class="literal">true</span>); 添加用户、设置密码、是否只读</span><br><span class="line"></span><br><span class="line">2、数据库认证、安全模式</span><br><span class="line"> db.auth(<span class="string">&quot;userName&quot;</span>, <span class="string">&quot;123123&quot;</span>);</span><br><span class="line"></span><br><span class="line">3、显示当前所有用户</span><br><span class="line"> show users;</span><br><span class="line"></span><br><span class="line">4、删除用户</span><br><span class="line"> db.removeUser(<span class="string">&quot;userName&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>mongoBD的备份和恢复</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 备份</span></span><br><span class="line">docker <span class="built_in">exec</span> -it &lt;容器id或名称&gt; mongodump -h localhost -u root -p 123456 -d &lt;指定数据库，去掉-d备份所有数据库&gt; -o /tmp/<span class="built_in">test</span></span><br><span class="line"><span class="comment"># 将数据备份到/tep/test目录下 该目录在容器内部 需要复制出来</span></span><br><span class="line">docker cp &lt;容器名称或id&gt;:/tmp/<span class="built_in">test</span> /tmp/<span class="built_in">test</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 恢复</span></span><br><span class="line"><span class="comment"># 可以先将宿主机里的/tmp/test目录拷贝到容器里的/tmp/test</span></span><br><span class="line"><span class="comment"># 然后再执行恢复</span></span><br><span class="line">docker <span class="built_in">exec</span> -it &lt;容器名称或id&gt; mongorestore -h localhost -u root -p 123456 --dir /tmp/<span class="built_in">test</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 例如在服务器A docker里把运行的mongo数据库迁移到服务器B docker里</span></span><br><span class="line"><span class="comment"># 先备份服务器A上的数据库数据</span></span><br><span class="line">docker <span class="built_in">exec</span> -it &lt;容器id或名称&gt; /bin/bash <span class="comment"># 进容器里</span></span><br><span class="line"><span class="comment"># 指定test_db数据库及该数据库对应的账号密码 备份到/tmp/test下</span></span><br><span class="line">mongodump -h localhost -u testName -p 123456 -d test_db -o /tmp/<span class="built_in">test</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 然后恢复到服务器B上,其数据库地址和端口为121.132.12.11:27017</span></span><br><span class="line">mongorestore -h 121.132.12.11:27017 -u root -p 123456 --dir /tmp/<span class="built_in">test</span></span><br><span class="line"><span class="comment"># 指定服务器B数据库地址和端口，输入有权限的用户名密码，传递要恢复的数据/tmp/test</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 然后服务器B数据库中就多了这个库的数据</span></span><br><span class="line"><span class="comment"># 如果之前没创建过这个库，那么需要先登陆root用户，然后切换到该数据库下，然后新建登陆账号密码</span></span><br><span class="line"><span class="comment"># 所以备份的数据只是把数据传过来了，并不是把旧服务器上该库的登陆账号密码也传过来，需要自己重新设置</span></span><br></pre></td></tr></table></figure>
+
+<br />
+
+<h3 id="2、redis数据库安装"><a href="#2、redis数据库安装" class="headerlink" title="2、redis数据库安装"></a>2、redis数据库安装</h3><p>在服务器上新建<code>docker-compose.yml</code>文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在home目录下新建redis文件文件夹，在里面新建docker-compose.yml文件</span></span><br><span class="line"><span class="built_in">cd</span> /home</span><br><span class="line">mkdir redis</span><br><span class="line"><span class="built_in">cd</span> redis</span><br><span class="line">vim docker-compose.yml</span><br></pre></td></tr></table></figure>
+
+<p>然后对yml文件进行配置：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 将下面的配置复制到里面</span></span><br><span class="line">version: &#x27;3.8&#x27; # compose版本</span><br><span class="line">services:</span><br><span class="line">  redis:</span><br><span class="line">    image: redis # 镜像名</span><br><span class="line">    restart: always</span><br><span class="line">    container_name: &#x27;redis&#x27; # 容器名称</span><br><span class="line">    ports:</span><br><span class="line">      - 6379:6379</span><br><span class="line">    volumes:</span><br><span class="line">      - /home/redis:/data </span><br><span class="line">    command: [&quot;redis-server&quot;, &quot;--requirepass&quot;, &quot;700209&quot;]</span><br></pre></td></tr></table></figure>
+
+<p>保存文件后退出，然后挂在后台运行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
+
+<p>注意：上面映射端口后，需要在防火墙和安全组中放通该端口。</p>
+<br />
+
+<h3 id="3、mock测试服务安装"><a href="#3、mock测试服务安装" class="headerlink" title="3、mock测试服务安装"></a>3、mock测试服务安装</h3><p>使用mock数据提供方式：</p>
+<p>1、本地引用mock测试，详情<a target="_blank" rel="noopener" href="http://mockjs.com/">mock.js官方文档</a></p>
+<p>2、自己的服务器上通过DOClever测试服务（详见<a target="_blank" rel="noopener" href="https://github.com/sx1989827/DOClever">DOClever github上面文档</a>）</p>
+<p><img src="https://tva1.sinaimg.cn/large/008eGmZEly1gn7v8kfkcag30eq0d8dh3.gif" alt="mock"></p>
+<p>下面介绍在服务器上搭建DOClever测试服务。</p>
+<p>新建<code>docker-compose.yml</code>文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在home目录下新建redis文件文件夹，在里面新建docker-compose.yml文件</span></span><br><span class="line"><span class="built_in">cd</span> /home</span><br><span class="line">mkdir doclever</span><br><span class="line"><span class="built_in">cd</span> doclever</span><br><span class="line">vim docker-compose.yml</span><br></pre></td></tr></table></figure>
+
+<p>然后对yml文件进行配置：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 将下面的配置复制到里面</span></span><br><span class="line">version: &#x27;3.8&#x27;</span><br><span class="line">services:</span><br><span class="line">  DOClever:</span><br><span class="line">    image: lw96/doclever</span><br><span class="line">    restart: always</span><br><span class="line">    container_name: &quot;DOClever&quot;</span><br><span class="line">    ports:</span><br><span class="line">    - 12333:10000</span><br><span class="line">    volumes:</span><br><span class="line">    - /srv/doclever/file:/root/DOClever/data/file</span><br><span class="line">    - /srv/doclever/img:/root/DOClever/data/file/img</span><br><span class="line">    - /srv/doclever/tmp:/root/DOClever/data/tmp</span><br><span class="line">    environment:</span><br><span class="line">    - DB_HOST=mongodb://mongo:27017/DOClever</span><br><span class="line">    - PORT=10000</span><br><span class="line">    links:</span><br><span class="line">    - mongo:mongo</span><br><span class="line"></span><br><span class="line">  mongo:</span><br><span class="line">    image: mongo:latest</span><br><span class="line">    restart: always</span><br><span class="line">    container_name: &quot;mongodb&quot;</span><br><span class="line">    volumes:</span><br><span class="line">    - /srv/doclever/db:/data/db</span><br><span class="line">    # 将doclever里的数据全部存放在/srv/doclever里</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>如果使用的数据库为非本地mongodb</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">version: <span class="string">&quot;2&quot;</span></span><br><span class="line">services:</span><br><span class="line">DOClever:</span><br><span class="line"> image: lw96/doclever:latest</span><br><span class="line"> restart: always</span><br><span class="line"> container_name: <span class="string">&quot;DOClever&quot;</span></span><br><span class="line"> ports:</span><br><span class="line">    - 10000:10000</span><br><span class="line">    volumes:</span><br><span class="line">    - /hostdir/file:/root/DOClever/data/file</span><br><span class="line">    - /hostdir/img:/root/DOClever/data/file/img</span><br><span class="line">    - /hostdir/tmp:/root/DOClever/data/tmp</span><br><span class="line">    environment:</span><br><span class="line">    - DB_HOST=mongodb://remoteIP:remotePort/DOClever</span><br><span class="line">    - PORT=10000</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>保存文件后退出，然后挂在后台运行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
+
+<p>注意：上面映射端口后，需要在防火墙和安全组中放通该端口。</p>
+<p>改完配置，去云服务器和防火墙处给对应的端口放行，然后运行项目</p>
+<ul>
+<li><p>然后在浏览器里输入服务器ip+对应端口，即可进入管理系统</p>
+</li>
+<li><p>修改总后台密码（初始都是DOClever），然后进入整理好项目，输入返回数据</p>
+</li>
+<li><p><strong>直接请求线上的地址即可返回数据</strong>，或者使用在本地运行（net.js里设置的默认端口为36742）：</p>
+<p><code>node net.js http://101.133.162.136:12301/mock/5e197d14c52cc5000bae3689 http://localhost:8081</code></p>
+<p>然后，在postman里设置请求方式，地址loacalhost:36742/api，即可返回数据</p>
+</li>
+</ul>
+<blockquote>
+<p>注意文档里面有两个坑：</p>
+<ol>
+<li><p>docker-compose.yml配置文件里volumes挂载的img路径不对</p>
+<p><img src="https://tva1.sinaimg.cn/large/008eGmZEly1gn7v9r7gp2j30zc0u0npd.jpg" alt="image-20210201112110201"></p>
+</li>
+<li><p>mock规则有的例子有的不对</p>
+<p>在DOClever官方文档中Mock数据这块，有一个规则是<code>@mj(&#123;@DTD:@DPD&#125;)</code>，但是它跟的例子是：<code>例如：@mj(&#123;&quot;3&quot;,&quot;a&quot;&#125;)</code>，它例子中间用的逗号，而不是规则里的冒号，导致我直接复制例子运行返回的数据一直报错，花了很长时间都没理解为什么……抓狂</p>
+</li>
+</ol>
+</blockquote>
+<p>另外有个功能未实现：参数如何传递到mockjs规则中？</p>
+<p>在尝试用DOClever实践此项目时，需要输入num参数，根据输入的数字，确定返回的数据有多少条，于是问题来了，如何将num参数传递到DOClever的result结果规则里？</p>
+<p><img src="https://tva1.sinaimg.cn/large/008eGmZEly1gn7vdogb4ej320g0pq4d3.jpg" alt="image-20210201112457006"></p>
+<p>我翻遍了DOClever的文档，它的mock规则只有@count可以返回多条数组数据，在@code里可以获取到一些内置对象，其中通过query可以获取到传递的参数，但是这两个规则并不能同时生效……</p>
+<p>尝试了多次各种嵌套无果之后，用原生的@mj规则也没找到方法能实现输入参数num后，DOClever里自动根据num值返回对应的数据条数这个功能。</p>
+<p>在原生的mock.js中，可以通过<code>Mock.mock( rurl, function( options ) )</code>中的options获取到的url/body，然后提取出参数，但是DOClever里还没发现有效的解决方法。据了解，这个功能并未实现。</p>
+<br />
+
+<h3 id="4、showdoc安装"><a href="#4、showdoc安装" class="headerlink" title="4、showdoc安装"></a>4、showdoc安装</h3><p>通过docker方式安装，先拉取镜像：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull star7th/showdoc</span><br></pre></td></tr></table></figure>
+
+<p>接着新建存放showdoc数据的目录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /srv</span><br><span class="line">mkdir showdoc_data/html</span><br><span class="line">chmod  -R 777 showdoc_data <span class="comment"># 给予权限</span></span><br></pre></td></tr></table></figure>
+
+<p>挂载启动容器：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name showdoc -p 12302:80 -v /srv/showdoc_data/html:/var/www/html/ star7th/showdoc</span><br></pre></td></tr></table></figure>
+
+<p>注意在防火墙和安全组中放通该端口。</p>
+<p>使用方法和数据的迁移等各种操作可查<a target="_blank" rel="noopener" href="https://www.showdoc.com.cn/help?page_id=1385767280275683">文档</a></p>
+ 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://jeyson325.github.io/2021/%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%8E%A2%E7%B4%A2%E4%B9%8B%E6%97%85%EF%BC%9A%E5%9F%BA%E7%A1%80%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA.html" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%9C%8D%E5%8A%A1%E5%99%A8/" rel="tag">服务器</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2021/webpack%E6%89%93%E5%8C%85koa%E9%A1%B9%E7%9B%AE%E9%85%8D%E7%BD%AE%E8%A7%A3%E6%9E%90.html" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            webpack打包koa项目配置解析
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2021/docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%B1%87%E6%80%BB.html" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">docker常用命令汇总</div>
+      </a>
+    
+  </nav>
+
+   
+<!-- valine评论 -->
+<div id="vcomments-box">
+  <div id="vcomments"></div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script>
+<script>
+  new Valine({
+    el: "#vcomments",
+    app_id: "MDsEijjo4FndNO2zMicxD9Pm-9Nh9j0Va",
+    app_key: "ITIWeEeo4oqlok7axOOHKon2",
+    path: window.location.pathname,
+    avatar: "monsterid",
+    placeholder: "给我的文章加点评论吧 ~（注：以上可不填，直接评论即可）",
+    recordIP: true,
+  });
+  const infoEle = document.querySelector("#vcomments .info");
+  if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+    infoEle.childNodes.forEach(function (item) {
+      item.parentNode.removeChild(item);
+    });
+  }
+</script>
+<style>
+  #vcomments-box {
+    padding: 5px 30px;
+  }
+
+  @media screen and (max-width: 800px) {
+    #vcomments-box {
+      padding: 5px 0px;
+    }
+  }
+
+  #vcomments-box #vcomments {
+    background-color: #fff;
+  }
+
+  .v .vlist .vcard .vh {
+    padding-right: 20px;
+  }
+
+  .v .vlist .vcard {
+    padding-left: 10px;
+  }
+</style>
+
+ 
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2020-2021
+        <i class="ri-heart-fill heart_icon"></i> 有刃有鱼阮小六
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        由 <a href="https://hexo.io" target="_blank">Hexo</a> 强力驱动
+        <span class="division">|</span>
+        主题 - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/logo.png" alt="岛"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%8A%80%E6%9C%AF">技术</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E7%94%9F%E6%B4%BB">生活</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%86%99%E4%BD%9C">写作</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/aplayer">音乐歌单</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/update">更新日志</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <!-- class="ri-cup-line" 是杯子图标 可从https://remixicon.com/里找 -->
+  <p class="reward-p"><i class="ri-restaurant-line"></i>请我吃橘子</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.png">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.png">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+<!-- ClickLove -->
+
+
+<script src="/js/clickLove.js"></script>
+
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+
+
+<link rel="stylesheet" href="/css/clipboard.css">
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+<!-- CanvasBackground -->
+
+
+    
+  </div>
+</body>
+
+</html>

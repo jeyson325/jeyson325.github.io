@@ -43,10 +43,307 @@
       </categories>
   </entry>
   <entry>
+    <title>webpack打包koa项目配置解析</title>
+    <url>/2021/webpack%E6%89%93%E5%8C%85koa%E9%A1%B9%E7%9B%AE%E9%85%8D%E7%BD%AE%E8%A7%A3%E6%9E%90.html</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="https://cdn.jsdelivr.net/npm/meting@1.1.0/dist/Meting.min.js"></script><p>以前刚接触webpack的时候，我对它繁琐复杂的配置一个头两个大，后来项目渐渐做的多了，懂得多了，就渐渐熟悉了，而且也深深的理解了它的好处。</p>
+<p>不管是做前端项目，还是用node做后端项目，只要和js相关的，都可以用webpack辅助构建，它可以提供es6语法的支持、开发热更新、部署代码压缩、对各种资源文件的处理……等等许多功能。</p>
+<p>下面介绍在node框架koa开发的项目中，如何进行webpack配置。</p>
+<h2 id="一、新建koa项目"><a href="#一、新建koa项目" class="headerlink" title="一、新建koa项目"></a>一、新建koa项目</h2><p>新建<code>koa-demo</code>文件夹，通过npm初始化项目。然后创建以下目录结构、文件和内容：</p>
+<p><strong>项目目录</strong></p>
+<figure class="highlight diff"><table><tr><td class="code"><pre><span class="line">  koa-demo</span><br><span class="line">  |- package.json</span><br><span class="line"><span class="addition">+ |- /src</span></span><br><span class="line"><span class="addition">+   |- index.js</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>src/index.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 先npm安装koa </span></span><br><span class="line"><span class="comment">// 这里引用和初始化</span></span><br><span class="line"><span class="keyword">const</span> Koa = <span class="built_in">require</span>(<span class="string">&#x27;koa&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> app = <span class="keyword">new</span> Koa()</span><br><span class="line"></span><br><span class="line">app.use(<span class="keyword">async</span> ctx =&gt; &#123;</span><br><span class="line">  ctx.body = <span class="string">&#x27;hello koa&#x27;</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 监听端口</span></span><br><span class="line">app.listen(<span class="number">3000</span>)</span><br></pre></td></tr></table></figure>
+
+<p>这样一个简单的koa项目就创建好了。</p>
+<br />
+
+<h2 id="二、配置webpack"><a href="#二、配置webpack" class="headerlink" title="二、配置webpack"></a>二、配置webpack</h2><p>接下来就是重点了，配置webpack，我们先安装相关所有需要的依赖，再解释为什么要这样配置：</p>
+<p>注：<strong>这里所有配置以webpack4版本为基础</strong>，升级webpack5可去官方查看</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm i -D webpack@4 webpack-cli@3</span><br><span class="line"><span class="comment"># 安装webpack4版本</span></span><br><span class="line"><span class="comment"># 安装webpack-cli3版本 此工具用于在命令行中运行 webpack</span></span><br><span class="line"></span><br><span class="line">npm i -D clean-webpack-plugin</span><br><span class="line"><span class="comment"># 常用插件，打包前自动清理之前打包的文件</span></span><br><span class="line"></span><br><span class="line">npm i -D webpack-node-externals</span><br><span class="line"><span class="comment"># 打包时排除node_modules，里面的所有依赖都不打包</span></span><br><span class="line"></span><br><span class="line">npm i -D @babel/core @babel/node @babel/preset-env babel-loader</span><br><span class="line"><span class="comment"># 使用es6语法所需的babel相关依赖</span></span><br><span class="line"><span class="comment"># @babel/node在babel7中被移了出来，如果在node环境中使用，要单独安装，有在运行Babel预设和插件之前进行编译的好处，调试用</span></span><br><span class="line"></span><br><span class="line">npm i -D terser-webpack-plugin@4</span><br><span class="line"><span class="comment"># 生产环境需要打包压缩代码</span></span><br><span class="line"></span><br><span class="line">npm i -D webpack-merge</span><br><span class="line"><span class="comment"># 分开发配置和生产配置，它们有共同配置，抽离出来，通过webpack-merge合并</span></span><br><span class="line"></span><br><span class="line">npm i -D nodemon</span><br><span class="line"><span class="comment"># 监控node.js 源代码的变化和自动重启服务</span></span><br><span class="line"></span><br><span class="line">npm i -D cross-env</span><br><span class="line"><span class="comment"># 运行跨平台设置和使用环境变量的脚本</span></span><br><span class="line"></span><br><span class="line">npm i -D npm-run-all</span><br><span class="line"><span class="comment"># 实现同时执行多个命令</span></span><br><span class="line"></span><br><span class="line">npm i -D rimraf</span><br><span class="line"><span class="comment"># 以包的形式包装rm -rf命令，用来删除文件和文件夹的。用来清理dist目录</span></span><br></pre></td></tr></table></figure>
+
+<p>我们的koa项目分为<strong>开发时环境</strong>和<strong>生产时环境</strong>，不同环境时webpack的配置是有部分不同的，所以要新建两个配置文件<code>webpack.config.dev.js</code> 和 <code>webpack.config.prod.js</code>，同时它们又有共同之处，所以需要一个通用配置文件<code>webpack.config.base.js</code>。</p>
+<p>所以在项目根目录下新建config文件夹，把这三个webpack配置文件放进去。</p>
+<p><strong>项目目录</strong></p>
+<figure class="highlight diff"><table><tr><td class="code"><pre><span class="line">  koa-demo</span><br><span class="line"><span class="addition">+ |- config</span></span><br><span class="line"><span class="addition">+ 	|- webpack.config.base.js</span></span><br><span class="line"><span class="addition">+ 	|- webpack.config.dev.js</span></span><br><span class="line"><span class="addition">+ 	|- webpack.config.prod.js</span></span><br><span class="line">  |- package.json</span><br><span class="line">  |- /src</span><br><span class="line">    |- index.js</span><br></pre></td></tr></table></figure>
+
+<p>接下来在通用配置文件<code>webpack.config.base.js</code>中配置：</p>
+<p><strong>config/webpack.config.base.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> webpack = <span class="built_in">require</span>(<span class="string">&#x27;webpack&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> nodeExternals = <span class="built_in">require</span>(<span class="string">&#x27;webpack-node-externals&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> &#123; CleanWebpackPlugin &#125; = <span class="built_in">require</span>(<span class="string">&#x27;clean-webpack-plugin&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> webpackConfig = &#123;</span><br><span class="line">  target: <span class="string">&#x27;node&#x27;</span>, <span class="comment">// koa项目仅在node环境下运行，因此设置称&#x27;node&#x27;</span></span><br><span class="line">  entry: &#123;</span><br><span class="line">    <span class="comment">// 设置入口文件</span></span><br><span class="line">    server: path.join(__dirname, <span class="string">&#x27;../src/index.js&#x27;</span>)</span><br><span class="line">  &#125;,</span><br><span class="line">  output: &#123;</span><br><span class="line">    <span class="comment">// 设置打包后的文件和位置</span></span><br><span class="line">    filename: <span class="string">&#x27;[name].bundle.js&#x27;</span>,</span><br><span class="line">    path: path.join(__dirname, <span class="string">&#x27;../dist&#x27;</span>)</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">// devtool: &#x27;inline-source-map&#x27;,</span></span><br><span class="line">  <span class="built_in">module</span>: &#123;</span><br><span class="line">    rules: [</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="regexp">/\.js|jsx$/</span>,</span><br><span class="line">        use: &#123;</span><br><span class="line">          loader: <span class="string">&#x27;babel-loader&#x27;</span></span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="comment">// 尽量将 loader 应用于最少数量的必要模块，因此设置include</span></span><br><span class="line">        <span class="comment">// 只针对该目录下的js文件进行babel处理</span></span><br><span class="line">        include: path.join(__dirname, <span class="string">&#x27;../src&#x27;</span>)</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;,</span><br><span class="line">  resolve: &#123;</span><br><span class="line">    <span class="comment">// modules: 告诉webpack哪些目录需要搜索去匹配解析</span></span><br><span class="line">    modules: [path.join(__dirname, <span class="string">&#x27;../src/index.js&#x27;</span>), <span class="string">&#x27;node_modules&#x27;</span>],</span><br><span class="line">    <span class="comment">// extensions: 告诉webpack这些后缀文件需要去搜索匹配</span></span><br><span class="line">    extensions: [<span class="string">&#x27;.js&#x27;</span>, <span class="string">&#x27;.json&#x27;</span>],</span><br><span class="line">    alias: &#123;</span><br><span class="line">      <span class="comment">// 设置别名指向对应目录</span></span><br><span class="line">      <span class="string">&#x27;@&#x27;</span>: path.join(__dirname, <span class="string">&#x27;../src&#x27;</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  externals: [nodeExternals()], <span class="comment">// 排除对node_modules里的依赖进行打包</span></span><br><span class="line">  plugins: [</span><br><span class="line">    <span class="keyword">new</span> CleanWebpackPlugin(), <span class="comment">// 打包前清除输出目录</span></span><br><span class="line">    <span class="keyword">new</span> webpack.DefinePlugin(&#123;</span><br><span class="line">      <span class="comment">// 定义环境变量，区分开发和生产环境</span></span><br><span class="line">      <span class="comment">// 具体详情可查看DefinePlugin文档</span></span><br><span class="line">      <span class="string">&#x27;process.env.NODE_ENV&#x27;</span>:</span><br><span class="line">        process.env.NODE_ENV === <span class="string">&#x27;production&#x27;</span></span><br><span class="line">          ? <span class="built_in">JSON</span>.stringify(<span class="string">&#x27;production&#x27;</span>)</span><br><span class="line">          : <span class="built_in">JSON</span>.stringify(<span class="string">&#x27;development&#x27;</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">  ],</span><br><span class="line">  <span class="comment">// node下这些选项可以使最初为Node.js环境编写的代码，在其他环境（如浏览器）中运行</span></span><br><span class="line">  node: &#123;</span><br><span class="line">    <span class="built_in">console</span>: <span class="literal">true</span>,</span><br><span class="line">    <span class="built_in">global</span>: <span class="literal">true</span>,</span><br><span class="line">    process: <span class="literal">true</span>,</span><br><span class="line">    Buffer: <span class="literal">true</span>,</span><br><span class="line">    __filename: <span class="literal">true</span>,</span><br><span class="line">    __dirname: <span class="literal">true</span>,</span><br><span class="line">    setImmediate: <span class="literal">true</span>,</span><br><span class="line">    path: <span class="literal">true</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = webpackConfig</span><br></pre></td></tr></table></figure>
+
+<p><strong>config/webpack.config.dev.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; merge &#125; = <span class="built_in">require</span>(<span class="string">&#x27;webpack-merge&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> baseConfig = <span class="built_in">require</span>(<span class="string">&#x27;./webpack.config.base&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 通过webpack-merge合并基础配置，添加开发时配置</span></span><br><span class="line"><span class="keyword">const</span> webpackConfig = merge(baseConfig, &#123;</span><br><span class="line">  mode: <span class="string">&#x27;development&#x27;</span>, <span class="comment">// 开发模式</span></span><br><span class="line">  devtool: <span class="string">&#x27;eval-source-map&#x27;</span>, <span class="comment">// 开发时出错能知道在源代码中哪一行</span></span><br><span class="line">  stats: &#123;</span><br><span class="line">    children: <span class="literal">false</span>, <span class="comment">// webpack打包时子模块信息设置不显示</span></span><br><span class="line">    modules: <span class="literal">false</span> <span class="comment">// 不显示模块信息</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = webpackConfig</span><br></pre></td></tr></table></figure>
+
+<p><strong>config/webpack.config.prod.js</strong></p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> &#123; merge &#125; = <span class="built_in">require</span>(<span class="string">&#x27;webpack-merge&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> baseConfig = <span class="built_in">require</span>(<span class="string">&#x27;./webpack.config.base&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> TerserPlugin = <span class="built_in">require</span>(<span class="string">&#x27;terser-webpack-plugin&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 通过webpack-merge合并基础配置，添加生产时配置</span></span><br><span class="line"><span class="keyword">const</span> webpackConfig = merge(baseConfig, &#123;</span><br><span class="line">  mode: <span class="string">&#x27;production&#x27;</span>, <span class="comment">// 生产模式</span></span><br><span class="line">  stats: &#123;</span><br><span class="line">    children: <span class="literal">false</span>, <span class="comment">// webpack打包时子模块信息设置不显示</span></span><br><span class="line">    warnings: <span class="literal">false</span> <span class="comment">// 警告不显示</span></span><br><span class="line">  &#125;,</span><br><span class="line">  optimization: &#123;</span><br><span class="line">    minimizer: [</span><br><span class="line">      <span class="comment">// terser-webpack-plugin插件可以压缩代码</span></span><br><span class="line">      <span class="comment">// 在webpack4版本中需要安装terser-webpack-plugin4版本</span></span><br><span class="line">      <span class="comment">// 里面是官方推荐的具体的参数，详情可查看文档</span></span><br><span class="line">      <span class="keyword">new</span> TerserPlugin(&#123;</span><br><span class="line">        terserOptions: &#123;</span><br><span class="line">          warning: <span class="literal">true</span>,</span><br><span class="line">          compress: &#123;</span><br><span class="line">            warnings: <span class="literal">false</span>,</span><br><span class="line">            drop_console: <span class="literal">false</span>, <span class="comment">// 取消注释console 方便有时候进行调试</span></span><br><span class="line">            dead_code: <span class="literal">true</span>,</span><br><span class="line">            drop_debugger: <span class="literal">true</span></span><br><span class="line">          &#125;,</span><br><span class="line">          output: &#123;</span><br><span class="line">            comments: <span class="literal">false</span>, <span class="comment">// 不要注释</span></span><br><span class="line">            beautify: <span class="literal">false</span> <span class="comment">// 不要格式，一行显示所有代码</span></span><br><span class="line">          &#125;,</span><br><span class="line">          mangle: <span class="literal">true</span></span><br><span class="line">        &#125;,</span><br><span class="line">        parallel: <span class="literal">true</span>, <span class="comment">// 使用多进程并行运行可提高构建速度，默认的并发运行数量 os.cpus().length - 1</span></span><br><span class="line">        sourceMap: <span class="literal">false</span></span><br><span class="line">      &#125;)</span><br><span class="line">    ],</span><br><span class="line">    <span class="comment">// splitChunks 用来避免模块之间重复的依赖关系</span></span><br><span class="line">    splitChunks: &#123;</span><br><span class="line">      cacheGroups: &#123;</span><br><span class="line">        commons: &#123;</span><br><span class="line">          name: <span class="string">&#x27;commons&#x27;</span>,</span><br><span class="line">          chunks: <span class="string">&#x27;initial&#x27;</span>,</span><br><span class="line">          minChunks: <span class="number">3</span>,</span><br><span class="line">          enforce: <span class="literal">true</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = webpackConfig</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="1、配置babel去支持es6语法"><a href="#1、配置babel去支持es6语法" class="headerlink" title="1、配置babel去支持es6语法"></a>1、配置babel去支持es6语法</h3><p>接着在根目录下新建<code>.babelrc</code>文件，增加babel配置：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;presets&quot;</span>: [</span><br><span class="line">    [</span><br><span class="line">      <span class="string">&quot;@babel/preset-env&quot;</span>,</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">&quot;targets&quot;</span>: &#123;</span><br><span class="line">          <span class="attr">&quot;node&quot;</span>: <span class="string">&quot;current&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>改写src/index.js中的代码：</p>
+<figure class="highlight diff"><table><tr><td class="code"><pre><span class="line"><span class="deletion">- const Koa = require(&#x27;koa&#x27;)</span></span><br><span class="line"><span class="addition">+ import Koa from &#x27;koa&#x27;</span></span><br><span class="line">const app = new Koa()</span><br><span class="line"></span><br><span class="line">app.use(async ctx =&gt; &#123;</span><br><span class="line">  ctx.body = &#x27;hello koa&#x27;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">// 监听端口</span><br><span class="line">app.listen(3000)</span><br></pre></td></tr></table></figure>
+
+<p>如果我们用<code>node src/index.js</code>去运行，则会报错：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">import Koa from &#x27;koa&#x27;</span><br><span class="line">^^^^^^</span><br><span class="line"></span><br><span class="line">SyntaxError: Cannot use import statement outside a module</span><br></pre></td></tr></table></figure>
+
+<p>在在安装babel之后，node_modules中提供了一个<code>babel-node</code>命令，我们可以通过该命令来运行我们的入口文件。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npx babel-node src/index.js</span><br></pre></td></tr></table></figure>
+
+<p>配合之前安装的<code>nodemon</code>可以实现热更新</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npx nodemon --<span class="built_in">exec</span> babel-node src/index.js</span><br></pre></td></tr></table></figure>
+
+<p>我们在<code>package.json</code>中添加这个脚本：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;script&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;start&quot;</span>: <span class="string">&quot;nodemon --exec babel-node src/index.js&quot;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样通过在终端里运行<code>npm run start</code>即可启动项目了。</p>
+<p>当然这个只是简单的实现去支持es6语法和开发时热更新功能，并没有通过用webpack去构建，在项目简单的情况下尚可。后面将介绍通过webpack去启动。</p>
+<h3 id="2、调试webpack配置文件"><a href="#2、调试webpack配置文件" class="headerlink" title="2、调试webpack配置文件"></a>2、调试webpack配置文件</h3><p>运行命令去监听webpack配置文件：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npx node --inspect-brk ./node_modules/.bin/webpack --config config/webpack.config.prod.js --progress</span><br><span class="line"><span class="comment"># --config 指定要监听的配置文件</span></span><br><span class="line"><span class="comment"># --progress 打印webpack编译的过程</span></span><br></pre></td></tr></table></figure>
+
+<p>可以在chrome浏览器里调试，也可以在编辑器里调试，具体方法见<a href="https://nodejs.org/en/docs/guides/debugging-getting-started/">node调试文档</a>。</p>
+<p><img src="https://tva1.sinaimg.cn/large/008eGmZEly1gnag6rqjrjj31sk0joalj.jpg" alt="image-20210203165556606"></p>
+<p>我们在<code>package.json</code>中添加这个脚本用来调试用：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;script&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;start&quot;</span>: <span class="string">&quot;nodemon --exec babel-node src/index.js&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;webpack:debug&quot;</span>: <span class="string">&quot;node --inspect-brk ./node_modules/.bin/webpack --config config/webpack.config.prod.js --progress&quot;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3、通过webpack构建开发时环境"><a href="#3、通过webpack构建开发时环境" class="headerlink" title="3、通过webpack构建开发时环境"></a>3、通过webpack构建开发时环境</h3><p>我们已经把开发时环境配置好了，接下来就是启动它，<strong>通过<code>webpack --watch</code>命令来监听项目中文件的变化，如果其中一个文件被更新，代码将被重新编译</strong>，而不必再去手动运行整个构建。</p>
+<p>同时我们通过<code>cross-env</code>来设置环境变量，来指定当当前开发环境还是生产环境。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npx cross-env NODE_ENV=development webpack --watch --config config/webpack.config.dev.js --progress</span><br></pre></td></tr></table></figure>
+
+<p>执行该命令的意思就是，设置一个环境变量NODE_ENV，值为development，因为我们之前在配置文件中通过DefinePlugin做了配置，所以当这个值不是production时就是开发环境，定义了对应的变量，在项目文件中就可以拿到这个变量，来针对开发和生产时做不同的逻辑处理。</p>
+<p>设置了开发时的环境变量后，通过<code>webpack --watch</code>启动监听模式，指定开发时的配置文件<code>config/webpack.config.dev.js</code>文件，当项目中文件发生变化，代码将被重新编译打包输出到<code>dist/server.bundle.js</code>。</p>
+<p>但仅仅这样时不够的，文件虽然重新被编译并打包了，但是我们并没有监听这个打包后的文件，因此我们通过<code>nodemon</code>来监听输出后的文件：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npx nodemon --inspect ./dist/server.bundle.js</span><br></pre></td></tr></table></figure>
+
+<p>我们这时候将不再简单的监听原始入口文件<code>src/index.js</code>了，而是监听经过了webpack处理（包括babel转换、代码压缩等）打包后生成的文件。</p>
+<p>通过运行上面这两个命令就可以帮助我们实现构建开发时环境。我们把该命令配置到<code>package.json</code>脚本中：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;script&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;start&quot;</span>: <span class="string">&quot;nodemon --exec babel-node src/index.js&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;webpack:debug&quot;</span>: <span class="string">&quot;node --inspect-brk ./node_modules/.bin/webpack --config config/webpack.config.prod.js --progress&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;watch&quot;</span>: <span class="string">&quot;cross-env NODE_ENV=development webpack --watch --config config/webpack.config.dev.js --progress&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;debug&quot;</span>: <span class="string">&quot;nodemon --inspect dist/server.bundle.js&quot;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是这是两个命令，一个终端控制台只能监听一个命令，如果每次启动项目都开两个终端比较麻烦，所以我们安装一个工具<code>npm-run-all</code>，来实现一个脚本同时执行多个命令。继续在<code>package.json</code>中添加脚本：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;script&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;start&quot;</span>: <span class="string">&quot;nodemon --exec babel-node src/index.js&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;webpack:debug&quot;</span>: <span class="string">&quot;node --inspect-brk ./node_modules/.bin/webpack --config config/webpack.config.prod.js --progress&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;watch&quot;</span>: <span class="string">&quot;cross-env NODE_ENV=development webpack --watch --config config/webpack.config.dev.js --progress&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;debug&quot;</span>: <span class="string">&quot;nodemon --inspect dist/server.bundle.js&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;start:dist&quot;</span>: <span class="string">&quot;npm-run-all -p watch debug&quot;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>npm-run-all -p watch debug</code>命令的含义是并行执行watch和debug两个脚本命令<code>-p</code>是并行执行的意思。</p>
+<p>配置好后，我们直接在终端运行即可<strong>启动开发时环境</strong>了：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm run start:dist</span><br></pre></td></tr></table></figure>
+
+<p>然后就可以安心写koa项目代码啦。</p>
+<h3 id="4、项目打包，运用到生产环境"><a href="#4、项目打包，运用到生产环境" class="headerlink" title="4、项目打包，运用到生产环境"></a>4、项目打包，运用到生产环境</h3><p>项目写好之后，我们需要打包部署到线上生产环境，这时候再通过<code>npm run start:dist</code>命令就不合适了，因此我们来配置下构建生产环境的打包命令。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npx cross-env NODE_ENV=production webpack --config config/webpack.config.prod.js</span><br></pre></td></tr></table></figure>
+
+<p>和上面构建开发环境的命令很类似，不过此时我们设置环境变量NODE_ENV值为production，并指定配置文件<code>config/webpack.config.prod.js</code>文件去打包构建。</p>
+<p>我们把该命令配置到<code>package.json</code>中：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;script&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;start&quot;</span>: <span class="string">&quot;nodemon --exec babel-node src/index.js&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;webpack:debug&quot;</span>: <span class="string">&quot;node --inspect-brk ./node_modules/.bin/webpack --config config/webpack.config.prod.js --progress&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;watch&quot;</span>: <span class="string">&quot;cross-env NODE_ENV=development webpack --watch --config config/webpack.config.dev.js --progress&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;debug&quot;</span>: <span class="string">&quot;nodemon --inspect dist/server.bundle.js&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;start:dist&quot;</span>: <span class="string">&quot;npm-run-all -p watch debug&quot;</span>,</span><br><span class="line">    <span class="attr">&quot;build&quot;</span>: <span class="string">&quot;cross-env NODE_ENV=production webpack --config config/webpack.config.prod.js&quot;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行该命令：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm run build</span><br></pre></td></tr></table></figure>
+
+<p>即完成了生产环境下的项目打包构建。</p>
+<p>将整个项目目录除了<code>node_modules</code>文件夹，推送到线上服务器，然后运行<code>npm install</code>安装依赖，接着用node命令执行文件<code>node dist/server.bundle.js</code>把项目启动起来，通过服务器地址和暴露的端口既可以访问koa项目接口啦。</p>
+<blockquote>
+<p>注：清除dist目录配置</p>
+<p>使用<code>npm run build</code>文件项目时每次都会生成一个dist目录，有时需要把dist目录全部删掉，除了在命令行使用rm -rf /dist/命令删除外，还可以使用rimraf命令：</p>
+<p>安装：<code>npm install -D rimraf</code></p>
+<p>使用：<code>npx rimraf dist</code></p>
+<p>我们将其配置到<code>package.json</code>中：</p>
+<figure class="highlight diff"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;script&quot;: &#123;</span><br><span class="line">    ...</span><br><span class="line">    &quot;build&quot;: &quot;cross-env NODE_ENV=production webpack --config config/webpack.config.prod.js&quot;,</span><br><span class="line"><span class="addition">+   &quot;clean&quot;: &quot;rimraf dist&quot;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后通过运行该命令即可清除dist目录：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm run clean</span><br></pre></td></tr></table></figure>
+</blockquote>
+<br />
+
+<h2 id="三、配置eslint-prettier风格"><a href="#三、配置eslint-prettier风格" class="headerlink" title="三、配置eslint + prettier风格"></a>三、配置eslint + prettier风格</h2><p>我习惯写项目必配eslint，操作如下：</p>
+<h3 id="1、安装eslint"><a href="#1、安装eslint" class="headerlink" title="1、安装eslint"></a>1、安装eslint</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 安装eslint</span></span><br><span class="line">npm i eslint -D</span><br><span class="line"></span><br><span class="line"><span class="comment"># eslint初始化</span></span><br><span class="line">npx eslint --init</span><br><span class="line"></span><br><span class="line"><span class="comment"># 进入自定义选择项</span></span><br><span class="line"><span class="comment"># 1. 你想要怎么使用eslint？ To check syntax and find problems</span></span><br><span class="line"><span class="comment"># 2. 哪一种模块是你的项目使用的？ JavaScript modules</span></span><br><span class="line"><span class="comment"># 3. 选择哪一个框架？ None of these</span></span><br><span class="line"><span class="comment"># 4. 你想要使用TypeScript吗？ N</span></span><br><span class="line"><span class="comment"># 5. 你要运行在哪个环境？ Browser, Node</span></span><br><span class="line"><span class="comment"># 6. 你想要配置文件格式是哪个？ JavaScript</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 全部选择完成后，会在本地生成.eslintrc.js文件</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2、安装prettier"><a href="#2、安装prettier" class="headerlink" title="2、安装prettier"></a>2、安装prettier</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 安装相关配置依赖</span></span><br><span class="line">npm install --save-dev eslint-config-prettier</span><br><span class="line">npm install --save-dev eslint-plugin-prettier</span><br><span class="line">npm install --save-dev --save-exact prettier</span><br></pre></td></tr></table></figure>
+
+<p>然后在<code>.eslintrc.js</code>文件中添加配置：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  ...</span><br><span class="line">  plugins: [<span class="string">&#x27;prettier&#x27;</span>],</span><br><span class="line">  <span class="keyword">extends</span>: [<span class="string">&#x27;eslint:recommended&#x27;</span>, <span class="string">&#x27;prettier&#x27;</span>, <span class="string">&#x27;prettier/prettier&#x27;</span>],</span><br><span class="line">  rules: &#123;</span><br><span class="line">    <span class="string">&#x27;prettier/prettier&#x27;</span>: <span class="string">&#x27;error&#x27;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>具体的prettier规则可以新建一个<code>.prettierrc</code>文件设置。</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;semi&quot;</span>: <span class="literal">false</span>, <span class="comment">// 结尾是否加分号</span></span><br><span class="line">  <span class="attr">&quot;singleQuote&quot;</span>: <span class="literal">true</span>, <span class="comment">// 是否使用单引号</span></span><br><span class="line">  <span class="attr">&quot;printWidth&quot;</span>: <span class="number">80</span>, <span class="comment">// 一行代码最长显示80的length</span></span><br><span class="line">  <span class="attr">&quot;endOfLine&quot;</span>: <span class="string">&quot;auto&quot;</span>,</span><br><span class="line">  <span class="attr">&quot;trailingComma&quot;</span>: <span class="string">&quot;none&quot;</span> <span class="comment">// 对象或者数组结尾一项是否逗号</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注：如果在<code>.eslintrc.js</code>文件里直接设置规则也行，但是这样在后面提交检查执行lint-staged的命令<code>prettier --write</code>时，就无法拿到这个规则，而使用prettier默认的规则。</p>
+<p>因此我们需要新建<code>.prettierrc</code>文件去让它们识别。</p>
+</blockquote>
+<p>另外为了增加验证效率，排除那些不需要验证规则的文件，比如<code>mode_modules</code>，可以新建<code>.eslintignore</code>和<code>.prettierignore</code>文件。</p>
+<blockquote>
+<p>注：webstorm编辑器默认JavaScript文件最后分号结尾，如果上述prettier规则结尾不要分号，则会有个编辑器默认的warning：unterminated statement颜色，虽然没啥错，但是看着不爽，可以在编辑器里设置去掉warning。</p>
+<p><img src="https://tva1.sinaimg.cn/large/008eGmZEly1gn9a1y4d6yj31f00oc0yy.jpg" alt="image-20210202163811226"></p>
+</blockquote>
+<br />
+
+<h2 id="四、提交git前代码检查"><a href="#四、提交git前代码检查" class="headerlink" title="四、提交git前代码检查"></a>四、提交git前代码检查</h2><p>为了增强代码线上质量，可以在git提交到仓库前使用<code>husky</code>和<code>lint-staged</code>进行检查。</p>
+<p>它们的功能就是在git提交时触发钩子，其中最重要的一个钩子是<code>pre-commit</code>，在提交代码前可以让我们配置具体做什么，比如运行一下代码检查，如果不符合eslint规则的就中止这次git提交，让你去检查代码问题。</p>
+<p>配置它们很简单，先安装这两个工具。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">npm install husky lint-staged --save-dev</span><br></pre></td></tr></table></figure>
+
+<p>然后在<code>package.json</code>中增加配置：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">	<span class="attr">&quot;husky&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;hooks&quot;</span>: &#123;</span><br><span class="line">      <span class="attr">&quot;pre-commit&quot;</span>: <span class="string">&quot;lint-staged&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">&quot;lint-staged&quot;</span>: &#123;</span><br><span class="line">    <span class="comment">// 匹配所有js文件，按顺序执行任务</span></span><br><span class="line">    <span class="attr">&quot;*.js&quot;</span>: [</span><br><span class="line">      <span class="string">&quot;prettier --write&quot;</span>,</span><br><span class="line">      <span class="string">&quot;eslint&quot;</span>,</span><br><span class="line">      <span class="string">&quot;git add&quot;</span></span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>git的hooks可以在.git文件下的hooks目录里去查看它们，我们可以理解为执行git操作过程中的一系列生命周期，就像vue生命周期一样，在提交时触发一个<code>pre-commit</code>钩子，里面可以执行提交前要做的事情。比如可以执行检查代码：</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;husky&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;hooks&quot;</span>: &#123;</span><br><span class="line">      <span class="attr">&quot;pre-commit&quot;</span>: <span class="string">&quot;prettier --write&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样它就在提交前执行了prettier修复命令。但是这样有一个问题，就是它会检查项目所有的代码，而不是仅仅你这次提交的，所以我们需要<code>lint-staged</code>来解决这个问题，而且<code>lint-staged</code>中可以分任务去执行多个命令。</p>
+<figure class="highlight json"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">	<span class="attr">&quot;husky&quot;</span>: &#123;</span><br><span class="line">    <span class="attr">&quot;hooks&quot;</span>: &#123;</span><br><span class="line">      <span class="attr">&quot;pre-commit&quot;</span>: <span class="string">&quot;lint-staged&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="attr">&quot;lint-staged&quot;</span>: &#123;</span><br><span class="line">    <span class="comment">// 匹配提交的所有js文件，按顺序执行任务</span></span><br><span class="line">    <span class="attr">&quot;*.js&quot;</span>: [</span><br><span class="line">      <span class="string">&quot;prettier --write&quot;</span>,</span><br><span class="line">      <span class="string">&quot;eslint&quot;</span>,</span><br><span class="line">      <span class="string">&quot;git add&quot;</span></span><br><span class="line">    ]，</span><br><span class="line">    <span class="comment">// 匹配提交的所有vue文件，按顺序执行任务</span></span><br><span class="line">    <span class="string">&quot;*.vue&quot;</span>: [...]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述检查js文件的任务就是，先通过<code>prettier --write *.js</code>命令修复文件中不符合规则的代码，执行完后再执行<code>eslint *.js</code>命令检查不符合eslint规则的代码，没问题后执行<code>git add *.js</code>将修复的文件（如果有修复更改）重新添加到暂存区，然后再执行提交操作。</p>
+<p>这其中有任何一个任务没通过，则本地提交中止，显示报错信息，提醒你规范代码。</p>
+<p><img src="https://tva1.sinaimg.cn/large/008eGmZEly1gnbavn3j68j30va0u00zg.jpg" alt="image-20210204103753077"></p>
+<p>通过以上所有基础配置，开发koa项目之前的构建环境已经搭建完成，接下来只需要安心写项目代码即可。</p>
+<p>后续可针对这些配置，再加上koa系列相关基础中间件，做成脚手架，以减少重复搭建项目基础环境的成本。</p>]]></content>
+      <categories>
+        <category>技术</category>
+      </categories>
+      <tags>
+        <tag>webpack</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>服务器探索之旅：基础环境搭建</title>
+    <url>/2021/%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%8E%A2%E7%B4%A2%E4%B9%8B%E6%97%85%EF%BC%9A%E5%9F%BA%E7%A1%80%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA.html</url>
+    <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="https://cdn.jsdelivr.net/npm/meting@1.1.0/dist/Meting.min.js"></script><p><a href="/2020/%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%8E%A2%E7%B4%A2%E4%B9%8B%E6%97%85%EF%BC%9A%E9%80%89%E8%B4%AD%E5%92%8C%E7%99%BB%E9%99%86.html">服务器选购和登陆</a>之后，就要进行基础环境搭建了。</p>
+<p>每个人的需求不同，我个人需要安装的环境有<strong>node环境</strong>和<strong>docker环境</strong>。其他的数据库服务、HTTP Server服务等都是基于docker实现的，因此下面主要介绍这些环境的搭建。</p>
+<a id="more"></a>
+
+<h2 id="一、node环境安装"><a href="#一、node环境安装" class="headerlink" title="一、node环境安装"></a>一、node环境安装</h2><p>如果要安装node，强烈推荐使用<code>nvm</code>方式去安装。<code>nvm</code>可以控制和切换node版本，特别方便。</p>
+<p>根据<code>nvm</code>在github上的<a href="https://github.com/nvm-sh/nvm#install--update-script">文档</a>介绍进行安装：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 下载脚本</span></span><br><span class="line">curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash</span><br><span class="line"><span class="comment"># 或</span></span><br><span class="line">wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.2/install.sh | bash</span><br></pre></td></tr></table></figure>
+
+<p>运行脚本将nvm存储库克隆到~/.nvm，并添加到环境变量中：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> NVM_DIR=<span class="string">&quot;<span class="subst">$([ -z <span class="string">&quot;<span class="variable">$&#123;XDG_CONFIG_HOME-&#125;</span>&quot;</span> ] &amp;&amp; printf %s <span class="string">&quot;<span class="variable">$&#123;HOME&#125;</span>/.nvm&quot;</span> || printf %s <span class="string">&quot;<span class="variable">$&#123;XDG_CONFIG_HOME&#125;</span>/nvm&quot;</span>)</span>&quot;</span></span><br><span class="line">[ -s <span class="string">&quot;<span class="variable">$NVM_DIR</span>/nvm.sh&quot;</span> ] &amp;&amp; \. <span class="string">&quot;<span class="variable">$NVM_DIR</span>/nvm.sh&quot;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>下载脚本拒绝连接解决方法</strong></p>
+<p>在下载脚本时出现报错：<code>Failed connect to raw.githubusercontent.com:443; 拒绝连接</code></p>
+<p>这是因为墙的原因，要解决这个问题，可以使用科学上网，或者添加hosts来解决</p>
+<p>在<a href="https://www.ipaddress.com/">https://www.ipaddress.com/</a> 查询raw.githubusercontent.com的真实IP</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 进入hosts文件</span></span><br><span class="line">vim /etc/hosts</span><br><span class="line"></span><br><span class="line"><span class="comment"># 添加</span></span><br><span class="line">199.232.96.133 raw.githubusercontent.com</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>安装完成后查看版本确认已正常安装：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nvm --version</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>nvm常用命令</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 查看</span></span><br><span class="line">nvm ls-remote <span class="comment"># 列出node有哪些版本</span></span><br><span class="line">nvm list <span class="comment"># 查看已安装的node版本</span></span><br><span class="line">nvm current <span class="comment"># 显示当前版本</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装和卸载</span></span><br><span class="line">nvm install <span class="comment"># 安装最新版本</span></span><br><span class="line">nvm install 12.20.0 <span class="comment"># 安装指定版本</span></span><br><span class="line">nvm uninstall 12.20.0 <span class="comment"># 卸载指定版本</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用</span></span><br><span class="line">nvm use 8.0.0 <span class="comment"># 当前切换到指定版本</span></span><br><span class="line">nvm <span class="built_in">alias</span> default 8.1.0 <span class="comment"># 设置默认版本</span></span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>安装node：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">nvm install 12.20.1</span><br></pre></td></tr></table></figure>
+
+<p>完成后检查node版本及是否正常安装</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">node --version</span><br></pre></td></tr></table></figure>
+
+<br />
+
+<h2 id="二、docker环境安装"><a href="#二、docker环境安装" class="headerlink" title="二、docker环境安装"></a>二、docker环境安装</h2><p>docker安装及常用操作在上篇博文<a href="/2021/docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%B1%87%E6%80%BB.html">docker常用命令汇总</a>中已经介绍，便不再赘述。</p>
+<p>配置好docker环境之后，下面介绍使用docker安装各种服务：</p>
+<h3 id="1、mongodb数据库"><a href="#1、mongodb数据库" class="headerlink" title="1、mongodb数据库"></a>1、mongodb数据库</h3><p>在服务器上新建<code>docker-compose.yml</code>文件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 在home目录下新建mongodb文件文件夹，在里面新建docker-compose.yml文件</span></span><br><span class="line"><span class="built_in">cd</span> /home</span><br><span class="line">mkdir mongodb</span><br><span class="line"><span class="built_in">cd</span> mongodb</span><br><span class="line">vim docker-compose.yml</span><br></pre></td></tr></table></figure>
+
+<p>然后对yml文件进行配置：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 将下面的配置复制到里面</span></span><br><span class="line">version: &#x27;3.8&#x27; # compose版本</span><br><span class="line">services:</span><br><span class="line">  mongo:</span><br><span class="line">    image: mongo # 选择镜像 如指定版本mongo:4.2</span><br><span class="line">    restart: always</span><br><span class="line">    container_name: mongodb # 设置镜像名称</span><br><span class="line">    environment:</span><br><span class="line">      MONGO_INITDB_ROOT_USERNAME: root</span><br><span class="line">      MONGO_INITDB_ROOT_PASSWORD: 123456</span><br><span class="line">    ports:</span><br><span class="line">      - 27017:27017 # 映射端口</span><br><span class="line">    volumes:</span><br><span class="line">      - /home/mongodb:/data/db # 挂载</span><br></pre></td></tr></table></figure>
+
+<p>保存文件后退出，然后挂在后台运行</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
+
+<p>注意：上面映射端口后，需要在防火墙和安全组中放通该端口。</p>
+<p>这时候，mongodb数据库服务就启动了，接下来是初始化数据库</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 进入容器内 运行mongo连接到数据库</span></span><br><span class="line">docker <span class="built_in">exec</span> -it &lt;运行的mongodb容器的id或名称&gt; mongo</span><br><span class="line"><span class="comment"># 进入后到达mongodb的shell终端 然后再通过账号密码连接</span></span><br><span class="line"><span class="comment"># 使用（创建）数据库</span></span><br><span class="line">use admin</span><br><span class="line"><span class="comment"># 用账号密码登录该数据库（认证、权限）</span></span><br><span class="line"><span class="comment"># root用户是超级管理员，可以做任何事情，一般交给运维管理使用</span></span><br><span class="line">db.auth(<span class="string">&#x27;root&#x27;</span>, <span class="string">&#x27;567123&#x27;</span>)  <span class="comment"># 输出1则表示成功了</span></span><br><span class="line"><span class="comment"># 显示数据库列表</span></span><br><span class="line">show dbs</span><br><span class="line"></span><br><span class="line">use jeyson_db</span><br><span class="line"><span class="comment"># 创建一个用户（名称、密码、角色权限：对对应的数据库享有dbOwner权限）</span></span><br><span class="line"><span class="comment"># 注：需要有足够的权限才能创建用户，比如root用户，所以如果要创建，先认证root用户</span></span><br><span class="line"><span class="comment"># 然后再use jeyson_db切换到你想要新增用户的数据库下</span></span><br><span class="line">db.createUser(&#123;user: <span class="string">&#x27;mytest&#x27;</span>,<span class="built_in">pwd</span>:<span class="string">&#x27;098890&#x27;</span>,roles:[&#123;role:<span class="string">&#x27;dbOwner&#x27;</span>,db:<span class="string">&#x27;jeyson_db&#x27;</span>&#125;]&#125;)</span><br><span class="line"><span class="comment"># 创建完成后退出当前数据库 再重新进来认证登录（不要同一个数据库多个用户认证,否则报错too many users are authenticated）</span></span><br><span class="line"><span class="comment"># 重新进来后 切换到jeyson_db数据库 使用新创建的用户认证登陆</span></span><br><span class="line">use jeyson_db</span><br><span class="line">db.auth(<span class="string">&#x27;mytest&#x27;</span>, <span class="string">&#x27;098890&#x27;</span>)</span><br><span class="line"><span class="comment"># 插入users collection（类似表）中一条数据</span></span><br><span class="line">db.users.insertOne(&#123;name:<span class="string">&#x27;myname&#x27;</span>,age:30,email:<span class="string">&#x27;31231test@qq.com&#x27;</span>&#125;)</span><br><span class="line"><span class="comment"># 查询所有数据</span></span><br><span class="line">db.users.find(&#123;&#125;)</span><br><span class="line"><span class="comment"># 更新一条数据</span></span><br><span class="line">db.users.updateOne(&#123;name:<span class="string">&#x27;myname&#x27;</span>, &#123;<span class="variable">$set</span>:&#123;email:<span class="string">&#x27;83821dw@qq.com&#x27;</span>&#125;&#125;&#125;)</span><br><span class="line"><span class="comment"># 删除一条数据</span></span><br><span class="line">db.users.deleteOne(&#123;name:<span class="string">&#x27;myname&#x27;</span>&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 其他常用命令</span></span><br><span class="line">show users：显示用户</span><br><span class="line">show collections：显示当前数据库中的集合（类似关系数据库中的表）</span><br><span class="line">use &lt;db name&gt;：切换当前数据库</span><br><span class="line"><span class="comment"># MongoDB没有创建数据库的命令，但有类似的命令。</span></span><br><span class="line"><span class="comment"># 如：如果你想创建一个“myTest”的数据库，先运行use myTest命令，之后就做一些操作（如：db.createCollection(&#x27;user&#x27;)）,这样就可以创建一个名叫“myTest”的数据库</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 用户相关</span></span><br><span class="line">1、添加一个用户</span><br><span class="line"> db.addUser(<span class="string">&quot;name&quot;</span>);</span><br><span class="line"> db.addUser(<span class="string">&quot;userName&quot;</span>, <span class="string">&quot;pwd123&quot;</span>, <span class="literal">true</span>); 添加用户、设置密码、是否只读</span><br><span class="line"></span><br><span class="line">2、数据库认证、安全模式</span><br><span class="line"> db.auth(<span class="string">&quot;userName&quot;</span>, <span class="string">&quot;123123&quot;</span>);</span><br><span class="line"></span><br><span class="line">3、显示当前所有用户</span><br><span class="line"> show users;</span><br><span class="line"></span><br><span class="line">4、删除用户</span><br><span class="line"> db.removeUser(<span class="string">&quot;userName&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>mongoBD的备份和恢复</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 备份</span></span><br><span class="line">docker <span class="built_in">exec</span> -it &lt;容器id或名称&gt; mongodump -h localhost -u root -p 123456 -d &lt;指定数据库，去掉-d备份所有数据库&gt; -o /tmp/<span class="built_in">test</span></span><br><span class="line"><span class="comment"># 将数据备份到/tep/test目录下 该目录在容器内部 需要复制出来</span></span><br><span class="line">docker cp &lt;容器名称或id&gt;:/tmp/<span class="built_in">test</span> /tmp/<span class="built_in">test</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 恢复</span></span><br><span class="line"><span class="comment"># 可以先将宿主机里的/tmp/test目录拷贝到容器里的/tmp/test</span></span><br><span class="line"><span class="comment"># 然后再执行恢复</span></span><br><span class="line">docker <span class="built_in">exec</span> -it &lt;容器名称或id&gt; mongorestore -h localhost -u root -p 123456 --dir /tmp/<span class="built_in">test</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 例如在服务器A docker里把运行的mongo数据库迁移到服务器B docker里</span></span><br><span class="line"><span class="comment"># 先备份服务器A上的数据库数据</span></span><br><span class="line">docker <span class="built_in">exec</span> -it &lt;容器id或名称&gt; /bin/bash <span class="comment"># 进容器里</span></span><br><span class="line"><span class="comment"># 指定test_db数据库及该数据库对应的账号密码 备份到/tmp/test下</span></span><br><span class="line">mongodump -h localhost -u testName -p 123456 -d test_db -o /tmp/<span class="built_in">test</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 然后恢复到服务器B上,其数据库地址和端口为121.132.12.11:27017</span></span><br><span class="line">mongorestore -h 121.132.12.11:27017 -u root -p 123456 --dir /tmp/<span class="built_in">test</span></span><br><span class="line"><span class="comment"># 指定服务器B数据库地址和端口，输入有权限的用户名密码，传递要恢复的数据/tmp/test</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 然后服务器B数据库中就多了这个库的数据</span></span><br><span class="line"><span class="comment"># 如果之前没创建过这个库，那么需要先登陆root用户，然后切换到该数据库下，然后新建登陆账号密码</span></span><br><span class="line"><span class="comment"># 所以备份的数据只是把数据传过来了，并不是把旧服务器上该库的登陆账号密码也传过来，需要自己重新设置</span></span><br></pre></td></tr></table></figure>
+
+<br />
+
+<h3 id="2、redis数据库安装"><a href="#2、redis数据库安装" class="headerlink" title="2、redis数据库安装"></a>2、redis数据库安装</h3><p>在服务器上新建<code>docker-compose.yml</code>文件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 在home目录下新建redis文件文件夹，在里面新建docker-compose.yml文件</span></span><br><span class="line"><span class="built_in">cd</span> /home</span><br><span class="line">mkdir redis</span><br><span class="line"><span class="built_in">cd</span> redis</span><br><span class="line">vim docker-compose.yml</span><br></pre></td></tr></table></figure>
+
+<p>然后对yml文件进行配置：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 将下面的配置复制到里面</span></span><br><span class="line">version: &#x27;3.8&#x27; # compose版本</span><br><span class="line">services:</span><br><span class="line">  redis:</span><br><span class="line">    image: redis # 镜像名</span><br><span class="line">    restart: always</span><br><span class="line">    container_name: &#x27;redis&#x27; # 容器名称</span><br><span class="line">    ports:</span><br><span class="line">      - 6379:6379</span><br><span class="line">    volumes:</span><br><span class="line">      - /home/redis:/data </span><br><span class="line">    command: [&quot;redis-server&quot;, &quot;--requirepass&quot;, &quot;700209&quot;]</span><br></pre></td></tr></table></figure>
+
+<p>保存文件后退出，然后挂在后台运行</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
+
+<p>注意：上面映射端口后，需要在防火墙和安全组中放通该端口。</p>
+<br />
+
+<h3 id="3、mock测试服务安装"><a href="#3、mock测试服务安装" class="headerlink" title="3、mock测试服务安装"></a>3、mock测试服务安装</h3><p>使用mock数据提供方式：</p>
+<p>1、本地引用mock测试，详情<a href="http://mockjs.com/">mock.js官方文档</a></p>
+<p>2、自己的服务器上通过DOClever测试服务（详见<a href="https://github.com/sx1989827/DOClever">DOClever github上面文档</a>）</p>
+<p><img src="https://tva1.sinaimg.cn/large/008eGmZEly1gn7v8kfkcag30eq0d8dh3.gif" alt="mock"></p>
+<p>下面介绍在服务器上搭建DOClever测试服务。</p>
+<p>新建<code>docker-compose.yml</code>文件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 在home目录下新建redis文件文件夹，在里面新建docker-compose.yml文件</span></span><br><span class="line"><span class="built_in">cd</span> /home</span><br><span class="line">mkdir doclever</span><br><span class="line"><span class="built_in">cd</span> doclever</span><br><span class="line">vim docker-compose.yml</span><br></pre></td></tr></table></figure>
+
+<p>然后对yml文件进行配置：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 将下面的配置复制到里面</span></span><br><span class="line">version: &#x27;3.8&#x27;</span><br><span class="line">services:</span><br><span class="line">  DOClever:</span><br><span class="line">    image: lw96/doclever</span><br><span class="line">    restart: always</span><br><span class="line">    container_name: &quot;DOClever&quot;</span><br><span class="line">    ports:</span><br><span class="line">    - 12333:10000</span><br><span class="line">    volumes:</span><br><span class="line">    - /srv/doclever/file:/root/DOClever/data/file</span><br><span class="line">    - /srv/doclever/img:/root/DOClever/data/file/img</span><br><span class="line">    - /srv/doclever/tmp:/root/DOClever/data/tmp</span><br><span class="line">    environment:</span><br><span class="line">    - DB_HOST=mongodb://mongo:27017/DOClever</span><br><span class="line">    - PORT=10000</span><br><span class="line">    links:</span><br><span class="line">    - mongo:mongo</span><br><span class="line"></span><br><span class="line">  mongo:</span><br><span class="line">    image: mongo:latest</span><br><span class="line">    restart: always</span><br><span class="line">    container_name: &quot;mongodb&quot;</span><br><span class="line">    volumes:</span><br><span class="line">    - /srv/doclever/db:/data/db</span><br><span class="line">    # 将doclever里的数据全部存放在/srv/doclever里</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>如果使用的数据库为非本地mongodb</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">version: <span class="string">&quot;2&quot;</span></span><br><span class="line">services:</span><br><span class="line">DOClever:</span><br><span class="line"> image: lw96/doclever:latest</span><br><span class="line"> restart: always</span><br><span class="line"> container_name: <span class="string">&quot;DOClever&quot;</span></span><br><span class="line"> ports:</span><br><span class="line">    - 10000:10000</span><br><span class="line">    volumes:</span><br><span class="line">    - /hostdir/file:/root/DOClever/data/file</span><br><span class="line">    - /hostdir/img:/root/DOClever/data/file/img</span><br><span class="line">    - /hostdir/tmp:/root/DOClever/data/tmp</span><br><span class="line">    environment:</span><br><span class="line">    - DB_HOST=mongodb://remoteIP:remotePort/DOClever</span><br><span class="line">    - PORT=10000</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>保存文件后退出，然后挂在后台运行</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
+
+<p>注意：上面映射端口后，需要在防火墙和安全组中放通该端口。</p>
+<p>改完配置，去云服务器和防火墙处给对应的端口放行，然后运行项目</p>
+<ul>
+<li><p>然后在浏览器里输入服务器ip+对应端口，即可进入管理系统</p>
+</li>
+<li><p>修改总后台密码（初始都是DOClever），然后进入整理好项目，输入返回数据</p>
+</li>
+<li><p><strong>直接请求线上的地址即可返回数据</strong>，或者使用在本地运行（net.js里设置的默认端口为36742）：</p>
+<p><code>node net.js http://101.133.162.136:12301/mock/5e197d14c52cc5000bae3689 http://localhost:8081</code></p>
+<p>然后，在postman里设置请求方式，地址loacalhost:36742/api，即可返回数据</p>
+</li>
+</ul>
+<blockquote>
+<p>注意文档里面有两个坑：</p>
+<ol>
+<li><p>docker-compose.yml配置文件里volumes挂载的img路径不对</p>
+<p><img src="https://tva1.sinaimg.cn/large/008eGmZEly1gn7v9r7gp2j30zc0u0npd.jpg" alt="image-20210201112110201"></p>
+</li>
+<li><p>mock规则有的例子有的不对</p>
+<p>在DOClever官方文档中Mock数据这块，有一个规则是<code>@mj(&#123;@DTD:@DPD&#125;)</code>，但是它跟的例子是：<code>例如：@mj(&#123;&quot;3&quot;,&quot;a&quot;&#125;)</code>，它例子中间用的逗号，而不是规则里的冒号，导致我直接复制例子运行返回的数据一直报错，花了很长时间都没理解为什么……抓狂</p>
+</li>
+</ol>
+</blockquote>
+<p>另外有个功能未实现：参数如何传递到mockjs规则中？</p>
+<p>在尝试用DOClever实践此项目时，需要输入num参数，根据输入的数字，确定返回的数据有多少条，于是问题来了，如何将num参数传递到DOClever的result结果规则里？</p>
+<p><img src="https://tva1.sinaimg.cn/large/008eGmZEly1gn7vdogb4ej320g0pq4d3.jpg" alt="image-20210201112457006"></p>
+<p>我翻遍了DOClever的文档，它的mock规则只有@count可以返回多条数组数据，在@code里可以获取到一些内置对象，其中通过query可以获取到传递的参数，但是这两个规则并不能同时生效……</p>
+<p>尝试了多次各种嵌套无果之后，用原生的@mj规则也没找到方法能实现输入参数num后，DOClever里自动根据num值返回对应的数据条数这个功能。</p>
+<p>在原生的mock.js中，可以通过<code>Mock.mock( rurl, function( options ) )</code>中的options获取到的url/body，然后提取出参数，但是DOClever里还没发现有效的解决方法。据了解，这个功能并未实现。</p>
+<br />
+
+<h3 id="4、showdoc安装"><a href="#4、showdoc安装" class="headerlink" title="4、showdoc安装"></a>4、showdoc安装</h3><p>通过docker方式安装，先拉取镜像：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker pull star7th/showdoc</span><br></pre></td></tr></table></figure>
+
+<p>接着新建存放showdoc数据的目录</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> /srv</span><br><span class="line">mkdir showdoc_data/html</span><br><span class="line">chmod  -R 777 showdoc_data <span class="comment"># 给予权限</span></span><br></pre></td></tr></table></figure>
+
+<p>挂载启动容器：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run -d --name showdoc -p 12302:80 -v /srv/showdoc_data/html:/var/www/html/ star7th/showdoc</span><br></pre></td></tr></table></figure>
+
+<p>注意在防火墙和安全组中放通该端口。</p>
+<p>使用方法和数据的迁移等各种操作可查<a href="https://www.showdoc.com.cn/help?page_id=1385767280275683">文档</a></p>
+]]></content>
+      <categories>
+        <category>技术</category>
+      </categories>
+      <tags>
+        <tag>服务器</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>docker常用命令汇总</title>
     <url>/2021/docker%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%B1%87%E6%80%BB.html</url>
     <content><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.css"><script src="https://cdnjs.cloudflare.com/ajax/libs/aplayer/1.10.1/APlayer.min.js" class="aplayer-secondary-script-marker"></script><script class="meting-secondary-script-marker" src="https://cdn.jsdelivr.net/npm/meting@1.1.0/dist/Meting.min.js"></script><p>在服务器上我钟爱docker服务，真香。</p>
-<p>以下是我<strong>基于CentOS系统</strong>对它进行安装、管理、常用命令的相关笔记汇总。</p>
+<p>以下是我<strong>基于CentOS系统</strong>对它进行安装、管理、记录常用命令的相关笔记汇总。</p>
 <a id="more"></a>
 
 <h2 id="一、安装docker"><a href="#一、安装docker" class="headerlink" title="一、安装docker"></a>一、安装docker</h2><p>各个系统的安装方法官网上有详细的说明，这里是<a href="https://docs.docker.com/engine/install/centos/">CentOS系统的安装方法</a></p>
