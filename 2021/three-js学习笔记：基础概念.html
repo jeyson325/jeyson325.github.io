@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+       
+      <meta name="keywords" content="生活,代码,博客" />
+       
+      <meta name="description" content="有刃有鱼阮小六的博客" />
+      
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>three.js学习笔记：基础概念 |  岛</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/logo.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css"
+      />
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+       
+ 
+<script>
+var _hmt = _hmt || [];
+(function() {
+	var hm = document.createElement("script");
+	hm.src = "https://hm.baidu.com/hm.js?7bcaf5b5f4d25a43d3da737ce02caec9";
+	var s = document.getElementsByTagName("script")[0]; 
+	s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="岛" type="application/atom+xml">
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-three-js学习笔记：基础概念"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  three.js学习笔记：基础概念
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2021/three-js%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%9A%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5.html" class="article-date">
+  <time datetime="2021-05-24T07:52:11.000Z" itemprop="datePublished">2021-05-24</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">5.6k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">22 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <p><a target="_blank" rel="noopener" href="https://threejs.org/">Three.js</a>是一个3D库，它可以在web浏览器上渲染3D模型，常用应用场景包括H5游戏、3D可视化平台等等。</p>
+<p>要想通过学习three.js来绘制3D模型，首先需要了解Three.js应用程序的结构和基本概念，包括诸如场景，灯光，阴影，材质，纹理之类的东西。</p>
+<p><img src="https://threejsfundamentals.org/threejs/lessons/resources/images/threejs-structure.svg" alt="image-base"></p>
+<ul>
+<li><code>Renderer</code>渲染器，它是three.js的主要对象，所有图像最终都将通过renderer进行渲染（绘制），因此需要我们需要将场景<code>Scene</code>和相机<code>Camera</code>传递进去。</li>
+<li><code>Scene</code>场景，一个scene对象定义了场景图的根，其是树状结构，下面容纳所有3D场景中的对象，比如<code>Mesh</code>、<code>Object3D</code>、<code>Camera</code>、<code>Light</code>、<code>Group</code>等。</li>
+<li><code>Camera</code>相机，就像电影的镜头一样，canvas画布中呈现什么，都是基于相机镜头的位置和朝向。也就是相机指向哪里，用户将会看到哪里，这是非常重要的一个概念。</li>
+<li><code>Geometry</code>对象表示某些几何形状的顶点数据，例如球体，立方体，平面，狗，猫，人，树，建筑物等。Three.js提供了许多内置的几何形状方便我们直接调用，此外还可以创建自定义几何图形（需要对webGL基础<code>BufferAttribute</code>中的positions, normals, colors, uv, etc…有深入理解，且数学计算能力好），或者通过3d编辑器制作模型导出，然后从文件中加载几何图形。</li>
+<li><code>Material</code>代表绘制几何图形的表现属性（材质），比如颜色、光泽度、透明度、贴图等，一个material对象可以引用一个或者多个<code>Texture</code>贴图对象。</li>
+<li><code>Texture</code>贴图，表示从图像文件中加载，或者从画布纹理CanvasTexture中生成，或者以一个动态场景为贴图，渲染到渲染目标。</li>
+<li><code>Mesh</code>网格，是几何图形Geometry和Material结合，绘制后的实体对象。</li>
+<li><code>Light</code>灯光，有不同类型的灯光，在任何一个场景中，没有灯光将默认会漆黑一片。</li>
+</ul>
+<h2 id="renderer响应式"><a href="#renderer响应式" class="headerlink" title="renderer响应式"></a>renderer响应式</h2><p>renderer实例化的过程，可以传递指定的canvas元素，如果不传则默认生成一个新的canvas元素，然后所有的渲染结果都是在该canvas元素上展示的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1、传递指定的canvas元素</span></span><br><span class="line"><span class="keyword">const</span> canvas = <span class="built_in">document</span>.querySelector(<span class="string">&#x27;#canvas&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> renderer1 = <span class="keyword">new</span> THREE.WebGLRenderer(&#123;canvas&#125;);</span><br><span class="line"><span class="comment">// 2、不传</span></span><br><span class="line"><span class="keyword">const</span> renderer2 = <span class="keyword">new</span> THREE.WebGLRenderer();</span><br><span class="line"><span class="comment">// 通过实例renderer.domElement可以拿到canvas元素</span></span><br><span class="line"><span class="keyword">const</span> elem = renderer2.domElement <span class="comment">// elem即自动生成的canvas元素，可以将它添加到html中</span></span><br></pre></td></tr></table></figure>
+
+<p>这两种方式都可以，不过还需要对canvas的尺寸和camera的参数做进一步的处理，否则的话就会采用canvas默认宽高和camera默认宽高比，使渲染结果拉伸扭曲。</p>
+<p><img src="https://threejsfundamentals.org/threejs/lessons/resources/images/resize-incorrect-aspect.png" alt="image-responsive"></p>
+<p>解决方式：</p>
+<p>写一个方法判断是否需要调整画布的大小</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">resizeRendererToDisplaySize</span>(<span class="params">renderer</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> canvas = renderer.domElement;</span><br><span class="line">  <span class="comment">// 处理HD-DPI显示，以设备的分辨率进行渲染</span></span><br><span class="line">  <span class="keyword">const</span> pixelRatio = <span class="built_in">window</span>.devicePixelRatio;</span><br><span class="line">  <span class="keyword">const</span> width  = canvas.clientWidth  * pixelRatio | <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">const</span> height = canvas.clientHeight * pixelRatio | <span class="number">0</span>;</span><br><span class="line">  <span class="comment">// 如果canvas元素盒子宽高和画布的大小不一样</span></span><br><span class="line">  <span class="comment">// 则让renderer设置为新的宽高，即将canvas画布大小设置为最新的盒子宽高</span></span><br><span class="line">  <span class="keyword">const</span> needResize = canvas.width !== width || canvas.height !== height;</span><br><span class="line">  <span class="keyword">if</span> (needResize) &#123;</span><br><span class="line">    renderer.setSize(width, height, <span class="literal">false</span>);</span><br><span class="line">    <span class="comment">// ...其他需要更新的地方，如后期处理composer更新尺寸</span></span><br><span class="line">    <span class="comment">// composer &amp;&amp; composer.setSize(width, height)</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> needResize;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 然后在render渲染方法中调用，并更新camera参数</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">render</span>(<span class="params">time</span>) </span>&#123;</span><br><span class="line"> 	time *= <span class="number">0.001</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (resizeRendererToDisplaySize(renderer)) &#123;</span><br><span class="line">    <span class="comment">// 如果画布大小变动了，则更新camera参数为最新的宽高比</span></span><br><span class="line">    <span class="keyword">const</span> canvas = renderer.domElement;</span><br><span class="line">    camera.aspect = canvas.clientWidth / canvas.clientHeight;</span><br><span class="line">    camera.updateProjectionMatrix();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="几何体-Geometry"><a href="#几何体-Geometry" class="headerlink" title="几何体 Geometry"></a>几何体 Geometry</h2><p>threejs中已经封装好了一些基础的几何形状，方便我们直接传参调用。</p>
+<p>如立方体、球体、锥体、柱体、平面（双面）、字体…</p>
+<p><img src="https://tva1.sinaimg.cn/large/008eGmZEly1goi3lcf8qzj30oc0m6grf.jpg" alt="image-20210313110404216"></p>
+<p>对于简单的物体，我们可以通过代码来动态绘制模型，不过对于大多数3D应用程序来说，在<a target="_blank" rel="noopener" href="https://blender.org/">Blender</a> 或<a target="_blank" rel="noopener" href="https://www.autodesk.com/products/maya/">Maya</a>或<a target="_blank" rel="noopener" href="https://www.maxon.net/en-us/products/cinema-4d/">Cinema 4D之</a>类的3D建模程序中制作3D模型更为常见。</p>
+<h2 id="材料-Material"><a href="#材料-Material" class="headerlink" title="材料 Material"></a>材料 Material</h2><p>three.js中的各种材质类，都是继承自<code>Material</code>基类。因此有一些比较常用的基类属性需要认识一下：</p>
+<ul>
+<li><p>clippingPlanes：用户定义的剪裁平面。和其他相关属性组合，可以实现<strong>剪裁物体</strong>。如下图<a target="_blank" rel="noopener" href="https://threejs.org/examples/#webgl_clipping_intersection">例子</a>：</p>
+<p><img src="https://tva1.sinaimg.cn/large/008i3skNly1gqthe3mq1yj318u0oi46e.jpg" alt="image-20210524140334145"></p>
+</li>
+<li><p>colorWrite：是否渲染材质的颜色。 这可以<strong>与网格的renderOrder属性结合使用，以创建遮挡其他对象的不可见对象</strong>。默认值为true。</p>
+</li>
+<li><p>flatShading：对象看起来是多面的还是光滑的，定义材质是否使用平面着色进行渲染，默认是false。</p>
+<p><img src="https://tva1.sinaimg.cn/large/008i3skNly1gqthl82ngkj30yg0badhu.jpg" alt="image-20210524141027498"></p>
+</li>
+<li><p>fog：材质是否受雾影响，默认true。</p>
+</li>
+<li><p>isMaterial：检查此类或派生类是否为材质，默认true。</p>
+</li>
+<li><p>lights：材质是否收到光照影响，默认true。</p>
+</li>
+<li><p>needsUpdate：指定需要重新编译材质。实例化时，此属性自动设置为true。（重大更改材料时，需要手动设置为true）</p>
+</li>
+<li><p>opacity：0-1之间。当材质的<code>transparent</code>属性为true时，表示材质的透明度；为false时，完全显示，此指仅影响颜色，也就是颜色的透明度。</p>
+</li>
+<li><p>transparent：定义材质是否透明。设置为true后可以通过opacity来控制透明度，默认是false。</p>
+</li>
+<li><p>side：定义要渲染那一面，前面、背面或双面。默认是THREE.FrontSide。</p>
+</li>
+<li><p>shadowSide：定义投影的面，前面、背面或双面。默认是null。</p>
+</li>
+</ul>
+<p>下面介绍常用的几种材质类：</p>
+<p>1、MeshBasicMaterial：一个以简单着色（平面或线框）方式来绘制几何体的材质，不受光照的影响。</p>
+<p>2、MeshLambertMaterial：非光泽表面的材质，没有镜面高光。</p>
+<p>3、<strong>MeshPhongMaterial</strong>：具有镜面高光的光泽表面的材质。（比较常用的）</p>
+<ul>
+<li>shininess：高亮的程度，越高的值越闪亮。默认值为30。设为0就好像MeshBasicMaterial材质。</li>
+<li>emissive：材质的放射（光）颜色，基本上是不受其他光照影响的固有颜色。默认为黑色。</li>
+<li>wireframe：将几何体渲染为线框。</li>
+<li>map：颜色贴图。默认为null。纹理贴图颜色由漫反射颜色.color调节。</li>
+</ul>
+<p><img src="https://tva1.sinaimg.cn/large/008eGmZEly1goi3mij93dj311i0jcgru.jpg" alt="image-20210313110511888"></p>
+<p>4、MeshToonMaterial：一种类似卡通着色的材质。</p>
+<p>5、MeshStandardMaterial：基于物理的标准材质，比MeshPhongMaterial更精确和逼真，计算成本更高。</p>
+<ul>
+<li>roughness：粗糙度，从0到1。</li>
+<li>metalness：金属含量，从0到1。</li>
+</ul>
+<p>6、MeshPhysicalMaterial：上面材质的拓展，提供了更高级的基于物理的渲染属性。</p>
+<ul>
+<li>clearCoatRoughness：透明涂层的粗糙度，从0到1，默认0。越大越粗糙。</li>
+</ul>
+<p><strong>上述材料，越逼真的计算越慢，性能要求越高。</strong></p>
+<p>另外还有一些特殊的材质：</p>
+<p>ShadowMaterial：此材质可以接收阴影，但在其他方面完全透明。即用阴影深浅表明立体感。</p>
+<p>MeshNormalMaterial：一种把法向量映射到RGB颜色的材质。X为红色， y为绿色，而 z是蓝色。</p>
+<p>ShaderMaterial：使用自定义shader渲染的材质。</p>
+<blockquote>
+<p>注：如果有重大更改材料，如：</p>
+<ul>
+<li><code>flatShading</code></li>
+<li>从不使用纹理切换为使用纹理，或从不使用纹理切换为不使用纹理</li>
+</ul>
+<p><strong>需要设置<code>material.needsUpdate = true</code></strong></p>
+</blockquote>
+<h2 id="贴图（纹理）Texture"><a href="#贴图（纹理）Texture" class="headerlink" title="贴图（纹理）Texture"></a>贴图（纹理）Texture</h2><p><img src="https://tva1.sinaimg.cn/large/008eGmZEly1goi3ndgrzcj30zi0gc47n.jpg" alt="image-20210313110601575"></p>
+<p>核心是加载贴图，在材料中设置map属性对应</p>
+<p>如：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建一个TextureLoader贴图加载器</span></span><br><span class="line"><span class="keyword">const</span> loader = <span class="keyword">new</span> THREE.TextureLoader();</span><br><span class="line"><span class="comment">// 加载贴图放在材质里</span></span><br><span class="line"><span class="keyword">const</span> material = <span class="keyword">new</span> THREE.MeshBasicMaterial(&#123;</span><br><span class="line">  map: loader.load(<span class="string">&#x27;resources/images/wall.jpg&#x27;</span>),</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> mesh = <span class="keyword">new</span> THREE.Mesh(geometry, material);</span><br></pre></td></tr></table></figure>
+
+<p>如果加载立方体6个不同面上纹理：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> loader = <span class="keyword">new</span> THREE.TextureLoader();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 用数组装载每个面不同的材质</span></span><br><span class="line"><span class="keyword">const</span> materials = [</span><br><span class="line">  <span class="keyword">new</span> THREE.MeshBasicMaterial(&#123;<span class="attr">map</span>: loader.load(<span class="string">&#x27;resources/images/flower-1.jpg&#x27;</span>)&#125;),</span><br><span class="line">  <span class="keyword">new</span> THREE.MeshBasicMaterial(&#123;<span class="attr">map</span>: loader.load(<span class="string">&#x27;resources/images/flower-2.jpg&#x27;</span>)&#125;),</span><br><span class="line">  <span class="keyword">new</span> THREE.MeshBasicMaterial(&#123;<span class="attr">map</span>: loader.load(<span class="string">&#x27;resources/images/flower-3.jpg&#x27;</span>)&#125;),</span><br><span class="line">  <span class="keyword">new</span> THREE.MeshBasicMaterial(&#123;<span class="attr">map</span>: loader.load(<span class="string">&#x27;resources/images/flower-4.jpg&#x27;</span>)&#125;),</span><br><span class="line">  <span class="keyword">new</span> THREE.MeshBasicMaterial(&#123;<span class="attr">map</span>: loader.load(<span class="string">&#x27;resources/images/flower-5.jpg&#x27;</span>)&#125;),</span><br><span class="line">  <span class="keyword">new</span> THREE.MeshBasicMaterial(&#123;<span class="attr">map</span>: loader.load(<span class="string">&#x27;resources/images/flower-6.jpg&#x27;</span>)&#125;),</span><br><span class="line">];</span><br><span class="line"><span class="comment">// 这里传入材料数组即可</span></span><br><span class="line"><span class="keyword">const</span> cube = <span class="keyword">new</span> THREE.Mesh(geometry, materials);</span><br></pre></td></tr></table></figure>
+
+<p>另外，如果要在单个几何图形上允许多个图像，使用”纹理图集“性能更高，纹理图集是将多个图像放置在一个纹理中，然后在几何图形的顶点上使用纹理坐标来选择在几何图形中的每个三角形上使用纹理的哪些部分的位置。（即类似于雪碧图，多个图放在一张大图上，通过设置不同的坐标来取图）</p>
+<p><strong>加载纹理的同步和异步：</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> loader = <span class="keyword">new</span> THREE.TextureLoader();</span><br><span class="line"><span class="keyword">const</span> texture = loader.load(<span class="string">&#x27;resources/images/flower-1.jpg&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>加载纹理是异步的，但在纹理没有加载出来之前，代码往后执行的纹理将是透明的，直到Three.js异步加载图像为止，此时它将使用下载的图像更新纹理。所以其实不必等待纹理加载，我们的页面将以透明的形式呈现，一旦加载完成则更新纹理。</p>
+<p>如果要等待纹理加载，<code>load</code>纹理加载器的方法会执行一个回调，该回调将在纹理完成加载后调用。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> loader = <span class="keyword">new</span> THREE.TextureLoader();</span><br><span class="line">loader.load(<span class="string">&#x27;resources/images/wall.jpg&#x27;</span>, <span class="function">(<span class="params">texture</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// 在加载完成的回调里去执行渲染</span></span><br><span class="line">  <span class="keyword">const</span> material = <span class="keyword">new</span> THREE.MeshBasicMaterial(&#123;</span><br><span class="line">    map: texture,</span><br><span class="line">  &#125;);</span><br><span class="line">  <span class="keyword">const</span> cube = <span class="keyword">new</span> THREE.Mesh(geometry, material);</span><br><span class="line">  scene.add(cube);</span><br><span class="line">  cubes.push(cube);  <span class="comment">//添加到要旋转的多维数据集列表中</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>等待加载纹理进度条</strong></p>
+<p>要等到所有纹理都加载完毕后，可以使用<a target="_blank" rel="noopener" href="https://threejs.org/docs/#api/en/loaders/managers/LoadingManager"><code>LoadingManager</code></a>，并将其传递给<a target="_blank" rel="noopener" href="https://threejs.org/docs/#api/en/loaders/TextureLoader"><code>TextureLoader</code></a>，然后将其 <a target="_blank" rel="noopener" href="https://threejs.org/docs/#api/en/loaders/managers/LoadingManager#onLoad"><code>onLoad</code></a> 属性设置为回调。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;loading&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;progress&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;progressbar&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取到上面进度条元素</span></span><br><span class="line"><span class="keyword">const</span> loadingElem = <span class="built_in">document</span>.querySelector(<span class="string">&#x27;#loading&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> progressBarElem = loadingElem.querySelector(<span class="string">&#x27;.progressbar&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> loadManager = <span class="keyword">new</span> THREE.LoadingManager(); <span class="comment">// 创建一个加载管理对象</span></span><br><span class="line"><span class="keyword">const</span> loader = <span class="keyword">new</span> THREE.TextureLoader(loadManager); <span class="comment">// 将其传递给贴图loader</span></span><br><span class="line"> </span><br><span class="line"><span class="keyword">const</span> materials = [</span><br><span class="line">  <span class="keyword">new</span> THREE.MeshBasicMaterial(&#123;<span class="attr">map</span>: loader.load(<span class="string">&#x27;resources/images/flower-1.jpg&#x27;</span>)&#125;),</span><br><span class="line">  <span class="keyword">new</span> THREE.MeshBasicMaterial(&#123;<span class="attr">map</span>: loader.load(<span class="string">&#x27;resources/images/flower-2.jpg&#x27;</span>)&#125;),</span><br><span class="line">  <span class="keyword">new</span> THREE.MeshBasicMaterial(&#123;<span class="attr">map</span>: loader.load(<span class="string">&#x27;resources/images/flower-3.jpg&#x27;</span>)&#125;),</span><br><span class="line">  <span class="keyword">new</span> THREE.MeshBasicMaterial(&#123;<span class="attr">map</span>: loader.load(<span class="string">&#x27;resources/images/flower-4.jpg&#x27;</span>)&#125;),</span><br><span class="line">  <span class="keyword">new</span> THREE.MeshBasicMaterial(&#123;<span class="attr">map</span>: loader.load(<span class="string">&#x27;resources/images/flower-5.jpg&#x27;</span>)&#125;),</span><br><span class="line">  <span class="keyword">new</span> THREE.MeshBasicMaterial(&#123;<span class="attr">map</span>: loader.load(<span class="string">&#x27;resources/images/flower-6.jpg&#x27;</span>)&#125;),</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在加载管理对象加载过程中onProgress事件中可以进行页面进度条渲染</span></span><br><span class="line">loadManager.onProgress = <span class="function">(<span class="params">urlOfLastItemLoaded, itemsLoaded, itemsTotal</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> progress = itemsLoaded / itemsTotal;</span><br><span class="line">  progressBarElem.style.transform = <span class="string">`scaleX(<span class="subst">$&#123;progress&#125;</span>)`</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在加载管理对象加载完成onLoad事件中完成后续渲染</span></span><br><span class="line">loadManager.onLoad = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> cube = <span class="keyword">new</span> THREE.Mesh(geometry, materials);</span><br><span class="line">  scene.add(cube);</span><br><span class="line">  cubes.push(cube);  <span class="comment">//添加到要旋转的多维数据集列表中</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>贴图的内存使用情况</strong></p>
+<p>纹理通常占用<code>width * height * 4 * 1.33</code>内存字节。</p>
+<p>一个157k的图片，其尺寸为3024 x 3761像素，则其内存为：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">3024</span> * <span class="number">3761</span> * <span class="number">4</span> * <span class="number">1.33</span> = <span class="number">60505764.5</span> <span class="comment">// 需要60兆的内存！</span></span><br></pre></td></tr></table></figure>
+
+<p>所以：使纹理的尺寸变小，而不仅仅是文件大小变小。<strong>小文件=快速下载，尺寸小=占用更少的内存。</strong></p>
+<p><strong>纹理的过滤（类似于锐利或者柔和效果）</strong></p>
+<p>设置texture.magFilter属性为以下常量：</p>
+<p>THREE.NearestFilter：类似于锐利，有点像像素化，边角分明，看起来清晰。</p>
+<p>THREE.LinearFilter：纹理中选择4个像素并将其混合，类似柔和。看起来模糊些，但是没有锋利的边角。</p>
+<p><strong>THREE.LinearMipmapLinearFilter</strong>：选择2个mips，从每个像素中选择4个像素，然后将所有8个像素混合到1个像素中。此效果相对较佳。</p>
+<p>另外还有其他3个常量值，不在赘述。</p>
+<p>纹理的重复、偏移、旋转纹理属性：</p>
+<ul>
+<li><p>重复：有两个属性wrapS（水平包装），wrapT（垂直包装）。可以设置的属性常量值有：</p>
+<ul>
+<li>THREE.ClampToEdgeWrapping：每个边缘上的最后一个像素将永远重复。</li>
+<li>THREE.RepeatWrapping：重复纹理。</li>
+<li>THREE.MirroredRepeatWrapping：纹理被镜像并重复。</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 打开两个方向的环绕</span></span><br><span class="line">someTexture.wrapS = THREE.RepeatWrapping;</span><br><span class="line">someTexture.wrapT = THREE.RepeatWrapping;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 通过repeat属性设置横纵方向重复值（各重复2次）</span></span><br><span class="line">someTexture.repeat.set(<span class="number">2</span>, <span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>偏移：可以通过设置<code>offset</code>属性来偏移纹理。纹理以单位偏移，其中1单位= 1纹理大小。换句话说，0 =无偏移，而1 =偏移一个完整的纹理量。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> xOffset = <span class="number">.5</span>;   <span class="comment">//偏移一半的纹理</span></span><br><span class="line"><span class="keyword">const</span> yOffset = <span class="number">.25</span>;  <span class="comment">//偏移1/4的纹理</span></span><br><span class="line">someTexture.offset.set(xOffset, yOffset);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>旋转：可以通过<code>rotation</code>以弧度为单位设置属性以及<code>center</code>选择旋转中心的属性来设置旋转纹理。默认值为0,0，它从左下角开始旋转。像偏移一样，这些单位的纹理大小也一样，因此将它们设置为<code>.5, .5</code>围绕纹理中心旋转。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">someTexture.center.set(<span class="number">.5</span>, <span class="number">.5</span>);</span><br><span class="line">someTexture.rotation = THREE.MathUtils.degToRad(<span class="number">45</span>);</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<h2 id="灯光-Light"><a href="#灯光-Light" class="headerlink" title="灯光 Light"></a>灯光 Light</h2><p><strong>AmbientLight：环境光</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// color指光线的颜色</span></span><br><span class="line"><span class="comment">// intensity指光线强度，默认1，越小越暗（0则漆黑一片），越大越亮</span></span><br><span class="line"><span class="keyword">const</span> color = <span class="number">0xFFFFFF</span>;</span><br><span class="line"><span class="keyword">const</span> intensity = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">const</span> light = <span class="keyword">new</span> THREE.AmbientLight(color, intensity);</span><br><span class="line">scene.add(light);</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>HemisphereLight：半球光</strong>（类似天空颜色和大地颜色渐渐向中间过渡）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> skyColor = <span class="number">0xB1E1FF</span>;  <span class="comment">// 浅蓝</span></span><br><span class="line"><span class="keyword">const</span> groundColor = <span class="number">0xB97A20</span>;  <span class="comment">//棕橙色</span></span><br><span class="line"><span class="keyword">const</span> intensity = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">const</span> light = <span class="keyword">new</span> THREE.HemisphereLight(skyColor, groundColor, intensity);</span><br><span class="line">scene.add(light);</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>DirectionalLight：平行光</strong>（类似太阳光，因为足够远，看成每条光线都是平行的，可投射阴影）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> color = <span class="number">0xFFFFFF</span>;</span><br><span class="line"><span class="keyword">const</span> intensity = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">const</span> light = <span class="keyword">new</span> THREE.DirectionalLight(color, intensity);</span><br><span class="line"><span class="comment">// 平行光的特点是，从一个平行光的位置 position 到 target的位置</span></span><br><span class="line">light.position.set(<span class="number">0</span>, <span class="number">10</span>, <span class="number">0</span>);</span><br><span class="line">light.target.position.set(-<span class="number">5</span>, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">scene.add(light);</span><br><span class="line">scene.add(light.target);</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://tva1.sinaimg.cn/large/008eGmZEly1goi32vicomj31bw0u0tlw.jpg" alt="image-20210313104616725"></p>
+<p><strong>PointLight：点光源</strong>（从一个点向四周散射光线，所以只需要一个发光点位置，可投射阴影）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> color = <span class="number">0xFFFFFF</span>;</span><br><span class="line"><span class="keyword">const</span> intensity = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">const</span> light = <span class="keyword">new</span> THREE.PointLight(color, intensity);</span><br><span class="line">light.position.set(<span class="number">0</span>, <span class="number">10</span>, <span class="number">0</span>);</span><br><span class="line">scene.add(light);</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>SpotLight：聚光灯</strong>（是连接了圆锥的点光源，类似于加了圆锥顶灯罩的灯泡，可投射阴影）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> color = <span class="number">0xFFFFFF</span>;</span><br><span class="line"><span class="keyword">const</span> intensity = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">const</span> light = <span class="keyword">new</span> THREE.SpotLight(color, intensity);</span><br><span class="line">scene.add(light);</span><br></pre></td></tr></table></figure>
+
+<p>参数略多，有起始点位置position，目标点位置target，距离distance，圆锥角度angle，边缘阴影硬度penumbra等。</p>
+<p>另外，针对上述的<strong>PointLight 点光源</strong>和<strong>SpotLight 聚光灯</strong>，在renderer上有一个属性叫<code>physicallyCorrectLights</code>，意思是物理上的灯，显示生活中的等，设置为true之后，可以修改两个属性：</p>
+<p>power：800 （类似一个60w的灯泡）</p>
+<p>decay：2 （衰减值，越大衰减越厉害，光线影响的范围就越小）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> renderer = <span class="keyword">new</span> THREE.WebGLRenderer(&#123;canvas&#125;);</span><br><span class="line">renderer.physicallyCorrectLights = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> color = <span class="number">0xFFFFFF</span>;</span><br><span class="line"><span class="keyword">const</span> intensity = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">const</span> light = <span class="keyword">new</span> THREE.PointLight(color, intensity);</span><br><span class="line">light.power = <span class="number">800</span>;</span><br><span class="line">light.decay = <span class="number">2</span>;</span><br><span class="line">light.distance = <span class="literal">Infinity</span>;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="相机-Camera"><a href="#相机-Camera" class="headerlink" title="相机 Camera"></a>相机 Camera</h2><p><strong>PerspectiveCamera：透视相机</strong></p>
+<p>它提供了3D视图，远处的物体看起来比近处的物体小，模拟人眼所看到的景象，它是3D场景的渲染中使用得最普遍的投影模式。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> fov = <span class="number">45</span>;</span><br><span class="line"><span class="keyword">const</span> aspect = <span class="number">2</span>;  <span class="comment">// the canvas default</span></span><br><span class="line"><span class="keyword">const</span> near = <span class="number">0.1</span>;</span><br><span class="line"><span class="keyword">const</span> far = <span class="number">100</span>;</span><br><span class="line"><span class="keyword">const</span> camera = <span class="keyword">new</span> THREE.PerspectiveCamera(fov, aspect, near, far);</span><br><span class="line">camera.position.set(<span class="number">0</span>, <span class="number">10</span>, <span class="number">20</span>);</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://tva1.sinaimg.cn/large/008eGmZEly1goi8kmek5cj31ei0mi1e0.jpg" alt="image-20210313135621353"></p>
+<p>它提供了四个初始化参数：</p>
+<ul>
+<li>fov：摄像机视锥体垂直视野角度，<strong>从视图的底部到顶部，以角度来表示</strong>。默认值是50。值越大，视野越开阔，可容纳的视觉范围越大，而在画布范围是固定的情况下，为了容纳扩大的视觉范围，会把看到的物体绘制小一点，所以感觉就会距离物体越远，也就是<strong>该值越大，看起来离物体越远，该值越小，看起来离物体越近</strong>。</li>
+<li>aspect：摄像机视锥体的长宽比，通常是使用画布的宽/画布的高。默认值是1（正方形画布）。</li>
+<li>near：摄像机的近端面，默认值是0.1。（选择合适的值，不要设置的极其小，如0.00001，这样GPU渲染难）</li>
+<li>far：摄像机的远端面，默认值是2000。（选择合适的值，不要设置的极其大，如10000000，这样GPU渲染难）</li>
+</ul>
+<p>near和far选择合适的值可容纳视觉所有物体即可。</p>
+<p><strong>OrthographicCamera：正交相机</strong></p>
+<p>使用正交投影来进行投影。在这种投影模式下，无论物体距离相机距离远或者近，在最终渲染的图片中物体的大小都保持不变。这对于渲染2D场景或者UI元素是非常有用的。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> left = -<span class="number">1</span>;</span><br><span class="line"><span class="keyword">const</span> right = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">const</span> top = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">const</span> bottom = -<span class="number">1</span>;</span><br><span class="line"><span class="keyword">const</span> near = <span class="number">5</span>;</span><br><span class="line"><span class="keyword">const</span> far = <span class="number">50</span>;</span><br><span class="line"><span class="keyword">const</span> camera = <span class="keyword">new</span> THREE.OrthographicCamera(left, right, top, bottom, near, far);</span><br><span class="line">camera.zoom = <span class="number">0.2</span>;</span><br></pre></td></tr></table></figure>
+
+<p>它提供了六个初始化参数：</p>
+<ul>
+<li><p>left：摄像机视锥体左侧面。</p>
+</li>
+<li><p>right：摄像机视锥体右侧面</p>
+</li>
+<li><p>top：摄像机视锥体上侧面</p>
+</li>
+<li><p>bottom：摄像机视锥体下侧面</p>
+</li>
+<li><p>near：摄像机的近端面，默认值是0.1。</p>
+</li>
+<li><p>far：摄像机的远端面，默认值是2000。</p>
+</li>
+</ul>
+<p>此外还可以设置zoom属性，获取或者设置摄像机的缩放倍数，其默认值为<strong>1</strong>，值越小，放大倍数越大。</p>
+<p><img src="https://tva1.sinaimg.cn/large/008eGmZEly1goiakbhh8kj31sa0oyjub.jpg" alt="image-20210313142530343"></p>
+<p><img src="https://tva1.sinaimg.cn/large/008eGmZEly1goi9a5fevyj31ns0ou4aq.jpg" alt="image-20210313142053348"></p>
+<p>如果绘制2D的东西，可以让画布的一个像素与相机中的一个单元匹配。<strong>也就是让画布和相机视野尺寸一样</strong>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">camera.left = -canvas.width / <span class="number">2</span>;</span><br><span class="line">camera.right = canvas.width / <span class="number">2</span>;</span><br><span class="line">camera.top = canvas.height / <span class="number">2</span>;</span><br><span class="line">camera.bottom = -canvas.height / <span class="number">2</span>;</span><br><span class="line">camera.near = -<span class="number">1</span>;</span><br><span class="line">camera.far = <span class="number">1</span>;</span><br><span class="line">camera.zoom = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<p>或者，可以把原点像2D画布一样位于左上角，则可以使用此</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">camera.left = <span class="number">0</span>;</span><br><span class="line">camera.right = canvas.width;</span><br><span class="line">camera.top = <span class="number">0</span>;</span><br><span class="line">camera.bottom = canvas.height;</span><br><span class="line">camera.near = -<span class="number">1</span>;</span><br><span class="line">camera.far = <span class="number">1</span>;</span><br><span class="line">camera.zoom = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<p>另外该相机的常用应用场景是绘制3D建模程序的平面三视图。</p>
+<h2 id="阴影-Shadow"><a href="#阴影-Shadow" class="headerlink" title="阴影 Shadow"></a>阴影 Shadow</h2><p>阴影是一个复杂的话题。</p>
+<p>threejs 默认使用的是<em>shadow maps</em>方案，这种工作方式是<em>对于每个投射阴影的光源，所有标记为投射阴影的对象都是从光源的角度渲染的</em>。</p>
+<p>也就是说如果有5个灯光都是投射阴影，有20个对象，则每个灯光都需要绘制一遍20个对象，所以通常要找到其他解决方案，而不是让所有的灯光都产生阴影。</p>
+<p>解决方案之一：具有多个灯光，但是只有一个定向灯光会产生阴影。</p>
+<p>解决方案之二：使用光照贴图和/或环境光遮挡贴图来预先计算离线照明的效果。</p>
+<p>解决方案之三：使用假阴影。制作一个平面，在近似阴影的平面上放置灰度（引用）纹理，然后将其绘制在对象下方地面上方。如下面这张图所示：</p>
+<p><img src="https://tva1.sinaimg.cn/large/e6c9d24ely1goknfujzshj210g0gm48u.jpg" alt="image-20210315160146130"></p>
+<p>首先要明确的是，可以投射阴影的灯光有三种：</p>
+<p><strong>DirectionalLight：平行光</strong>、</p>
+<p><strong>PointLight：点光源</strong>、</p>
+<p><strong>SpotLight：聚光灯</strong>。</p>
+<p>让物体产生阴影，需要选择一个可以投射阴影的灯光，然后走这几步：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 第一步：是在渲染器中打开阴影。</span></span><br><span class="line"><span class="keyword">const</span> renderer = <span class="keyword">new</span> THREE.WebGLRenderer(&#123;canvas&#125;);</span><br><span class="line">renderer.shadowMap.enabled = <span class="literal">true</span>;</span><br><span class="line"><span class="comment">// 第二步：在灯光处让光源投射阴影</span></span><br><span class="line"><span class="keyword">const</span> light = <span class="keyword">new</span> THREE.DirectionalLight(color, intensity);</span><br><span class="line">light.castShadow = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// 第三步：在地面上接收阴影（所有产生的阴影最终都呈现在这里）</span></span><br><span class="line"><span class="keyword">const</span> mesh = <span class="keyword">new</span> THREE.Mesh(planeGeo, planeMat); <span class="comment">// 地平面</span></span><br><span class="line">mesh.receiveShadow = <span class="literal">true</span>; <span class="comment">// 接收阴影</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 第四部：让所有物体都可以投射和接受阴影</span></span><br><span class="line"><span class="comment">// 即多物体重叠遮挡的情况下，每个物体都可以接收阴影，也可以将自己产品的影音继续投射出去</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">const</span> mesh = <span class="keyword">new</span> THREE.Mesh(cubeGeo, cubeMat);</span><br><span class="line">	mesh.castShadow = <span class="literal">true</span>;</span><br><span class="line">	mesh.receiveShadow = <span class="literal">true</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line"> </span><br><span class="line">	<span class="keyword">const</span> mesh = <span class="keyword">new</span> THREE.Mesh(sphereGeo, sphereMat);</span><br><span class="line">	mesh.castShadow = <span class="literal">true</span>;</span><br><span class="line">	mesh.receiveShadow = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注：如果有多个可以投射阴影的灯光，可以选择一个最大的主光源投射阴影，其他的不投射。</p>
+<p>另外还需要明确一个概念就是，可投射阴影的灯光有个shadow属性，该属性指向的是对应的xxxLightShadow类，在该类中，有一个camera属性，这就是<strong>阴影摄影机</strong>的概念。灯光的阴影摄影机定义了一个在其中渲染阴影的区域，也就是说有时候虽然设置了灯光，但是<strong>阴影摄影机不在渲染阴影的区域，则阴影会看起来不完整</strong>。</p>
+<p>如平行光投射阴影：</p>
+<p><img src="https://tva1.sinaimg.cn/large/e6c9d24ely1gokpkh7sptj219o0joagd.jpg" alt="image-20210315171528192"></p>
+<p>因此可以通过设置<code>light.shadow.camera</code>的left、right、top、bottom值来改变看区域范围，使阴影变得完整。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> color = <span class="number">0xFFFFFF</span>;</span><br><span class="line"><span class="keyword">const</span> intensity = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">const</span> light = <span class="keyword">new</span> THREE.DirectionalLight(color, intensity);</span><br><span class="line">light.castShadow = <span class="literal">true</span>; <span class="comment">// 投射阴影</span></span><br><span class="line">light.position.set(<span class="number">0</span>, <span class="number">10</span>, );</span><br><span class="line">light.target.position.set(-<span class="number">4</span>, <span class="number">0</span>, -<span class="number">4</span>);</span><br><span class="line"><span class="keyword">const</span> d = <span class="number">20</span>;</span><br><span class="line">light.shadow.camera.left = -d;</span><br><span class="line">light.shadow.camera.right = d;</span><br><span class="line">light.shadow.camera.top = d;</span><br><span class="line">light.shadow.camera.bottom = -d;</span><br><span class="line">light.shadow.mapSize.width = <span class="number">500</span>; <span class="comment">// 阴影贴图的宽度</span></span><br><span class="line">light.shadow.mapSize.height = <span class="number">500</span>; <span class="comment">// 阴影贴图的高度</span></span><br><span class="line">scene.add(light);</span><br><span class="line">scene.add(light.target);</span><br></pre></td></tr></table></figure>
+
+<p>另外如果阴影摄像机范围设置的越大，则阴影的边沿越像素化，可以通过<code>light.shadow.mapSize.width</code> 和 <code>light.shadow.mapSize.height</code>来设置阴影贴图纹理的分辨率，默认为512x512。它们越大，占用的内存就越多，计算速度就越慢。因此无需设置太大，保持合适的页面效果就可以。</p>
+<p>而对于<strong>点光源PointLight</strong>，我们无需设置阴影摄像机的范围，因为它向四面八方发光。实际上它就是朝着立方体的6个面投射阴影，这意味着 <code>PointLight</code>阴影要慢得多，因为整个场景<strong>必须绘制6次，每个方向绘制一次</strong>。</p>
+<h2 id="雾-Fog"><a href="#雾-Fog" class="headerlink" title="雾 Fog"></a>雾 Fog</h2><p>雾一般是一种根据与相机的距离而褪色为特定颜色的方法。three.js中有两个雾对象。</p>
+<p><img src="https://tva1.sinaimg.cn/large/e6c9d24ely1goljs2kc5jj21mq0gijy4.jpg" alt="image-20210316104042347"></p>
+<p><strong>Fog：雾距相机的距离呈匀速增长。</strong></p>
+<p>可以选择<code>near</code>和<code>far</code>设置与相机的距离，在范围内有雾效果，范围外，无效果。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> scene = <span class="keyword">new</span> THREE.Scene();</span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">const</span> color = <span class="number">0xFFFFFF</span>;  <span class="comment">// 白色的</span></span><br><span class="line">  <span class="keyword">const</span> near = <span class="number">10</span>;</span><br><span class="line">  <span class="keyword">const</span> far = <span class="number">100</span>;</span><br><span class="line">  scene.fog = <span class="keyword">new</span> THREE.Fog(color, near, far);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>FogExp2：雾距相机的距离也呈指数增长。</strong></p>
+<p>density定义雾的密度将会增长多快，默认值是0.00025。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> scene = <span class="keyword">new</span> THREE.Scene();</span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">const</span> color = <span class="number">0xFFFFFF</span>;</span><br><span class="line">  <span class="keyword">const</span> density = <span class="number">0.1</span>;</span><br><span class="line">  scene.fog = <span class="keyword">new</span> THREE.FogExp2(color, density);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>注意：雾是对象颜色的每个像素计算的一部分，这意味着如果要将场景淡化为某种颜色，则<strong>需要将雾和背景色设置为相同的颜色</strong>。使用该<code>scene.background</code>属性设置背景色 </p>
+<p>另外如果不想某个物体物化，比如在室内，则可以在材质上<strong>设置fog属性，关闭雾化效果</strong>。室外的物体则开启雾化。</p>
+<blockquote>
+<p>参考资料：<a target="_blank" rel="noopener" href="https://threejsfundamentals.org/threejs/lessons/threejs-fundamentals.html">https://threejsfundamentals.org/threejs/lessons/threejs-fundamentals.html</a></p>
+</blockquote> 
+      <!-- reward -->
+      
+      <div id="reword-out">
+        <div id="reward-btn">
+          打赏
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://jeyson325.github.io/2021/three-js%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%9A%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5.html" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/three-js/" rel="tag">three.js</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+    
+      <a href="/2021/%E7%94%A8Yeoman%E6%90%AD%E5%BB%BA%E6%88%91%E8%87%AA%E5%B7%B1%E7%9A%84%E9%A1%B9%E7%9B%AE%E8%84%9A%E6%89%8B%E6%9E%B6.html" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">用Yeoman搭建我自己的项目脚手架</div>
+      </a>
+    
+  </nav>
+
+   
+<!-- valine评论 -->
+<div id="vcomments-box">
+  <div id="vcomments"></div>
+</div>
+<script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/valine@1.4.14/dist/Valine.min.js"></script>
+<script>
+  new Valine({
+    el: "#vcomments",
+    app_id: "MDsEijjo4FndNO2zMicxD9Pm-9Nh9j0Va",
+    app_key: "ITIWeEeo4oqlok7axOOHKon2",
+    path: window.location.pathname,
+    avatar: "monsterid",
+    placeholder: "给我的文章加点评论吧 ~（注：以上可不填，直接评论即可）",
+    recordIP: true,
+  });
+  const infoEle = document.querySelector("#vcomments .info");
+  if (infoEle && infoEle.childNodes && infoEle.childNodes.length > 0) {
+    infoEle.childNodes.forEach(function (item) {
+      item.parentNode.removeChild(item);
+    });
+  }
+</script>
+<style>
+  #vcomments-box {
+    padding: 5px 30px;
+  }
+
+  @media screen and (max-width: 800px) {
+    #vcomments-box {
+      padding: 5px 0px;
+    }
+  }
+
+  #vcomments-box #vcomments {
+    background-color: #fff;
+  }
+
+  .v .vlist .vcard .vh {
+    padding-right: 20px;
+  }
+
+  .v .vlist .vcard {
+    padding-left: 10px;
+  }
+</style>
+
+ 
+   
+     
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2020-2021
+        <i class="ri-heart-fill heart_icon"></i> 有刃有鱼阮小六
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></span>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+        <li>
+          <a href="https://beian.miit.gov.cn" target="_black" rel="nofollow">皖ICP备2021000001号-1</a>
+        </li>
+        
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/logo.png" alt="岛"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E6%8A%80%E6%9C%AF">技术</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E7%94%9F%E6%B4%BB">生活</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories/%E5%86%99%E4%BD%9C">写作</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/aplayer">音乐歌单</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/update">更新日志</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我吃橘子</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.png">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.png">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+ 
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+ 
+<!-- ClickLove -->
+ 
+<script src="/js/clickLove.js"></script>
+ 
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>
